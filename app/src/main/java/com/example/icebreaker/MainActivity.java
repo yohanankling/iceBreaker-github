@@ -6,8 +6,6 @@ import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.icebreaker.users.Register;
-import com.example.icebreaker.users.UsersList;
-
 
 public class MainActivity extends AppCompatActivity {
 
