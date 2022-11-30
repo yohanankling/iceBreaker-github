@@ -1,0 +1,9 @@
+pluginManagement {
+    repositories {
+        google()
+        mavenCentral()
+3    }
+}
+
+rootProject.name = "iceBreaker"
+include ':app'

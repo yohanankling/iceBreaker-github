@@ -1,0 +1,380 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".contactUs.Contact">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/ContactUs"
+        android:layout_width="0dp"
+        android:layout_height="100dp"
+        android:layout_weight="1"
+        android:background="@color/teal_700"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageButton
+            android:id="@+id/back"
+            android:layout_width="53dp"
+            android:layout_height="52dp"
+            android:adjustViewBounds="true"
+            android:background="#00FFFFFF"
+            android:scaleType="centerInside"
+            android:src="@drawable/back_btn"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/Contact"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/Contact"
+            android:layout_width="203dp"
+            android:layout_height="38dp"
+            android:layout_margin="10dp"
+            android:gravity="center"
+            android:text="The Devlopers"
+            android:textColor="@color/cardview_shadow_start_color"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="TextContrastCheck,TextContrastCheck" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/yohCard"
+        android:layout_width="0dp"
+        android:layout_height="160dp"
+        android:layout_marginTop="25dp"
+        android:layout_weight="1"
+        android:background="@color/theme"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ContactUs">
+
+        <ImageView
+            android:id="@+id/yohPic"
+            android:layout_width="120dp"
+            android:layout_height="151dp"
+            android:layout_margin="10dp"
+            android:background="#00FFFFFF"
+            android:src="@drawable/male"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageButton
+            android:id="@+id/yohWhatsapp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:adjustViewBounds="false"
+            android:background="#00FFFFFF"
+            android:scaleType="centerInside"
+            android:src="@drawable/whatsapp"
+            app:layout_constraintBottom_toBottomOf="@+id/yohPic"
+            app:layout_constraintStart_toEndOf="@+id/yohPic"
+            app:layout_constraintTop_toBottomOf="@+id/yohMail"
+            tools:ignore="SpeakableTextPresentCheck" />
+
+        <TextView
+            android:id="@+id/yohName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_marginTop="16dp"
+            android:text="Yohanan Kling"
+            android:textColor="@color/white"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.602"
+            app:layout_constraintStart_toEndOf="@+id/yohPic"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/yohMail"
+            android:layout_width="158dp"
+            android:layout_height="0dp"
+            android:layout_below="@+id/yohName"
+            android:layout_margin="10dp"
+            android:layout_marginTop="15dp"
+            android:autoLink="email"
+            android:text="yohanankli@gmail.com"
+            android:textColor="#212121"
+            app:layout_constraintEnd_toEndOf="@+id/yohName"
+            app:layout_constraintStart_toStartOf="@+id/yohName"
+            app:layout_constraintTop_toBottomOf="@+id/yohName"
+            tools:ignore="TouchTargetSizeCheck" />
+
+
+        <ImageButton
+            android:id="@+id/yohLinkedin"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="10dp"
+            android:background="#00FFFFFF"
+            android:scaleType="centerInside"
+            android:src="@drawable/linkedin"
+            app:layout_constraintBottom_toBottomOf="@+id/yohWhatsapp"
+            app:layout_constraintStart_toEndOf="@+id/yohWhatsapp"
+            app:layout_constraintTop_toTopOf="@+id/yohWhatsapp"
+            tools:ignore="SpeakableTextPresentCheck" />
+
+        <ImageButton
+            android:id="@+id/yohGithub"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="10dp"
+            android:background="#00FFFFFF"
+            android:scaleType="centerInside"
+            android:src="@drawable/github"
+            app:layout_constraintBottom_toBottomOf="@+id/yohLinkedin"
+            app:layout_constraintStart_toEndOf="@+id/yohLinkedin"
+            app:layout_constraintTop_toTopOf="@+id/yohLinkedin"
+            tools:ignore="SpeakableTextPresentCheck" />
+
+        <ImageButton
+            android:id="@+id/yohCv"
+            android:layout_width="50dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="10dp"
+            android:background="#00FFFFFF"
+            android:scaleType="centerInside"
+            android:src="@drawable/cv"
+            app:layout_constraintBottom_toBottomOf="@+id/yohGithub"
+            app:layout_constraintStart_toEndOf="@+id/yohGithub"
+            app:layout_constraintTop_toTopOf="@+id/yohGithub"
+            tools:ignore="SpeakableTextPresentCheck" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/tzachCard"
+        android:layout_width="0dp"
+        android:layout_height="160dp"
+        android:layout_marginTop="25dp"
+        android:layout_weight="1"
+        android:background="@color/theme"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/yohCard">
+
+        <ImageView
+            android:id="@+id/tzachPic"
+            android:layout_width="120dp"
+            android:layout_height="151dp"
+            android:layout_margin="10dp"
+            android:background="#00FFFFFF"
+            android:src="@drawable/male"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageButton
+            android:id="@+id/tzachWhatsapp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:adjustViewBounds="false"
+            android:background="#00FFFFFF"
+            android:scaleType="centerInside"
+            android:src="@drawable/whatsapp"
+            app:layout_constraintBottom_toBottomOf="@+id/tzachPic"
+            app:layout_constraintStart_toEndOf="@+id/tzachPic"
+            app:layout_constraintTop_toBottomOf="@+id/tzachMail"
+            tools:ignore="SpeakableTextPresentCheck" />
+
+        <TextView
+            android:id="@+id/tzachName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_marginTop="16dp"
+            android:text="Tzach Acker"
+            android:textColor="@color/white"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.602"
+            app:layout_constraintStart_toEndOf="@+id/tzachPic"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tzachMail"
+            android:layout_width="158dp"
+            android:layout_height="0dp"
+            android:layout_below="@+id/tzachName"
+            android:layout_margin="10dp"
+            android:layout_marginTop="15dp"
+            android:autoLink="email"
+            android:text="tzachaker@gmail.com"
+            android:textColor="#212121"
+            app:layout_constraintEnd_toEndOf="@+id/tzachName"
+            app:layout_constraintStart_toStartOf="@+id/tzachName"
+            app:layout_constraintTop_toBottomOf="@+id/tzachName"
+            tools:ignore="TouchTargetSizeCheck" />
+
+
+        <ImageButton
+            android:id="@+id/tzachLinkedin"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="10dp"
+            android:background="#00FFFFFF"
+            android:scaleType="centerInside"
+            android:src="@drawable/linkedin"
+            app:layout_constraintBottom_toBottomOf="@+id/tzachWhatsapp"
+            app:layout_constraintStart_toEndOf="@+id/tzachWhatsapp"
+            app:layout_constraintTop_toTopOf="@+id/tzachWhatsapp"
+            tools:ignore="SpeakableTextPresentCheck" />
+
+        <ImageButton
+            android:id="@+id/tzachGithub"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="10dp"
+            android:background="#00FFFFFF"
+            android:scaleType="centerInside"
+            android:src="@drawable/github"
+            app:layout_constraintBottom_toBottomOf="@+id/tzachLinkedin"
+            app:layout_constraintStart_toEndOf="@+id/tzachLinkedin"
+            app:layout_constraintTop_toTopOf="@+id/tzachLinkedin"
+            tools:ignore="SpeakableTextPresentCheck" />
+
+        <ImageButton
+            android:id="@+id/tzachCv"
+            android:layout_width="50dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="10dp"
+            android:background="#00FFFFFF"
+            android:scaleType="centerInside"
+            android:src="@drawable/cv"
+            app:layout_constraintBottom_toBottomOf="@+id/tzachGithub"
+            app:layout_constraintStart_toEndOf="@+id/tzachGithub"
+            app:layout_constraintTop_toTopOf="@+id/tzachGithub"
+            tools:ignore="SpeakableTextPresentCheck" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/nadavCard"
+        android:layout_width="0dp"
+        android:layout_height="160dp"
+        android:layout_marginTop="25dp"
+        android:layout_weight="1"
+        android:background="@color/theme"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tzachCard">
+
+        <ImageView
+            android:id="@+id/nadavPic"
+            android:layout_width="120dp"
+            android:layout_height="151dp"
+            android:layout_margin="10dp"
+            android:background="#00FFFFFF"
+            android:src="@drawable/male"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageButton
+            android:id="@+id/nadavWhatsapp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:adjustViewBounds="false"
+            android:background="#00FFFFFF"
+            android:scaleType="centerInside"
+            android:src="@drawable/whatsapp"
+            app:layout_constraintBottom_toBottomOf="@+id/nadavPic"
+            app:layout_constraintStart_toEndOf="@+id/nadavPic"
+            app:layout_constraintTop_toBottomOf="@+id/nadavMail"
+            tools:ignore="SpeakableTextPresentCheck" />
+
+        <TextView
+            android:id="@+id/nadavName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_marginTop="16dp"
+            android:text="Nadav Moyal"
+            android:textColor="@color/white"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.602"
+            app:layout_constraintStart_toEndOf="@+id/nadavPic"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/nadavMail"
+            android:layout_width="158dp"
+            android:layout_height="0dp"
+            android:layout_below="@+id/nadavName"
+            android:layout_margin="10dp"
+            android:layout_marginTop="15dp"
+            android:autoLink="email"
+            android:text="nadav@gmail.com"
+            android:textColor="#212121"
+            app:layout_constraintEnd_toEndOf="@+id/nadavName"
+            app:layout_constraintStart_toStartOf="@+id/nadavName"
+            app:layout_constraintTop_toBottomOf="@+id/nadavName"
+            tools:ignore="TouchTargetSizeCheck" />
+
+
+        <ImageButton
+            android:id="@+id/nadavLinkedin"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="10dp"
+            android:background="#00FFFFFF"
+            android:scaleType="centerInside"
+            android:src="@drawable/linkedin"
+            app:layout_constraintBottom_toBottomOf="@+id/nadavWhatsapp"
+            app:layout_constraintStart_toEndOf="@+id/nadavWhatsapp"
+            app:layout_constraintTop_toTopOf="@+id/nadavWhatsapp"
+            tools:ignore="SpeakableTextPresentCheck" />
+
+        <ImageButton
+            android:id="@+id/nadavGithub"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="10dp"
+            android:background="#00FFFFFF"
+            android:scaleType="centerInside"
+            android:src="@drawable/github"
+            app:layout_constraintBottom_toBottomOf="@+id/nadavLinkedin"
+            app:layout_constraintStart_toEndOf="@+id/nadavLinkedin"
+            app:layout_constraintTop_toTopOf="@+id/nadavLinkedin"
+            tools:ignore="SpeakableTextPresentCheck" />
+
+        <ImageButton
+            android:id="@+id/nadavCv"
+            android:layout_width="50dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="10dp"
+            android:background="#00FFFFFF"
+            android:scaleType="centerInside"
+            android:src="@drawable/cv"
+            app:layout_constraintBottom_toBottomOf="@+id/nadavGithub"
+            app:layout_constraintStart_toEndOf="@+id/nadavGithub"
+            app:layout_constraintTop_toTopOf="@+id/nadavGithub"
+            tools:ignore="SpeakableTextPresentCheck" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

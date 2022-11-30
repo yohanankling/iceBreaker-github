@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/theme"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <View
+        android:id="@+id/FirstHorizontalLine"
+        style="@style/Divider.Horizontal"
+        android:layout_width="375dp"
+        android:layout_height="5dp"
+        app:layout_constraintBottom_toTopOf="@+id/XMiddleCenter"
+        app:layout_constraintEnd_toEndOf="@+id/XMiddleRight"
+        app:layout_constraintStart_toStartOf="@+id/XMiddleLeft"
+        app:layout_constraintTop_toBottomOf="@+id/XTopLeft" />
+
+    <View
+        android:id="@+id/SecondHorizontalLine"
+        style="@style/Divider.Horizontal"
+        android:layout_width="375dp"
+        android:layout_height="5dp"
+        android:layout_marginBottom="300dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/XMiddleRight"
+        app:layout_constraintStart_toStartOf="@+id/XMiddleLeft" />
+
+    <View
+        android:id="@+id/LeftVerticalLine"
+        style="@style/Divider.Vertical"
+        android:layout_width="5dp"
+        android:layout_height="400dp"
+        app:layout_constraintBottom_toBottomOf="@+id/XDownCenter"
+        app:layout_constraintEnd_toStartOf="@+id/XMiddleCenter"
+        app:layout_constraintStart_toEndOf="@+id/XMiddleLeft"
+        app:layout_constraintTop_toTopOf="@+id/XTopLeft" />
+
+
+    <View
+        android:id="@+id/RightVerticalLine"
+        style="@style/Divider.Vertical"
+        android:layout_width="5dp"
+        android:layout_height="400dp"
+        app:layout_constraintBottom_toBottomOf="@+id/XDownCenter"
+        app:layout_constraintEnd_toStartOf="@+id/XMiddleRight"
+        app:layout_constraintStart_toEndOf="@+id/XMiddleCenter"
+        app:layout_constraintTop_toTopOf="@+id/XTopLeft" />
+
+    <ImageButton
+        android:id="@+id/XTopRight"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="40dp"
+        android:layout_marginBottom="250dp"
+        android:adjustViewBounds="true"
+        android:scaleType="centerInside"
+        android:src="@drawable/xsign"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/XTopLeft"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/XTopCenter"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="20dp"
+        android:adjustViewBounds="true"
+        android:scaleType="centerInside"
+        android:src="@drawable/xsign"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/XTopLeft"
+        app:layout_constraintEnd_toStartOf="@+id/XTopLeft"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/XTopLeft" />
+
+    <ImageButton
+        android:id="@+id/XTopLeft"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:adjustViewBounds="true"
+        android:scaleType="centerInside"
+        android:src="@drawable/xsign"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/XTopRight"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/XTopRight" />
+
+    <ImageButton
+        android:id="@+id/XMiddleRight"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:adjustViewBounds="true"
+        android:scaleType="centerInside"
+        android:src="@drawable/xsign"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/XMiddleCenter"
+        app:layout_constraintEnd_toEndOf="@+id/XTopRight"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/XTopRight"
+        app:layout_constraintTop_toTopOf="@+id/XMiddleCenter" />
+
+    <ImageButton
+        android:id="@+id/XMiddleCenter"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:adjustViewBounds="true"
+        android:scaleType="centerInside"
+        android:src="@drawable/xsign"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/XMiddleLeft"
+        app:layout_constraintEnd_toEndOf="@+id/XTopLeft"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/XTopLeft"
+        app:layout_constraintTop_toTopOf="@+id/XMiddleLeft" />
+
+    <ImageButton
+        android:id="@+id/XMiddleLeft"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="30dp"
+        android:adjustViewBounds="true"
+        android:scaleType="centerInside"
+        android:src="@drawable/xsign"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="@+id/XTopCenter"
+        app:layout_constraintStart_toStartOf="@+id/XTopCenter"
+        app:layout_constraintTop_toBottomOf="@+id/XTopCenter" />
+
+    <ImageButton
+        android:id="@+id/XDownRight"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:adjustViewBounds="true"
+        android:scaleType="centerInside"
+        android:src="@drawable/xsign"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/XDownCenter"
+        app:layout_constraintEnd_toEndOf="@+id/XMiddleRight"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/XMiddleRight"
+        app:layout_constraintTop_toTopOf="@+id/XDownCenter"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <ImageButton
+        android:id="@+id/XDownCenter"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:adjustViewBounds="true"
+        android:scaleType="centerInside"
+        android:src="@drawable/xsign"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/XDownLeft"
+        app:layout_constraintEnd_toEndOf="@+id/XMiddleCenter"
+        app:layout_constraintStart_toStartOf="@+id/XMiddleCenter"
+        app:layout_constraintTop_toTopOf="@+id/XDownLeft" />
+
+    <ImageButton
+        android:id="@+id/XDownLeft"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="30dp"
+        android:adjustViewBounds="true"
+        android:scaleType="centerInside"
+        android:src="@drawable/xsign"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="@+id/XMiddleLeft"
+        app:layout_constraintStart_toStartOf="@+id/XMiddleLeft"
+        app:layout_constraintTop_toBottomOf="@+id/XMiddleLeft" />
+
+    <ImageButton
+        android:id="@+id/OTopRight"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="40dp"
+        android:layout_marginBottom="250dp"
+        android:adjustViewBounds="true"
+        android:scaleType="centerInside"
+        android:src="@drawable/osign"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/XTopLeft"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/OTopCenter"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="20dp"
+        android:adjustViewBounds="true"
+        android:scaleType="centerInside"
+        android:src="@drawable/osign"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/XTopLeft"
+        app:layout_constraintEnd_toStartOf="@+id/XTopLeft"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/XTopLeft" />
+
+    <ImageButton
+        android:id="@+id/OTopLeft"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:adjustViewBounds="true"
+        android:scaleType="centerInside"
+        android:src="@drawable/osign"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/XTopRight"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/XTopRight" />
+
+    <ImageButton
+        android:id="@+id/OMiddleRight"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:adjustViewBounds="true"
+        android:scaleType="centerInside"
+        android:src="@drawable/osign"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/XMiddleCenter"
+        app:layout_constraintEnd_toEndOf="@+id/XTopRight"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/XTopRight"
+        app:layout_constraintTop_toTopOf="@+id/XMiddleCenter" />
+
+    <ImageButton
+        android:id="@+id/OMiddleCenter"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:adjustViewBounds="true"
+        android:scaleType="centerInside"
+        android:src="@drawable/osign"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/XMiddleLeft"
+        app:layout_constraintEnd_toEndOf="@+id/XTopLeft"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/XTopLeft"
+        app:layout_constraintTop_toTopOf="@+id/XMiddleLeft" />
+
+    <ImageButton
+        android:id="@+id/OMiddleLeft"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="30dp"
+        android:adjustViewBounds="true"
+        android:scaleType="centerInside"
+        android:src="@drawable/osign"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="@+id/XTopCenter"
+        app:layout_constraintStart_toStartOf="@+id/XTopCenter"
+        app:layout_constraintTop_toBottomOf="@+id/XTopCenter" />
+
+    <ImageButton
+        android:id="@+id/ODownRight"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:adjustViewBounds="true"
+        android:scaleType="centerInside"
+        android:src="@drawable/osign"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/XDownCenter"
+        app:layout_constraintEnd_toEndOf="@+id/XMiddleRight"
+        app:layout_constraintStart_toStartOf="@+id/XMiddleRight"
+        app:layout_constraintTop_toTopOf="@+id/XDownCenter" />
+
+    <ImageButton
+        android:id="@+id/ODownCenter"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:adjustViewBounds="true"
+        android:scaleType="centerInside"
+        android:src="@drawable/osign"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/XDownLeft"
+        app:layout_constraintEnd_toEndOf="@+id/XMiddleCenter"
+        app:layout_constraintStart_toStartOf="@+id/XMiddleCenter"
+        app:layout_constraintTop_toTopOf="@+id/XDownLeft" />
+
+    <ImageButton
+        android:id="@+id/ODownLeft"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="30dp"
+        android:adjustViewBounds="true"
+        android:scaleType="centerInside"
+        android:src="@drawable/osign"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="@+id/XMiddleLeft"
+        app:layout_constraintStart_toStartOf="@+id/XMiddleLeft"
+        app:layout_constraintTop_toBottomOf="@+id/XMiddleLeft" />
+
+    <Button
+        android:id="@+id/QuitBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Quit"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/RightVerticalLine" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

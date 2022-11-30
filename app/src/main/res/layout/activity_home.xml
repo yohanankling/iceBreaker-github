@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/theme"
+    tools:context=".Home">
+
+    <TextView
+        android:id="@+id/Menu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="menu"
+        android:textColor="#FF0000"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.137" />
+
+    <Button
+        android:id="@+id/Status"
+        android:layout_width="125dp"
+        android:layout_height="50dp"
+        android:textSize="12sp"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="30dp"
+        android:text="my status"
+        app:layout_constraintEnd_toStartOf="@+id/Menu"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/Menu" />
+
+    <Button
+        android:id="@+id/OnlineMember"
+        android:layout_width="125dp"
+        android:layout_height="50dp"
+        android:textSize="12sp"
+        android:layout_marginEnd="50dp"
+        android:text="member online"
+        app:layout_constraintBottom_toBottomOf="@+id/Status"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/Menu"
+        app:layout_constraintTop_toTopOf="@+id/Status" />
+
+    <Button
+        android:id="@+id/Broadcast"
+        android:layout_width="125dp"
+        android:layout_height="50dp"
+        android:textSize="12sp"
+        android:layout_marginTop="30dp"
+        android:text="broadcast"
+        app:layout_constraintEnd_toEndOf="@+id/OnlineMember"
+        app:layout_constraintStart_toStartOf="@+id/OnlineMember"
+        app:layout_constraintTop_toBottomOf="@+id/OnlineMember" />
+
+    <Button
+        android:id="@+id/PlayWith"
+        android:layout_width="125dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="30dp"
+        android:text="play with"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="@+id/Chats"
+        app:layout_constraintStart_toStartOf="@+id/Chats"
+        app:layout_constraintTop_toBottomOf="@+id/Chats" />
+
+    <Button
+        android:id="@+id/Disconnect"
+        android:layout_width="125dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="30dp"
+        android:text="disconnect"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="@+id/Broadcast"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/Broadcast"
+        app:layout_constraintTop_toBottomOf="@+id/Broadcast" />
+
+    <Button
+        android:id="@+id/RemoveUser"
+        android:layout_width="125dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="30dp"
+        android:text="remove user"
+        android:textSize="12sp"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="@+id/Disconnect"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/Disconnect"
+        app:layout_constraintTop_toBottomOf="@+id/Disconnect" />
+
+    <Button
+        android:id="@+id/UserList"
+        android:layout_width="125dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="30dp"
+        android:text="user list"
+        android:textSize="12sp"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="@+id/PlayWith"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/PlayWith"
+        app:layout_constraintTop_toBottomOf="@+id/PlayWith" />
+
+    <Button
+        android:id="@+id/ContactUs"
+        android:layout_width="300dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="80dp"
+        android:text="talk with the developer"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="@+id/Chats"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/PlayWith"
+        app:layout_constraintTop_toBottomOf="@+id/RemoveUser" />
+
+    <Button
+        android:id="@+id/Chats"
+        android:layout_width="125dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="30dp"
+        android:text="chats"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="@+id/Status"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/Status"
+        app:layout_constraintTop_toBottomOf="@+id/Status" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
