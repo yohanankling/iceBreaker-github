@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -26,7 +27,8 @@ import java.util.ArrayList;
 public class ChatList extends AppCompatActivity {
 
     private ListView userListView;
-    private ArrayList<String> users = new ArrayList<>();
+    private ArrayList<String> usersEmail = new ArrayList<>();
+    private ArrayList<String> usersId = new ArrayList<>();
     private FirebaseAuth mAuth;
     private DatabaseReference databaseReference;
     private ImageButton backBtn;
@@ -64,10 +66,11 @@ public class ChatList extends AppCompatActivity {
                         if (!dataSnapshot.child("Email").getValue().toString().equals(mAuth.getCurrentUser().getEmail())){
                             String Toshow  = dataSnapshot.child("Name").getValue().toString();
 //                                   + " | Area : " + dataSnapshot.child("Area").getValue().toString();
-                            users.add(Toshow);
+                            usersEmail.add(Toshow);
+                            usersId.add(dataSnapshot.getKey());
                         }
                     }
-                    CostumBaseadapter costumBaseadapter = new CostumBaseadapter(ChatList.this, users);
+                    CostumBaseadapter costumBaseadapter = new CostumBaseadapter(ChatList.this, usersEmail);
                     userListView.setAdapter(costumBaseadapter);
                 }
             }
@@ -84,7 +87,7 @@ public class ChatList extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(ChatList.this, Chat.class);
-                intent.putExtra("Email", users.get(position));
+                intent.putExtra("FriendUid", usersId.get(position));
                 startActivity(intent);
             }
         });
