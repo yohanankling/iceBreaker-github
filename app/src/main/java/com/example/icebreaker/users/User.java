@@ -1,23 +1,15 @@
 package com.example.icebreaker.users;
 
-import androidx.annotation.NonNull;
-
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-
 public class User {
-    String Id;
-    String Email;
-    String Name;
-    String Gender;
-    String Area;
-    String LastSeen;
-    boolean Online;
-    boolean AdminAccess;
-    boolean GameAvailable;
+    public String Id;
+    public String Email;
+    public String Name;
+    public String Gender;
+    public String Area;
+    public String LastSeen;
+    public boolean Online;
+    public boolean AdminAccess;
+    public boolean GameAvailable;
 
 
     public User(String Id, String Email, String Name, String Gender, String Area, String LastSeen, boolean online, boolean AdminAccess, boolean GameAvailable) {

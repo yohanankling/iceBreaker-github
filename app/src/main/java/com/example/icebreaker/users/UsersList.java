@@ -1,12 +1,10 @@
 package com.example.icebreaker.users;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.icu.util.Calendar;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -20,17 +18,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.icebreaker.CostumBaseadapter;
 import com.example.icebreaker.Home;
 import com.example.icebreaker.R;
-import com.example.icebreaker.chats.Chat;
-import com.example.icebreaker.chats.ChatList;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 public class UsersList extends AppCompatActivity {
@@ -40,6 +33,8 @@ public class UsersList extends AppCompatActivity {
     private DatabaseReference databaseReference;
     private ImageButton backBtn;
     private ArrayList<String> usersId = new ArrayList<>();
+    User user = new User("", "", "", "", "", "", true, true, true);
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,54 +87,58 @@ public class UsersList extends AppCompatActivity {
         userListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                User user = new User(usersId.get(position), "" , "", "" , "", "", true, true, true);
-                getUserInfo(user);
+                user.setId(usersId.get(position));
+                getUserInfo();
                 // TODO :: check how to change object by reference and not by value
-                Toast.makeText(UsersList.this, user.getEmail(), Toast.LENGTH_SHORT).show();
-                AlertDialog.Builder builder = new AlertDialog.Builder(UsersList.this);
-                final View PopUpStatus = getLayoutInflater().inflate(R.layout.popupstatus, null);
-                ImageButton backBtn = PopUpStatus.findViewById(R.id.back);
-                ImageView male = PopUpStatus.findViewById(R.id.MaleUserPic);
-                ImageView female = PopUpStatus.findViewById(R.id.FemaleUserPic);
-                TextView name = PopUpStatus.findViewById(R.id.Name);
-                TextView mail = PopUpStatus.findViewById(R.id.Mail);
-                TextView area = PopUpStatus.findViewById(R.id.Area);
-                TextView Game = PopUpStatus.findViewById(R.id.Game);
-                TextView SocialClass = PopUpStatus.findViewById(R.id.SocialClass);
-                backBtn.setOnClickListener(v -> {
-                    Intent intent = new Intent(UsersList.this, Home.class);
-                    startActivity(intent);
+            }
+
+            private void getUserInfo() {
+                databaseReference.child("users").addListenerForSingleValueEvent(new ValueEventListener() {
+                    @SuppressLint("SetTextI18n")
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        user.setEmail(snapshot.child(user.getId()).child("Email").getValue(String.class));
+                        user.setName(snapshot.child(user.getId()).child("Name").getValue(String.class));
+                        user.setGender(snapshot.child(user.getId()).child("Gender").getValue(String.class));
+
+                        AlertDialog.Builder builder = new AlertDialog.Builder(UsersList.this);
+                        final View PopUpStatus = getLayoutInflater().inflate(R.layout.popupstatus, null);
+                        ImageButton backBtn = PopUpStatus.findViewById(R.id.back);
+                        ImageView male = PopUpStatus.findViewById(R.id.MaleUserPic);
+                        ImageView female = PopUpStatus.findViewById(R.id.FemaleUserPic);
+                        TextView Details = PopUpStatus.findViewById(R.id.Details);
+                        Details.setText("user details");
+                        TextView name = PopUpStatus.findViewById(R.id.Name);
+                        TextView mail = PopUpStatus.findViewById(R.id.Mail);
+                        TextView area = PopUpStatus.findViewById(R.id.Area);
+                        TextView Game = PopUpStatus.findViewById(R.id.Game);
+                        TextView SocialClass = PopUpStatus.findViewById(R.id.SocialClass);
+                        backBtn.setOnClickListener(v -> {
+                            Intent intent = new Intent(UsersList.this, UsersList.class);
+                            startActivity(intent);
+                        });
+                        if (user.getGender().equals("Male")) {
+                            male.setVisibility(View.VISIBLE);
+                        } else female.setVisibility(View.VISIBLE);
+                        name.setText(user.getName());
+                        mail.setText("mail: " + user.getEmail());
+                        area.setText("area: " + user.getArea());
+                        if (user.isGameAvailable()) {
+                            Game.setText("game: " + "available");
+                        } else Game.setText("game: " + "not available");
+                        if (!user.haveAdminAccess()) {
+                            SocialClass.setText("access: user");
+                        } else SocialClass.setText("access: admin");
+                        builder.setView(PopUpStatus);
+                        AlertDialog dialog = builder.create();
+                        dialog.show();
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
                 });
-                if (user.getGender().equals("Male")) {
-                    male.setVisibility(View.VISIBLE);
-                } else female.setVisibility(View.VISIBLE);
-                name.setText(user.getName());
-                mail.setText("mail: " + user.getEmail());
-                area.setText("area: " + user.getArea());
-                if (user.isGameAvailable()) {
-                    Game.setText("game: " + "available");
-                } else Game.setText("game: " + "not available");
-                if (!user.haveAdminAccess()) {
-                    SocialClass.setText("access: user");
-                } else SocialClass.setText("access: admin");
-                builder.setView(PopUpStatus);
-                AlertDialog dialog = builder.create();
-                dialog.show();
-            }
-        });
-    }
-
-    private void getUserInfo(User user) {
-        databaseReference.child("users").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                user.setEmail(snapshot.child(user.getId()).child("Email").getValue(String.class));
-                user.setName(snapshot.child(user.getId()).child("Name").getValue(String.class));
-                user.setGender(snapshot.child(user.getId()).child("Gender").getValue(String.class));
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
             }
         });
     }
