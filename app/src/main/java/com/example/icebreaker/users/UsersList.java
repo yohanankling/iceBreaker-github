@@ -39,7 +39,7 @@ public class UsersList extends AppCompatActivity {
     private ArrayList<String> users = new ArrayList<>();
     private DatabaseReference databaseReference;
     private ImageButton backBtn;
-    private User user = new User("", "", "", "", "", "", true, false, true);
+    private ArrayList<String> usersId = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +57,7 @@ public class UsersList extends AppCompatActivity {
         userListView = findViewById(R.id.UserListListView);
     }
 
-    private void backBtn(){
+    private void backBtn() {
         backBtn.setOnClickListener(v -> {
             Intent intent = new Intent(UsersList.this, Home.class);
             startActivity(intent);
@@ -68,11 +68,13 @@ public class UsersList extends AppCompatActivity {
         databaseReference.child("users").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()){
-                    for (DataSnapshot dataSnapshot : snapshot.getChildren()){
-                        String Toshow  = dataSnapshot.child("Email").getValue().toString();
+                if (snapshot.exists()) {
+                    for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                        String Toshow = dataSnapshot.child("Email").getValue().toString();
 //                                   + " | Area : " + dataSnapshot.child("Area").getValue().toString();
                         users.add(Toshow);
+                        usersId.add(dataSnapshot.getKey());
+
                     }
                     CostumBaseadapter costumBaseadapter = new CostumBaseadapter(UsersList.this, users);
                     userListView.setAdapter(costumBaseadapter);
@@ -90,9 +92,54 @@ public class UsersList extends AppCompatActivity {
         userListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(UsersList.this, Chat.class);
-                intent.putExtra("Email", users.get(position));
-                startActivity(intent);
+                User user = new User(usersId.get(position), "" , "", "" , "", "", true, true, true);
+                getUserInfo(user);
+                // TODO :: check how to change object by reference and not by value
+                Toast.makeText(UsersList.this, user.getEmail(), Toast.LENGTH_SHORT).show();
+                AlertDialog.Builder builder = new AlertDialog.Builder(UsersList.this);
+                final View PopUpStatus = getLayoutInflater().inflate(R.layout.popupstatus, null);
+                ImageButton backBtn = PopUpStatus.findViewById(R.id.back);
+                ImageView male = PopUpStatus.findViewById(R.id.MaleUserPic);
+                ImageView female = PopUpStatus.findViewById(R.id.FemaleUserPic);
+                TextView name = PopUpStatus.findViewById(R.id.Name);
+                TextView mail = PopUpStatus.findViewById(R.id.Mail);
+                TextView area = PopUpStatus.findViewById(R.id.Area);
+                TextView Game = PopUpStatus.findViewById(R.id.Game);
+                TextView SocialClass = PopUpStatus.findViewById(R.id.SocialClass);
+                backBtn.setOnClickListener(v -> {
+                    Intent intent = new Intent(UsersList.this, Home.class);
+                    startActivity(intent);
+                });
+                if (user.getGender().equals("Male")) {
+                    male.setVisibility(View.VISIBLE);
+                } else female.setVisibility(View.VISIBLE);
+                name.setText(user.getName());
+                mail.setText("mail: " + user.getEmail());
+                area.setText("area: " + user.getArea());
+                if (user.isGameAvailable()) {
+                    Game.setText("game: " + "available");
+                } else Game.setText("game: " + "not available");
+                if (!user.haveAdminAccess()) {
+                    SocialClass.setText("access: user");
+                } else SocialClass.setText("access: admin");
+                builder.setView(PopUpStatus);
+                AlertDialog dialog = builder.create();
+                dialog.show();
+            }
+        });
+    }
+
+    private void getUserInfo(User user) {
+        databaseReference.child("users").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                user.setEmail(snapshot.child(user.getId()).child("Email").getValue(String.class));
+                user.setName(snapshot.child(user.getId()).child("Name").getValue(String.class));
+                user.setGender(snapshot.child(user.getId()).child("Gender").getValue(String.class));
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
             }
         });
     }

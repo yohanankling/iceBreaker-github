@@ -86,7 +86,6 @@ public class Home extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 user.setEmail(snapshot.child(user.getId()).child("Email").getValue(String.class));
-                ;
                 user.setName(snapshot.child(user.getId()).child("Name").getValue(String.class));
                 user.setGender(snapshot.child(user.getId()).child("Gender").getValue(String.class));
             }
