@@ -52,7 +52,7 @@ public class Chat extends AppCompatActivity {
         setContentView(R.layout.activity_chat);
         initFields();
         initUsers();
-//        chatTitle.setText(" chat with " + reciver.getName());
+        chatTitle.setText(reciver.getName());
         sendBtn();
         backBtn();
     }
@@ -147,6 +147,7 @@ public class Chat extends AppCompatActivity {
 
     private void backBtn(){
         backBtn.setOnClickListener(v -> {
+            Toast.makeText(this, "jjjjj", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(Chat.this, Home.class);
             startActivity(intent);
         });

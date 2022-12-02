@@ -1,5 +1,13 @@
 package com.example.icebreaker.users;
 
+import androidx.annotation.NonNull;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 public class User {
     public String Id;
     public String Email;
@@ -57,36 +65,36 @@ public class User {
     }
 
     public void setId(String id) {
-        Id = id;
+        this.Id = id;
     }
 
     public void setName(String name) {
-        Name = name;
+        this.Name = name;
     }
 
     public void setEmail(String email) {
-        Email = email;
+        this.Email = email;
     }
 
     public void setGender(String gender) {
-        Gender = gender;
+        this.Gender = gender;
     }
 
-    public void setLastSeen(String lastSeen) { LastSeen = lastSeen;}
+    public void setLastSeen(String lastSeen) { this.LastSeen = lastSeen;}
 
     public void setArea(String area) {
-        Area = area;
+        this.Area = area;
     }
 
     public void setGameAvailable(boolean gameAvailable) {
-        GameAvailable = gameAvailable;
+        this.GameAvailable = gameAvailable;
     }
 
     public void setOnline(boolean online) {
-        Online = online;
+        this.Online = online;
     }
 
     public void setAdminAccess(boolean adminAccess) {
-        AdminAccess = adminAccess;
+        this.AdminAccess = adminAccess;
     }
 }

@@ -222,7 +222,7 @@ public class Home extends AppCompatActivity {
                     if (user.isGameAvailable()) {
                         Game.setText("game: " + "available");
                     } else Game.setText("game: " + "not available");
-                    if (!user.haveAdminAccess()) {
+                    if (user.haveAdminAccess()) {
                         SocialClass.setText("access: user");
                     } else SocialClass.setText("access: admin");
                     builder.setView(PopUpStatus);
