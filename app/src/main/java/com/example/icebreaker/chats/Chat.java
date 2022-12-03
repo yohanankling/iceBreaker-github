@@ -42,9 +42,10 @@ public class Chat extends AppCompatActivity {
     private ArrayList <String> messages = new ArrayList<>();
     private FirebaseAuth mAuth;
     private DatabaseReference databaseReference;
-    private String myUid;
+    private int senderUid = 0, senderName = 1, recieverUid = 2, recieverName = 3;
     public User sender = new User("", "", "", "", "", "", true, false, true);
     public User reciver = new User("", "", "", "", "", "", true, false, true);
+    private String[] data;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +53,7 @@ public class Chat extends AppCompatActivity {
         setContentView(R.layout.activity_chat);
         initFields();
         initUsers();
-        chatTitle.setText(reciver.getName());
+        chatTitle.setText(" " + reciver.getName());
         sendBtn();
         backBtn();
     }
@@ -64,35 +65,22 @@ public class Chat extends AppCompatActivity {
         chatListView = findViewById(R.id.chatList);
         mAuth = FirebaseAuth.getInstance();
         databaseReference = FirebaseDatabase.getInstance().getReference();
-        myUid = mAuth.getCurrentUser().getUid();
         chatTitle = findViewById(R.id.chatTitle);
+        data = getIntent().getStringArrayExtra("data");
     }
 
     private void initUsers() {
-        sender.setId(myUid);
-        reciver.setId(getIntent().getStringExtra("FriendUid"));
-//        databaseReference.child("users").addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                sender.setEmail(snapshot.child(sender.getId()).child("Email").getValue(String.class));
-//                sender.setName(snapshot.child(sender.getId()).child("Name").getValue(String.class));
-//                sender.setGender(snapshot.child(sender.getId()).child("Gender").getValue(String.class));
-//                reciver.setEmail(snapshot.child(reciver.getId()).child("Email").getValue(String.class));
-//                reciver.setName(snapshot.child(reciver.getId()).child("Name").getValue(String.class));
-//                reciver.setGender(snapshot.child(reciver.getId()).child("Gender").getValue(String.class));
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//            }
-//        });
+        sender.setId(data[senderUid]);
+        sender.setName(data[senderName]);
+        reciver.setId(data[recieverUid]);
+        reciver.setName(data[recieverName]);
     }
 
     private void sendBtn() {
         send.setOnClickListener(v -> {
-//            if(message.getText().toString().isEmpty()){
-//                Toast.makeText(Chat.this, "can't send empty message..", Toast.LENGTH_SHORT).show();
-//            }
+            if(message.getText().toString().isEmpty()){
+                Toast.makeText(Chat.this, "can't send empty message..", Toast.LENGTH_SHORT).show();
+            }
 //            Map<String, String> messageData = new HashMap<>();
 ////            messageData.put("sender", Email);
 //            String FriendEmail = getIntent().getStringExtra("Email");
@@ -147,17 +135,16 @@ public class Chat extends AppCompatActivity {
 
     private void backBtn(){
         backBtn.setOnClickListener(v -> {
-            Toast.makeText(this, "jjjjj", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(Chat.this, Home.class);
             startActivity(intent);
         });
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
+//    @Override
+//    protected void onDestroy() {
+//        super.onDestroy();
 //        setStatus("offline");
-    }
-
-
+//    }
+//
+//
 }

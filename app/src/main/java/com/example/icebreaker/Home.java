@@ -108,7 +108,7 @@ public class Home extends AppCompatActivity {
         UserList = findViewById(R.id.UserList);
         UserList.setVisibility(View.VISIBLE);
         UserList.setOnClickListener(v -> {
-            Intent intent = new Intent(Home.this, com.example.icebreaker.users.UsersList.class);
+            Intent intent = new Intent(Home.this, UsersList.class);
             startActivity(intent);
         });
         RemoveUser = findViewById(R.id.RemoveUser);
@@ -276,6 +276,7 @@ public class Home extends AppCompatActivity {
             //TODO: chats
             Intent intent = new Intent(Home.this, ChatList.class);
             intent.putExtra("Email", user.getEmail());
+            Toast.makeText(this, user.getEmail(), Toast.LENGTH_SHORT).show();
             startActivity(intent);
         });
     }

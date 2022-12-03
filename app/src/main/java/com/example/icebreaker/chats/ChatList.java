@@ -6,7 +6,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -27,11 +26,13 @@ import java.util.ArrayList;
 public class ChatList extends AppCompatActivity {
 
     private ListView userListView;
-    private ArrayList<String> usersEmail = new ArrayList<>();
+    private ArrayList<String> usersName = new ArrayList<>();
     private ArrayList<String> usersId = new ArrayList<>();
     private FirebaseAuth mAuth;
     private DatabaseReference databaseReference;
     private ImageButton backBtn;
+    private int senderUid = 0, senderName = 1, recieverUid = 2, recieverName = 3;
+    private String [] PutExtraData = new String[4];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,13 +65,17 @@ public class ChatList extends AppCompatActivity {
                 if (snapshot.exists()){
                     for (DataSnapshot dataSnapshot : snapshot.getChildren()){
                         if (!dataSnapshot.child("Email").getValue().toString().equals(mAuth.getCurrentUser().getEmail())){
-                            String Toshow  = dataSnapshot.child("Name").getValue().toString();
+                            String name  = dataSnapshot.child("Name").getValue().toString();
 //                                   + " | Area : " + dataSnapshot.child("Area").getValue().toString();
-                            usersEmail.add(Toshow);
+                            usersName.add(name);
                             usersId.add(dataSnapshot.getKey());
                         }
+                        else {
+                            PutExtraData[senderUid] = dataSnapshot.getKey();
+                            PutExtraData[senderName] = dataSnapshot.child("Name").getValue().toString();
+                        }
                     }
-                    CostumBaseadapter costumBaseadapter = new CostumBaseadapter(ChatList.this, usersEmail);
+                    CostumBaseadapter costumBaseadapter = new CostumBaseadapter(ChatList.this, usersName);
                     userListView.setAdapter(costumBaseadapter);
                 }
             }
@@ -87,7 +92,9 @@ public class ChatList extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(ChatList.this, Chat.class);
-                intent.putExtra("FriendUid", usersId.get(position));
+                PutExtraData [recieverUid] = usersId.get(position);
+                PutExtraData [recieverName] = usersName.get(position);
+                intent.putExtra("data", PutExtraData);
                 startActivity(intent);
             }
         });
