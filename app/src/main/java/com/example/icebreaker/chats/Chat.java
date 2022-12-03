@@ -40,7 +40,6 @@ public class Chat extends AppCompatActivity {
     private ListView chatListView;
     private ArrayAdapter arrayAdapter;
     private ArrayList <String> messages = new ArrayList<>();
-    private FirebaseAuth mAuth;
     private DatabaseReference databaseReference;
     private int senderUid = 0, senderName = 1, recieverUid = 2, recieverName = 3;
     public User sender = new User("", "", "", "", "", "", true, false, true);
@@ -54,6 +53,7 @@ public class Chat extends AppCompatActivity {
         initFields();
         initUsers();
         chatTitle.setText(" " + reciver.getName());
+        initMessages();
         sendBtn();
         backBtn();
     }
@@ -63,7 +63,6 @@ public class Chat extends AppCompatActivity {
         send = findViewById(R.id.send);
         backBtn = findViewById(R.id.back);
         chatListView = findViewById(R.id.chatList);
-        mAuth = FirebaseAuth.getInstance();
         databaseReference = FirebaseDatabase.getInstance().getReference();
         chatTitle = findViewById(R.id.chatTitle);
         data = getIntent().getStringArrayExtra("data");
@@ -76,61 +75,62 @@ public class Chat extends AppCompatActivity {
         reciver.setName(data[recieverName]);
     }
 
+    private void initMessages() {
+        messages.clear();
+        databaseReference.child("messages").child(sender.getId()).child(reciver.getId()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()){
+                    for (DataSnapshot dataSnapshot : snapshot.getChildren()){
+                        String message = dataSnapshot.getValue().toString();
+                        messages.add(message);
+                    }
+                }
+                arrayAdapter = new ArrayAdapter(Chat.this, android.R.layout.simple_list_item_1, messages);
+                chatListView.setAdapter(arrayAdapter);
+            }
+            //
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
     private void sendBtn() {
         send.setOnClickListener(v -> {
             if(message.getText().toString().isEmpty()){
                 Toast.makeText(Chat.this, "can't send empty message..", Toast.LENGTH_SHORT).show();
+                return;
             }
-//            Map<String, String> messageData = new HashMap<>();
-////            messageData.put("sender", Email);
-//            String FriendEmail = getIntent().getStringExtra("Email");
-//            messageData.put("receiver", FriendEmail);
-//            messageData.put("message", message.getText().toString());
-//
-//            databaseReference.child("messages").addListenerForSingleValueEvent(new ValueEventListener() {
-//                @Override
-//                public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                    int count;
-//                    if (snapshot.exists()){
-//                        count = (int) snapshot.getChildrenCount() +1;
-//                    } else count = 1;
-//                    databaseReference.child("messages").child(String.valueOf(count)).setValue(messageData).addOnCompleteListener(task -> {
-//                        if (task.isSuccessful()){
-//                            message.setText("");
-//                        }
-//                    }).addOnFailureListener(e -> Toast.makeText(Chat.this, "Error in sending message: " + e.getMessage(), Toast.LENGTH_SHORT).show());
-//                }
-//
-//                @Override
-//                public void onCancelled(@NonNull DatabaseError error) {
-//
-//                }
-//            });
-//
-//        });
-//        databaseReference.child("chats").addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                if (snapshot.exists()){
-//                    for (DataSnapshot dataSnapshot : snapshot.getChildren()){
-//                        if (dataSnapshot.child("sender").getValue().toString().equals(Email) || dataSnapshot.child("reciever").getValue().toString().equals(Email)){
-//                            String message = dataSnapshot.child("message").getValue().toString();
-//                            if (!dataSnapshot.child("sender").getValue().toString().equals(Email)){
-//                                message = "> " + message;
-//                            }
-//                            messages.add(message);
-//                        }
-//                    }
-//                    arrayAdapter = new ArrayAdapter(Chat.this, android.R.layout.simple_list_item_1, messages);
-//                    chatListView.setAdapter(arrayAdapter);
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//
-//            }
+            String messageData = message.getText().toString();
+
+            databaseReference.child("messages").addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    int count;
+                    if (snapshot.exists()){
+                        count = (int) snapshot.getChildrenCount() +1;
+                    } else count = 1;
+                    databaseReference.child("messages").child(sender.getId()).child(reciver.getId()).child(String.valueOf(count)).setValue(sender.getName() + " : " + messageData).addOnCompleteListener(task -> {
+                        if (task.isSuccessful()){
+                            message.setText("");
+                        }
+                    }).addOnFailureListener(e -> Toast.makeText(Chat.this, "Error in sending message: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+                    databaseReference.child("messages").child(reciver.getId()).child(sender.getId()).child(String.valueOf(count)).setValue(sender.getName() + " >> " + messageData).addOnCompleteListener(task -> {
+                        if (task.isSuccessful()){
+                            message.setText("");
+                        }
+                    }).addOnFailureListener(e -> Toast.makeText(Chat.this, "Error in sending message: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+                    }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                }
+            });
         });
+        chatListView.setAdapter(null);
+        initMessages();
     }
 
     private void backBtn(){

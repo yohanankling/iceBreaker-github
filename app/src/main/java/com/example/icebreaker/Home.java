@@ -276,7 +276,6 @@ public class Home extends AppCompatActivity {
             //TODO: chats
             Intent intent = new Intent(Home.this, ChatList.class);
             intent.putExtra("Email", user.getEmail());
-            Toast.makeText(this, user.getEmail(), Toast.LENGTH_SHORT).show();
             startActivity(intent);
         });
     }
