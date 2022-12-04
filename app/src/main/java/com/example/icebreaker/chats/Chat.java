@@ -66,6 +66,8 @@ public class Chat extends AppCompatActivity {
         databaseReference = FirebaseDatabase.getInstance().getReference();
         chatTitle = findViewById(R.id.chatTitle);
         data = getIntent().getStringArrayExtra("data");
+        arrayAdapter = new ArrayAdapter(Chat.this, android.R.layout.simple_list_item_1, messages);
+        chatListView.setAdapter(arrayAdapter);
     }
 
     private void initUsers() {
@@ -77,6 +79,7 @@ public class Chat extends AppCompatActivity {
 
     private void initMessages() {
         messages.clear();
+        arrayAdapter.clear();
         databaseReference.child("messages").child(sender.getId()).child(reciver.getId()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -86,8 +89,7 @@ public class Chat extends AppCompatActivity {
                         messages.add(message);
                     }
                 }
-                arrayAdapter = new ArrayAdapter(Chat.this, android.R.layout.simple_list_item_1, messages);
-                chatListView.setAdapter(arrayAdapter);
+                arrayAdapter.notifyDataSetChanged();
             }
             //
             @Override
@@ -129,7 +131,6 @@ public class Chat extends AppCompatActivity {
                 }
             });
         });
-        chatListView.setAdapter(null);
         initMessages();
     }
 
