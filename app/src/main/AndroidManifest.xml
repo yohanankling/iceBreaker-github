@@ -15,6 +15,13 @@
         android:theme="@style/Theme.IceBreaker"
         tools:targetApi="31">
         <activity
+            android:name=".TicTacToe"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".users.UsersList"
             android:exported="false">
             <meta-data

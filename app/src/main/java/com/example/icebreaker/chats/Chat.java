@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -14,13 +13,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.icebreaker.CostumBaseadapter;
 import com.example.icebreaker.Home;
 import com.example.icebreaker.R;
 import com.example.icebreaker.users.User;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -28,8 +24,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 public class Chat extends AppCompatActivity {
 
@@ -78,7 +72,6 @@ public class Chat extends AppCompatActivity {
     }
 
     private void initMessages() {
-        messages.clear();
         arrayAdapter.clear();
         databaseReference.child("messages").child(sender.getId()).child(reciver.getId()).addValueEventListener(new ValueEventListener() {
             @Override
@@ -107,19 +100,19 @@ public class Chat extends AppCompatActivity {
             }
             String messageData = message.getText().toString();
 
-            databaseReference.child("messages").addListenerForSingleValueEvent(new ValueEventListener() {
+            databaseReference.child("messages").child(sender.getId()).child(reciver.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    int count;
+                    int count = 1;
                     if (snapshot.exists()){
                         count = (int) snapshot.getChildrenCount() +1;
-                    } else count = 1;
+                    }
                     databaseReference.child("messages").child(sender.getId()).child(reciver.getId()).child(String.valueOf(count)).setValue(sender.getName() + " : " + messageData).addOnCompleteListener(task -> {
                         if (task.isSuccessful()){
                             message.setText("");
                         }
                     }).addOnFailureListener(e -> Toast.makeText(Chat.this, "Error in sending message: " + e.getMessage(), Toast.LENGTH_SHORT).show());
-                    databaseReference.child("messages").child(reciver.getId()).child(sender.getId()).child(String.valueOf(count)).setValue(sender.getName() + " >> " + messageData).addOnCompleteListener(task -> {
+                    databaseReference.child("messages").child(reciver.getId()).child(sender.getId()).child(String.valueOf(count)).setValue(sender.getName() + " : " + messageData).addOnCompleteListener(task -> {
                         if (task.isSuccessful()){
                             message.setText("");
                         }

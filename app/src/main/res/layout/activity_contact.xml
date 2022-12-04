@@ -7,7 +7,7 @@
     tools:context=".contactUs.Contact">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/ContactUs"
+        android:id="@+id/userslist"
         android:layout_width="0dp"
         android:layout_height="100dp"
         android:layout_weight="1"
@@ -61,7 +61,7 @@
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ContactUs">
+        app:layout_constraintTop_toBottomOf="@+id/userslist">
 
         <ImageView
             android:id="@+id/yohPic"

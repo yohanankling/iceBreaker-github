@@ -76,7 +76,7 @@ public class Home extends AppCompatActivity {
         Broadcast = findViewById(R.id.Broadcast);
         PlayWith = findViewById(R.id.PlayWith);
         chat = findViewById(R.id.Chats);
-        ContactUs = findViewById(R.id.ContactUs);
+        ContactUs = findViewById(R.id.userslist);
         Disconnect = findViewById(R.id.Disconnect);
 
         user = new User("", "", "", "", "", "", true, false, true);
