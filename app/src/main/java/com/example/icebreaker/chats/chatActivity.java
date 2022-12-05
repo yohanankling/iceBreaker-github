@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -13,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.icebreaker.Home;
 import com.example.icebreaker.R;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
@@ -42,6 +44,8 @@ public class chatActivity extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseFirestore = FirebaseFirestore.getInstance();
         mrecyclerView = findViewById(R.id.recyclerview);
+//        Query query = firebaseFirestore.collection("Users").whereNotEqualTo("uid",firebaseAuth.getUid());
+        // TODO : return remarked comment
         Query query = firebaseFirestore.collection("Users");
         FirestoreRecyclerOptions<firebasemodel> allusername = new FirestoreRecyclerOptions.Builder<firebasemodel>().setQuery(query, firebasemodel.class).build();
         chatAdapter = new FirestoreRecyclerAdapter<firebasemodel, NoteViewHolder>(allusername) {
@@ -56,7 +60,10 @@ public class chatActivity extends AppCompatActivity {
                 noteViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Toast.makeText(chatActivity.this, "clicked", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(chatActivity.this, specificChat.class);
+                        intent.putExtra("Uid", firebasemodel.getUid());
+                        intent.putExtra("Email", firebasemodel.getEmail());
+                        startActivity(intent);
                     }
                 });
             }

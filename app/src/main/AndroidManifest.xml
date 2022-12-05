@@ -15,6 +15,13 @@
         android:theme="@style/Theme.IceBreaker"
         tools:targetApi="31">
         <activity
+            android:name=".chats.specificChat"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".chats.chatActivity"
             android:exported="false">
             <meta-data
