@@ -16,7 +16,10 @@ import android.widget.Toast;
 import com.example.icebreaker.R;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
@@ -32,6 +35,10 @@ public class chatActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.chatfraggment);
+        initFields();
+    }
+
+    private void initFields() {
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseFirestore = FirebaseFirestore.getInstance();
         mrecyclerView = findViewById(R.id.recyclerview);
@@ -86,6 +93,7 @@ public class chatActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         chatAdapter.startListening();
+        status("online");
     }
 
     @Override
@@ -93,6 +101,17 @@ public class chatActivity extends AppCompatActivity {
         super.onStop();
         if (chatAdapter != null){
             chatAdapter.stopListening();
+            status("offline");
         }
+    }
+
+    private void status(String status) {
+        DocumentReference documentReference = firebaseFirestore.collection("Users").document(firebaseAuth.getUid());
+        documentReference.update("status", status).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+
+            }
+        });
     }
 }

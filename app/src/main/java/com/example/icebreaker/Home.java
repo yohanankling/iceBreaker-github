@@ -20,12 +20,15 @@ import com.example.icebreaker.chats.*;
 import com.example.icebreaker.contactUs.Contact;
 import com.example.icebreaker.gameZone.PlayZone;
 import com.example.icebreaker.users.*;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.SimpleDateFormat;
 
@@ -36,6 +39,7 @@ public class Home extends AppCompatActivity {
     private Button Status, OnlineMember, Broadcast, PlayWith, chat, ContactUs, UserList, RemoveUser, Disconnect;
     private FirebaseAuth firebaseAuth;
     private DatabaseReference databaseReference;
+    private FirebaseFirestore firebaseFirestore;
     private User user;
 
     public class OtherUser{
@@ -70,6 +74,7 @@ public class Home extends AppCompatActivity {
     private void initFields() {
         firebaseAuth = FirebaseAuth.getInstance();
         databaseReference = FirebaseDatabase.getInstance().getReference();
+        firebaseFirestore = FirebaseFirestore.getInstance();
         Status = findViewById(R.id.Status);
         OnlineMember = findViewById(R.id.OnlineMember);
         Broadcast = findViewById(R.id.Broadcast);
@@ -95,7 +100,7 @@ public class Home extends AppCompatActivity {
         });
         if (!user.getOnline()) {
             Intent intent = new Intent(Home.this, MainActivity.class);
-            setStatus("offline");
+            status("offline");
             startActivity(intent);
         }
         if (user.getEmail().equals("admin@gmail.com")) {
@@ -170,20 +175,20 @@ public class Home extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        setStatus("online");
+        status("online");
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        setStatus("offline");
+        status("offline");
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         if (this.isFinishing()){
-            setStatus("offline");
+            status("offline");
         }
     }
 
@@ -191,7 +196,7 @@ public class Home extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         if (this.isFinishing()){
-            setStatus("offline");
+            status("offline");
         }
     }
 
@@ -294,7 +299,7 @@ public class Home extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        setStatus("offline");
+        status("offline");
     }
 
     private void DisconnectDialog() {
@@ -306,7 +311,7 @@ public class Home extends AppCompatActivity {
         {
             Toast.makeText(Home.this, "bye-bye!", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(Home.this, MainActivity.class);
-            setStatus("offline");
+            status("offline");
             startActivity(intent);
         });
         builder.setNegativeButton("no", (dialog, which) ->
@@ -317,21 +322,32 @@ public class Home extends AppCompatActivity {
     }
 
     private void setStatus(String state) {
-        String SaveCurrentDate, SaveCurrentTime;
-        Calendar date = Calendar.getInstance();
-        SimpleDateFormat CurrentDate = new SimpleDateFormat("MMM dd yyyy");
-        SaveCurrentDate = CurrentDate.format(date.getTime());
-
-        Calendar time = Calendar.getInstance();
-        SimpleDateFormat CurrentTime = new SimpleDateFormat("hh:mm a");
-        SaveCurrentTime = CurrentTime.format(time.getTime());
-
-        if (state.equals("offline")) {
-            user.setOnline(false);
-            firebaseAuth.signOut();
-            user.setLastSeen(SaveCurrentDate + " | " + SaveCurrentTime);
-            databaseReference.child("online").child(user.getId()).removeValue();
-            databaseReference.child("offline").child(user.getId()).setValue(user.getLastSeen());
-        } else databaseReference.child("online").child(user.getId());
+//        String SaveCurrentDate, SaveCurrentTime;
+//        Calendar date = Calendar.getInstance();
+//        SimpleDateFormat CurrentDate = new SimpleDateFormat("MMM dd yyyy");
+//        SaveCurrentDate = CurrentDate.format(date.getTime());
+//
+//        Calendar time = Calendar.getInstance();
+//        SimpleDateFormat CurrentTime = new SimpleDateFormat("hh:mm a");
+//        SaveCurrentTime = CurrentTime.format(time.getTime());
+//
+//        if (state.equals("offline")) {
+//            user.setOnline(false);
+//            firebaseAuth.signOut();
+//            user.setLastSeen(SaveCurrentDate + " | " + SaveCurrentTime);
+//            databaseReference.child("online").child(user.getId()).removeValue();
+//            databaseReference.child("offline").child(user.getId()).setValue(user.getLastSeen());
+//        } else databaseReference.child("online").child(user.getId());
     }
+
+    private void status(String status) {
+        DocumentReference documentReference = firebaseFirestore.collection("Users").document(firebaseAuth.getUid());
+        documentReference.update("status", status).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+
+            }
+        });
+    }
+
 }

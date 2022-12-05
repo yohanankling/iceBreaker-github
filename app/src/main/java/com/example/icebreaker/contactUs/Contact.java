@@ -10,9 +10,12 @@ import android.widget.ImageButton;
 
 import com.example.icebreaker.Home;
 import com.example.icebreaker.R;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.SimpleDateFormat;
 
@@ -21,6 +24,9 @@ public class Contact extends AppCompatActivity {
     private ImageButton backBtn, yohWhatsapp, yohLinkedin, yohGithub, yohCv,
             tzachWhatsapp, tzachLinkedin, tzachGithub, tzachCv,
             nadavWhatsapp, nadavLinkedin, nadavGithub, nadavCv;
+    private FirebaseAuth firebaseAuth;
+    private DatabaseReference databaseReference;
+    private FirebaseFirestore firebaseFirestore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +50,9 @@ public class Contact extends AppCompatActivity {
         nadavLinkedin = findViewById(R.id.nadavLinkedin);
         nadavGithub = findViewById(R.id.nadavGithub);
         nadavCv = findViewById(R.id.nadavCv);
+        firebaseAuth = FirebaseAuth.getInstance();
+        databaseReference = FirebaseDatabase.getInstance().getReference();
+        firebaseFirestore = FirebaseFirestore.getInstance();
     }
 
     private void SetBtns() {
@@ -127,30 +136,27 @@ public class Contact extends AppCompatActivity {
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-//        setStatus("offline");
+    protected void onStart() {
+        super.onStart();
+        status("online");
     }
 
-    private void setStatus(String state) {
-        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
-        String UserId = firebaseAuth.getCurrentUser().getUid();
-        String SaveCurrentDate, SaveCurrentTime;
-        Calendar date = Calendar.getInstance();
-        SimpleDateFormat CurrentDate = new SimpleDateFormat("MMM dd yyyy");
-        SaveCurrentDate = CurrentDate.format(date.getTime());
-
-        Calendar time = Calendar.getInstance();
-        SimpleDateFormat CurrentTime = new SimpleDateFormat("hh:mm a");
-        SaveCurrentTime = CurrentTime.format(time.getTime());
-        String LastSeen = SaveCurrentDate + "" + SaveCurrentTime;
-
-        if (state.equals("offline")) {
-            firebaseAuth.signOut();
-            databaseReference.child("online").child(UserId).removeValue();
-            databaseReference.child("offline").child(UserId).setValue(LastSeen);
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (this.isFinishing()){
+            status("offline");
         }
+    }
+
+    private void status(String status) {
+        DocumentReference documentReference = firebaseFirestore.collection("Users").document(firebaseAuth.getUid());
+        documentReference.update("status", status).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+
+            }
+        });
     }
 
 }

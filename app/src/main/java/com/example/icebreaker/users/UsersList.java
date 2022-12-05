@@ -18,11 +18,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.icebreaker.CostumBaseadapter;
 import com.example.icebreaker.Home;
 import com.example.icebreaker.R;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 
@@ -30,8 +34,9 @@ public class UsersList extends AppCompatActivity {
 
     private ListView userListView;
     private ArrayList<String> users = new ArrayList<>();
+    private FirebaseAuth firebaseAuth;
     private DatabaseReference databaseReference;
-    private ImageButton backBtn;
+    private FirebaseFirestore firebaseFirestore;    private ImageButton backBtn;
     private ArrayList<String> usersId = new ArrayList<>();
     User user = new User("", "", "", "", "", "", true, true, true);
 
@@ -48,7 +53,9 @@ public class UsersList extends AppCompatActivity {
 
     private void initFields() {
         backBtn = findViewById(R.id.back);
-        databaseReference = FirebaseDatabase.getInstance().getReference();
+        firebaseAuth = FirebaseAuth.getInstance();
+        databaseReference = FirebaseDatabase.getInstance().getReference(firebaseAuth.getUid());
+        firebaseFirestore = FirebaseFirestore.getInstance();
         userListView = findViewById(R.id.UserListListView);
     }
 
@@ -144,9 +151,27 @@ public class UsersList extends AppCompatActivity {
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-//        setStatus("offline");
+    protected void onStart() {
+        super.onStart();
+        status("online");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (this.isFinishing()){
+            status("offline");
+        }
+    }
+
+    private void status(String status) {
+        DocumentReference documentReference = firebaseFirestore.collection("Users").document(firebaseAuth.getUid());
+        documentReference.update("status", status).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+
+            }
+        });
     }
 
 }
