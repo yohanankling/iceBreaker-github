@@ -2,7 +2,6 @@ package com.example.icebreaker;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.icu.util.Calendar;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -18,7 +17,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.icebreaker.chats.*;
 import com.example.icebreaker.contactUs.Contact;
-import com.example.icebreaker.gameZone.PlayZone;
 import com.example.icebreaker.users.*;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -29,8 +27,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-
-import java.text.SimpleDateFormat;
 
 public class Home extends AppCompatActivity {
 

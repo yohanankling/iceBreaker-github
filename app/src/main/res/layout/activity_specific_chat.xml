@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -58,16 +58,58 @@
             app:layout_constraintTop_toBottomOf="@+id/UserName" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerview"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/bar"        >
+    <androidx.constraintlayout.widget.ConstraintLayout
+    android:id="@+id/messages"
+    android:layout_width="0dp"
+    android:layout_height="0dp"
+    android:layout_weight="1"
+    android:gravity="center"
+    android:orientation="vertical"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintHorizontal_bias="1.0"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/bar">
 
-    <!--    47:50    https://www.youtube.com/watch?v=4yADIs5b1No&list=PL1tIj6UC0gcsHo3uCI41WsfFWuWCVDRt8&index=5-->
 
-    </androidx.recyclerview.widget.RecyclerView>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/messages"
+            android:padding="5dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/messages" />
 
+        <EditText
+            android:id="@+id/getMessage"
+            android:layout_width="350dp"
+            android:layout_height="48dp"
+            android:layout_alignParentBottom="true"
+            android:hint="type a messgae"
+            android:paddingLeft="20dp"
+            android:paddingRight="10dp"
+            android:textAlignment="textStart"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:background="@drawable/edittextbackground"
+            android:textColorHint="@color/theme"
+            android:textColor="@color/theme"/>
 
+        <Button
+            android:id="@+id/send"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/send"
+            app:layout_constraintBottom_toBottomOf="@+id/getMessage"
+            app:layout_constraintStart_toEndOf="@+id/getMessage"
+            app:layout_constraintTop_toTopOf="@+id/getMessage" />
 
-</RelativeLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>

@@ -15,7 +15,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.icebreaker.CostumBaseadapter;
 import com.example.icebreaker.Home;
 import com.example.icebreaker.R;
 import com.google.android.gms.tasks.OnSuccessListener;

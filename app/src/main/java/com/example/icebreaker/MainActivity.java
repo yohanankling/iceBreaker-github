@@ -6,7 +6,6 @@ import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.icebreaker.gameZone.PlayZone;
 import com.example.icebreaker.users.Register;
 
 public class MainActivity extends AppCompatActivity {

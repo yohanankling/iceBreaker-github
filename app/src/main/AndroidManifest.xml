@@ -50,20 +50,6 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".chats.Chat"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
-            android:name=".chats.ChatList"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
             android:name=".contactUs.Contact"
             android:exported="false">
             <meta-data
@@ -79,13 +65,6 @@
         </activity>
         <activity
             android:name=".Home"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
-            android:name=".gameZone.PlayZone"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
