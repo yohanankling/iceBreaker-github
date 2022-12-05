@@ -17,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.icebreaker.chats.*;
 import com.example.icebreaker.contactUs.Contact;
+import com.example.icebreaker.gameZone.TicTacToe;
 import com.example.icebreaker.users.*;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -108,8 +109,8 @@ public class Home extends AppCompatActivity {
         UserList = findViewById(R.id.UserList);
         UserList.setVisibility(View.VISIBLE);
         UserList.setOnClickListener(v -> {
-            Intent intent = new Intent(Home.this, UsersList.class);
-            startActivity(intent);
+//            Intent intent = new Intent(Home.this, UsersList.class);
+//            startActivity(intent);
         });
         RemoveUser = findViewById(R.id.RemoveUser);
         RemoveUser.setVisibility(View.VISIBLE);
@@ -265,7 +266,7 @@ public class Home extends AppCompatActivity {
     private void PlayWithButton() {
         PlayWith.setOnClickListener(view -> {
             //TODO: set playwith X O platform
-            Intent intent = new Intent(Home.this, PlayZone.class);
+            Intent intent = new Intent(Home.this, TicTacToe.class);
             intent.putExtra("Email", user.getEmail());
             startActivity(intent);
         });

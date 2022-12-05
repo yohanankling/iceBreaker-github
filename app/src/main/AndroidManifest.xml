@@ -43,13 +43,6 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".users.UsersList"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
             android:name=".contactUs.Contact"
             android:exported="false">
             <meta-data
