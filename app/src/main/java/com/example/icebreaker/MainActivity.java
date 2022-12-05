@@ -16,8 +16,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Intent  intent = new Intent(MainActivity.this, PlayZone.class);
-        startActivity(intent);
+//        Intent  intent = new Intent(MainActivity.this, PlayZone.class);
+//        startActivity(intent);
         initViews();
         LoginButton();
         RegisterButton();

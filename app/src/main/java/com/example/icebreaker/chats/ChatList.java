@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.icebreaker.CostumBaseadapter;
 import com.example.icebreaker.Home;
@@ -25,7 +26,7 @@ import java.util.ArrayList;
 
 public class ChatList extends AppCompatActivity {
 
-    private ListView userListView;
+    private RecyclerView userListView;
     private ArrayList<String> usersName = new ArrayList<>();
     private ArrayList<String> usersId = new ArrayList<>();
     private FirebaseAuth mAuth;
@@ -76,7 +77,7 @@ public class ChatList extends AppCompatActivity {
                         }
                     }
                     CostumBaseadapter costumBaseadapter = new CostumBaseadapter(ChatList.this, usersName);
-                    userListView.setAdapter(costumBaseadapter);
+//                    userListView.setAdapter(costumBaseadapter);
                 }
             }
 
@@ -88,16 +89,16 @@ public class ChatList extends AppCompatActivity {
     }
 
     private void setChatChoose() {
-        userListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(ChatList.this, Chat.class);
-                PutExtraData [recieverUid] = usersId.get(position);
-                PutExtraData [recieverName] = usersName.get(position);
-                intent.putExtra("data", PutExtraData);
-                startActivity(intent);
-            }
-        });
+//        userListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                Intent intent = new Intent(ChatList.this, Chat.class);
+//                PutExtraData [recieverUid] = usersId.get(position);
+//                PutExtraData [recieverName] = usersName.get(position);
+//                intent.putExtra("data", PutExtraData);
+//                startActivity(intent);
+//            }
+//        });
     }
 
     @Override

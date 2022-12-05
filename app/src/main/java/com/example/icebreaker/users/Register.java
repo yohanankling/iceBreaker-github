@@ -85,6 +85,7 @@ public class Register extends AppCompatActivity {
                         Toast.makeText(Register.this, "registration canceled", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(Register.this, MainActivity.class);
                         startActivity(intent);
+                        finish();
                     });
             builder.setNegativeButton("no",
                     (dialog, which) ->

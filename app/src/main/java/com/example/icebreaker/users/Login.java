@@ -11,9 +11,15 @@ import android.widget.Toast;
 
 import com.example.icebreaker.Home;
 import com.example.icebreaker.R;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class Login extends AppCompatActivity {
 
@@ -21,6 +27,7 @@ public class Login extends AppCompatActivity {
     private EditText Email, Password;
     private FirebaseAuth firebaseAuth;
     private DatabaseReference databaseReference;
+    private FirebaseFirestore firebaseFirestore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +40,8 @@ public class Login extends AppCompatActivity {
 
     private void initFields() {
         firebaseAuth = FirebaseAuth.getInstance();
-        databaseReference = FirebaseDatabase.getInstance().getReference();
+        databaseReference = FirebaseDatabase.getInstance().getReference(firebaseAuth.getUid());
+        firebaseFirestore = FirebaseFirestore.getInstance();
         Email = findViewById(R.id.Email);
         Password = findViewById(R.id.Password);
         LoginBtn = findViewById(R.id.LoginBtn);
@@ -70,7 +78,7 @@ public class Login extends AppCompatActivity {
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()){
                         Toast.makeText(Login.this, "login successfully!", Toast.LENGTH_SHORT).show();
-                        setStatus();
+                        setAndInitStatus();
                         Intent intent = new Intent(Login.this, Home.class);
                         startActivity(intent);
                         finish();
@@ -79,16 +87,26 @@ public class Login extends AppCompatActivity {
                 }).addOnFailureListener(e -> Toast.makeText(Login.this, "Error: "+ e.getLocalizedMessage(), Toast.LENGTH_SHORT).show()).addOnCanceledListener(() -> Toast.makeText(Login.this, "login canceled..", Toast.LENGTH_SHORT).show());
     }
 
-    private void setStatus() {
+    private void setAndInitStatus() {
         String UserId = firebaseAuth.getCurrentUser().getUid();
-        databaseReference.child("online").child(UserId).child("Email").setValue(Email.getText().toString());
-        databaseReference.child("offline").child(UserId).removeValue();
+        databaseReference.setValue(Email.getText().toString(),UserId);
+        DocumentReference documentReference = firebaseFirestore.collection("Users").document(UserId);
+        Map<String, Object> userData = new HashMap<>();
+        userData.put("email", Email.getText().toString());
+        userData.put("uid", UserId);
+        userData.put("status", "online");
+        documentReference.set(userData).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+            }
+        });
     }
 
     private void RegisterButton() {
         RegisterBtn.setOnClickListener(view -> {
             Intent intent = new Intent(Login.this, Register.class);
             startActivity(intent);
+            finish();
         });
     }
 }

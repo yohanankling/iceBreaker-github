@@ -16,11 +16,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.icebreaker.chats.ChatList;
+import com.example.icebreaker.chats.*;
 import com.example.icebreaker.contactUs.Contact;
 import com.example.icebreaker.gameZone.PlayZone;
-import com.example.icebreaker.users.User;
-import com.example.icebreaker.users.UsersList;
+import com.example.icebreaker.users.*;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -274,7 +273,7 @@ public class Home extends AppCompatActivity {
     private void ChatsButton() {
         chat.setOnClickListener(view -> {
             //TODO: chats
-            Intent intent = new Intent(Home.this, ChatList.class);
+            Intent intent = new Intent(Home.this, chatActivity.class);
             intent.putExtra("Email", user.getEmail());
             startActivity(intent);
         });
