@@ -6,7 +6,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
@@ -30,17 +29,16 @@ import java.util.Calendar;
 
 public class Chat extends AppCompatActivity {
 
-    private EditText mgetmessage;
+    private EditText getMessage;
     private ImageButton back;
-    private Button msendmessagebutton;
-    private TextView status;
+    private Button sendBtn;
+    private TextView name, status;
     private String enteredMessage;
-    Intent intent;
-    String mrecievername, mrecieverUid, msenderUid;
+    String Recievername, RecieverUid, SenderUid;
     private FirebaseAuth firebaseAuth;
     private FirebaseDatabase firebaseDatabase;
     String senderRoom, recieverRoom;
-    RecyclerView mmessagerecyclerview;
+    RecyclerView recyclerView;
     String currentTime;
     Calendar calendar;
     SimpleDateFormat simpleDateFormat;
@@ -61,33 +59,32 @@ public class Chat extends AppCompatActivity {
 
     @SuppressLint("SimpleDateFormat")
     private void initFields() {
-        mgetmessage = findViewById(R.id.getMessage);
-        back = findViewById(R.id.Back);
-        status = findViewById(R.id.Status);
-        mmessagerecyclerview = findViewById(R.id.recyclerview);
-        msendmessagebutton = findViewById(R.id.send);
-        TextView mnameofuser = findViewById(R.id.UserName);
-        intent = getIntent();
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
         calendar = Calendar.getInstance();
         simpleDateFormat = new SimpleDateFormat("hh:mm a");
-        msenderUid = firebaseAuth.getUid();
-        mrecieverUid = getIntent().getStringExtra("Uid");
-        mrecievername = getIntent().getStringExtra("Email");
-        senderRoom = msenderUid+mrecieverUid;
-        recieverRoom = mrecieverUid+msenderUid;
-        mnameofuser.setText(mrecievername);
+        back = findViewById(R.id.Back);
+        getMessage = findViewById(R.id.getMessage);
+        status = findViewById(R.id.Status);
+        recyclerView = findViewById(R.id.recyclerview);
+        sendBtn = findViewById(R.id.send);
+        name = findViewById(R.id.UserName);
+        SenderUid = firebaseAuth.getUid();
+        RecieverUid = getIntent().getStringExtra("Uid");
+        Recievername = getIntent().getStringExtra("Email");
+        senderRoom = SenderUid + RecieverUid;
+        recieverRoom = RecieverUid + SenderUid;
+        name.setText(Recievername);
         messageArrayList = new ArrayList<>();
         linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setStackFromEnd(true);
-        mmessagerecyclerview.setLayoutManager(linearLayoutManager);
+        recyclerView.setLayoutManager(linearLayoutManager);
         messagesAdapter = new MessagesAdapter(Chat.this, messageArrayList);
-        mmessagerecyclerview.setAdapter(messagesAdapter);
+        recyclerView.setAdapter(messagesAdapter);
     }
 
     private void initStatus(){
-        DocumentReference document = FirebaseFirestore.getInstance().collection("Users").document(mrecieverUid);
+        DocumentReference document = FirebaseFirestore.getInstance().collection("Users").document(RecieverUid);
         document.get().addOnSuccessListener(documentSnapshot -> {
             if(documentSnapshot.exists()){
                 String s = documentSnapshot.getString("status");
@@ -122,8 +119,8 @@ public class Chat extends AppCompatActivity {
     }
 
     private void sendBtn() {
-        msendmessagebutton.setOnClickListener(v -> {
-            enteredMessage = mgetmessage.getText().toString();
+        sendBtn.setOnClickListener(v -> {
+            enteredMessage = getMessage.getText().toString();
             if (enteredMessage.isEmpty()) {
                 Toast.makeText(Chat.this, "enter message first..", Toast.LENGTH_SHORT).show();
             } else {
@@ -135,7 +132,7 @@ public class Chat extends AppCompatActivity {
                                 child("chats").child(recieverRoom).child("messages").push()
                                 .setValue(message).addOnCompleteListener(task1 -> {
                                 }));
-                mgetmessage.setText(null);
+                getMessage.setText(null);
             }
         });
     }

@@ -89,7 +89,7 @@ public class MessagesAdapter extends RecyclerView.Adapter {
 
         public recieverViewHolder(@NonNull View itemView) {
             super(itemView);
-            message = itemView.findViewById(R.id.sendermessage);
+            message = itemView.findViewById(R.id.recievermessage);
             time = itemView.findViewById(R.id.timeMessage);
         }
     }

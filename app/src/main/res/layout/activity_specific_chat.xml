@@ -58,45 +58,45 @@
             app:layout_constraintTop_toBottomOf="@+id/UserName" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+
     <androidx.constraintlayout.widget.ConstraintLayout
-    android:id="@+id/message"
-    android:layout_width="0dp"
-    android:layout_height="0dp"
-    android:layout_weight="1"
-    android:gravity="center"
-    android:orientation="vertical"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintHorizontal_bias="1.0"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/user">
+        android:id="@+id/message"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@+id/user">
 
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/message"
             android:padding="5dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/message" />
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/enterMessages"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent">
 
         <EditText
             android:id="@+id/getMessage"
             android:layout_width="350dp"
             android:layout_height="48dp"
+            android:background="@drawable/edittextbackground"
             android:hint="type a messgae"
             android:paddingLeft="20dp"
             android:paddingRight="10dp"
             android:textAlignment="textStart"
+            android:textColor="@color/theme"
+            android:textColorHint="@color/theme"
             android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            android:background="@drawable/edittextbackground"
-            android:textColorHint="@color/theme"
-            android:textColor="@color/theme"/>
+            app:layout_constraintStart_toStartOf="parent" />
 
         <Button
             android:id="@+id/send"
@@ -109,6 +109,6 @@
             app:layout_constraintBottom_toBottomOf="@+id/getMessage"
             app:layout_constraintStart_toEndOf="@+id/getMessage"
             app:layout_constraintTop_toTopOf="@+id/getMessage" />
-
     </androidx.constraintlayout.widget.ConstraintLayout>
+
     </androidx.constraintlayout.widget.ConstraintLayout>

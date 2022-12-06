@@ -14,7 +14,7 @@
         android:id="@+id/layoutformessage">
 
         <TextView
-            android:id="@+id/sendermessage"
+            android:id="@+id/recievermessage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="message"
@@ -29,8 +29,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="10sp"
-            android:layout_toRightOf="@+id/sendermessage"
-            android:layout_alignBottom="@id/sendermessage"
+            android:layout_toRightOf="@+id/recievermessage"
+            android:layout_alignBottom="@id/recievermessage"
             android:text="00:00"
             android:padding="7dp"
             android:textColor="@color/gray"/>
