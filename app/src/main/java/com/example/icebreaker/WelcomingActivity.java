@@ -9,20 +9,17 @@ import android.view.WindowManager;
 
 public class WelcomingActivity extends AppCompatActivity {
 
-    private static int TIMER = 3000;
+    private static final int TIMER = 2000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcoming);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Intent intent = new Intent(WelcomingActivity.this, MainActivity.class);
-                startActivity(intent);
-                finish();
-            }
+        new Handler().postDelayed(() -> {
+            Intent intent = new Intent(WelcomingActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish();
         },TIMER);
     }
 }

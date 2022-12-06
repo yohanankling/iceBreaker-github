@@ -1,17 +1,17 @@
 package com.example.icebreaker.chats;
 
-public class firebasemodel {
+public class FirebaseUser {
     String Uid;
     String Email;
     String Status;
 
-    public firebasemodel(String uid, String email, String status) {
+    public FirebaseUser(String uid, String email, String status) {
         Uid = uid;
         Email = email;
         Status = status;
     }
 
-    public firebasemodel() {
+    public FirebaseUser() {
     }
 
     public String getUid() {

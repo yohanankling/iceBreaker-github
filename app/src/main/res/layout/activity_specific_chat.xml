@@ -5,10 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/theme"
-    tools:context=".chats.specificChat">
+    tools:context=".chats.Chat">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/bar"
+        android:id="@+id/user"
         android:layout_width="match_parent"
         android:layout_height="101dp"
         android:layout_weight="1"
@@ -59,7 +59,7 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-    android:id="@+id/messages"
+    android:id="@+id/message"
     android:layout_width="0dp"
     android:layout_height="0dp"
     android:layout_weight="1"
@@ -69,25 +69,24 @@
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintHorizontal_bias="1.0"
     app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/bar">
+    app:layout_constraintTop_toBottomOf="@+id/user">
 
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/messages"
+            android:layout_below="@+id/message"
             android:padding="5dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/messages" />
+            app:layout_constraintTop_toBottomOf="@+id/message" />
 
         <EditText
             android:id="@+id/getMessage"
             android:layout_width="350dp"
             android:layout_height="48dp"
-            android:layout_alignParentBottom="true"
             android:hint="type a messgae"
             android:paddingLeft="20dp"
             android:paddingRight="10dp"

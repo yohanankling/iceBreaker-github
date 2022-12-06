@@ -13,88 +13,84 @@ import com.example.icebreaker.R;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class MessagesAdapter extends RecyclerView.Adapter {
 
-    Context context;
-    ArrayList<Messages> messagesArrayList;
-    int ITEM_SEND = 1;
-    int ITEM_RECIEVE = 2;
+    private final Context context;
+    private final ArrayList<Message> messageArrayList;
+    int SEND = 1;
+    int RECIEVE = 2;
 
-    public MessagesAdapter(Context context, ArrayList<Messages> messagesArrayList) {
+    public MessagesAdapter(Context context, ArrayList<Message> messageArrayList) {
         this.context = context;
-        this.messagesArrayList = messagesArrayList;
+        this.messageArrayList = messageArrayList;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        Message message = messageArrayList.get(position);
+        String Writer = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
+        if (Writer.equals(message.getSenderId())){
+            return SEND;
+        }
+        else return RECIEVE;
     }
 
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        if (viewType == ITEM_SEND){
-            View view = LayoutInflater.from(context).inflate(R.layout.senderchatlayout,parent,false);
+        if (viewType == SEND){
+            View view = LayoutInflater.from(context).inflate(R.layout.send_message,parent,false);
             return new SenderViewHolder(view);
         }
         else {
-            View view = LayoutInflater.from(context).inflate(R.layout.recieverchatlayout,parent,false);
+            View view = LayoutInflater.from(context).inflate(R.layout.recieve_message,parent,false);
             return new recieverViewHolder(view);
         }
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        Messages messages = messagesArrayList.get(position);
+        Message message = messageArrayList.get(position);
         if (holder.getClass()== SenderViewHolder.class){
             SenderViewHolder viewHolder = (SenderViewHolder) holder;
-            viewHolder.textViewmessage.setText(messages.getMessage());
-            viewHolder.timeofmessage.setText(messages.getCurrentTime());
+            viewHolder.time.setText(message.getCurrentTime());
+            viewHolder.message.setText(message.getMessage());
         }
         else{
             recieverViewHolder viewHolder = (recieverViewHolder) holder;
-            viewHolder.textViewmessage.setText(messages.getMessage());
-            viewHolder.timeofmessage.setText(messages.getCurrentTime());
+            viewHolder.time.setText(message.getCurrentTime());
+            viewHolder.message.setText(message.getMessage());
         }
-    }
-
-    @Override
-    public int getItemViewType(int position) {
-        Messages messages = messagesArrayList.get(position);
-        if (FirebaseAuth.getInstance().getCurrentUser().getUid().equals(messages.getSenderId())){
-            return ITEM_SEND;
-        }
-        else return ITEM_RECIEVE;
     }
 
     @Override
     public int getItemCount() {
-        return messagesArrayList.size();
+        return messageArrayList.size();
     }
 
-    class SenderViewHolder extends RecyclerView.ViewHolder {
+    static class SenderViewHolder extends RecyclerView.ViewHolder {
 
-        TextView textViewmessage;
-        TextView timeofmessage;
+        TextView message;
+        TextView time;
 
         public SenderViewHolder(@NonNull View itemView) {
             super(itemView);
-            textViewmessage = itemView.findViewById(R.id.sendermessage);
-            timeofmessage = itemView.findViewById(R.id.timeMessage);
-
-
+            message = itemView.findViewById(R.id.sendermessage);
+            time = itemView.findViewById(R.id.timeMessage);
         }
     }
 
-    class recieverViewHolder extends RecyclerView.ViewHolder {
+    static class recieverViewHolder extends RecyclerView.ViewHolder {
 
-        TextView textViewmessage;
-        TextView timeofmessage;
+        TextView message;
+        TextView time;
 
         public recieverViewHolder(@NonNull View itemView) {
             super(itemView);
-            textViewmessage = itemView.findViewById(R.id.sendermessage);
-            timeofmessage = itemView.findViewById(R.id.timeMessage);
-
-
+            message = itemView.findViewById(R.id.sendermessage);
+            time = itemView.findViewById(R.id.timeMessage);
         }
     }
-
-
 }

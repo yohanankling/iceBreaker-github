@@ -6,7 +6,9 @@ import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.icebreaker.users.Register;
+import com.example.icebreaker.users.*;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -15,23 +17,25 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-//        Intent  intent = new Intent(MainActivity.this, PlayZone.class);
+//        Intent  intent = new Intent(MainActivity.this, Home.class);
 //        startActivity(intent);
         initViews();
         LoginButton();
         RegisterButton();
     }
 
-//    @Override
-//    protected void onStart() {
-//        super.onStart();
-//        FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
-//        if(firebaseUser != null){
-//
-//        } else{
-//            startActivity (new Intent(this, Login.class));
-//            finish();}
-//    }
+    @Override
+    protected void onStart() {
+        super.onStart();
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+        if(firebaseUser != null){
+            startActivity (new Intent(this, Home.class));
+
+        } else{
+            startActivity (new Intent(this, Login.class));
+            finish();}
+    }
 
     private void initViews() {
         Login = findViewById(R.id.Login);
@@ -40,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void LoginButton() {
         Login.setOnClickListener(view -> {
-            Intent  intent = new Intent(MainActivity.this, com.example.icebreaker.users.Login.class);
+            Intent  intent = new Intent(MainActivity.this, Login.class);
             startActivity(intent);
         });
     }

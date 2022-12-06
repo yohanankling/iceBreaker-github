@@ -56,10 +56,8 @@ public class Contact extends AppCompatActivity {
     }
 
     private void SetBtns() {
-        backBtn.setOnClickListener(v -> {
-            Intent intent = new Intent(Contact.this, Home.class);
-            startActivity(intent);
-        });
+        backBtn.setOnClickListener(v -> finish()
+        );
         yohWhatsapp.setOnClickListener(view -> {
             String Url = "https://wa.me/972586669988?text=from iceBreaker";
             Intent intent = new Intent(Intent.ACTION_VIEW);

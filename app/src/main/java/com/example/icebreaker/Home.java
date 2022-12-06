@@ -116,7 +116,7 @@ public class Home extends AppCompatActivity {
         RemoveUser.setVisibility(View.VISIBLE);
         RemoveUser.setOnClickListener(v -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(Home.this);
-            final View removeuser = getLayoutInflater().inflate(R.layout.removeuser, null);
+            final View removeuser = getLayoutInflater().inflate(R.layout.remove_user, null);
             ImageButton backBtn = removeuser.findViewById(R.id.back);
             EditText MailToRemove = removeuser.findViewById(R.id.MailToRemove);
             Button Remove = removeuser.findViewById(R.id.Remove);
@@ -201,7 +201,7 @@ public class Home extends AppCompatActivity {
     private void StatusButton() {
         Status.setOnClickListener(view -> {
                     AlertDialog.Builder builder = new AlertDialog.Builder(Home.this);
-                    final View PopUpStatus = getLayoutInflater().inflate(R.layout.popupstatus, null);
+                    final View PopUpStatus = getLayoutInflater().inflate(R.layout.status_popup, null);
                     ImageButton backBtn = PopUpStatus.findViewById(R.id.back);
                     ImageView male = PopUpStatus.findViewById(R.id.MaleUserPic);
                     ImageView female = PopUpStatus.findViewById(R.id.FemaleUserPic);
@@ -275,7 +275,7 @@ public class Home extends AppCompatActivity {
     private void ChatsButton() {
         chat.setOnClickListener(view -> {
             //TODO: chats
-            Intent intent = new Intent(Home.this, chatActivity.class);
+            Intent intent = new Intent(Home.this, ChatList.class);
             intent.putExtra("Email", user.getEmail());
             startActivity(intent);
         });
