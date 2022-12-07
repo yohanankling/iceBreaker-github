@@ -133,28 +133,28 @@ public class Contact extends AppCompatActivity {
         });
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        status("online");
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        if (this.isFinishing()){
-            status("offline");
-        }
-    }
-
-    private void status(String status) {
-        DocumentReference documentReference = firebaseFirestore.collection("Users").document(firebaseAuth.getUid());
-        documentReference.update("status", status).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void unused) {
-
-            }
-        });
-    }
+//    @Override
+//    protected void onStart() {
+//        super.onStart();
+//        status("online");
+//    }
+//
+//    @Override
+//    protected void onStop() {
+//        super.onStop();
+//        if (this.isFinishing()){
+//            status("offline");
+//        }
+//    }
+//
+//    private void status(String status) {
+//        DocumentReference documentReference = firebaseFirestore.collection("Users").document(firebaseAuth.getUid());
+//        documentReference.update("status", status).addOnSuccessListener(new OnSuccessListener<Void>() {
+//            @Override
+//            public void onSuccess(Void unused) {
+//
+//            }
+//        });
+//    }
 
 }

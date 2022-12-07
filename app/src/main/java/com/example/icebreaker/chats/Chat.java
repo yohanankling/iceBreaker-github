@@ -20,8 +20,13 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.database.annotations.Nullable;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.MetadataChanges;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -37,6 +42,7 @@ public class Chat extends AppCompatActivity {
     String Recievername, RecieverUid, SenderUid;
     private FirebaseAuth firebaseAuth;
     private FirebaseDatabase firebaseDatabase;
+    private FirebaseFirestore firebaseFirestore;
     String senderRoom, recieverRoom;
     RecyclerView recyclerView;
     String currentTime;
@@ -61,6 +67,7 @@ public class Chat extends AppCompatActivity {
     private void initFields() {
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
+        firebaseFirestore = FirebaseFirestore.getInstance();
         calendar = Calendar.getInstance();
         simpleDateFormat = new SimpleDateFormat("hh:mm a");
         back = findViewById(R.id.Back);
@@ -77,29 +84,32 @@ public class Chat extends AppCompatActivity {
         name.setText(Recievername);
         messageArrayList = new ArrayList<>();
         linearLayoutManager = new LinearLayoutManager(this);
-        linearLayoutManager.setStackFromEnd(true);
+        linearLayoutManager.setStackFromEnd(false);
         recyclerView.setLayoutManager(linearLayoutManager);
         messagesAdapter = new MessagesAdapter(Chat.this, messageArrayList);
         recyclerView.setAdapter(messagesAdapter);
     }
 
     private void initStatus(){
-        DocumentReference document = FirebaseFirestore.getInstance().collection("Users").document(RecieverUid);
-        document.get().addOnSuccessListener(documentSnapshot -> {
+        status("online");
+        DocumentReference docRef = FirebaseFirestore.getInstance().collection("Users").document(RecieverUid);
+        docRef.addSnapshotListener(MetadataChanges.INCLUDE, (documentSnapshot, e) -> {
             if(documentSnapshot.exists()){
                 String s = documentSnapshot.getString("status");
                 status.setText(s);
             }
-        }).addOnFailureListener(e -> Toast.makeText(Chat.this,
-                "failed to fetch data", Toast.LENGTH_SHORT).show());
+        });
     }
 
-    private void initMessages() {
-//        messageArrayList.clear();
+
+        private void initMessages() {
+        messageArrayList.clear();
         DatabaseReference databaseReference = firebaseDatabase.getReference().child("chats").child(senderRoom).child("messages");
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                initStatus();
+                messageArrayList.clear();
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()){
                     Message message = dataSnapshot.getValue(Message.class);
                     messageArrayList.add(message);
@@ -115,7 +125,7 @@ public class Chat extends AppCompatActivity {
     }
 
     private void backBtn() {
-    back.setOnClickListener(v -> finish());
+        back.setOnClickListener(v -> finish());
     }
 
     private void sendBtn() {
@@ -135,19 +145,28 @@ public class Chat extends AppCompatActivity {
                 getMessage.setText(null);
             }
         });
+
     }
 
     @Override
     protected void onStart() {
         super.onStart();
         messagesAdapter.notifyDataSetChanged();
+        status("online");
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        if (messagesAdapter != null){
-            messagesAdapter.notifyDataSetChanged();
-        }
+//    @Override
+//    protected void onStop() {
+//        super.onStop();
+//        if (messagesAdapter != null){
+//            messagesAdapter.notifyDataSetChanged();
+//            status("offline");
+//        }
+//    }
+
+    private void status(String status) {
+        DocumentReference documentReference = firebaseFirestore.collection("Users").document(firebaseAuth.getUid());
+        documentReference.update("status", status).addOnSuccessListener(unused -> {
+        });
     }
 }

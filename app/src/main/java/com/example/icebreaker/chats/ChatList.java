@@ -28,6 +28,7 @@ public class ChatList extends AppCompatActivity {
     private RecyclerView recyclerView;
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore firebaseFirestore;
+
     private FirestoreRecyclerAdapter<FirebaseUser, userDetailes> chatAdapter;
 
     @Override
@@ -103,14 +104,14 @@ public class ChatList extends AppCompatActivity {
         status("online");
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        if (chatAdapter != null){
-            chatAdapter.stopListening();
-            status("offline");
-        }
-    }
+//    @Override
+//    protected void onStop() {
+//        super.onStop();
+//        if (chatAdapter != null){
+//            chatAdapter.stopListening();
+//            status("offline");
+//        }
+//    }
 
     private void status(String status) {
         DocumentReference documentReference = firebaseFirestore.collection("Users").document(firebaseAuth.getUid());
