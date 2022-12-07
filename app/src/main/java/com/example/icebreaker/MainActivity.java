@@ -29,10 +29,7 @@ public class MainActivity extends AppCompatActivity {
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
         if(firebaseUser != null){
             startActivity (new Intent(this, Home.class));
-
-        } else{
-            startActivity (new Intent(this, Login.class));
-            finish();}
+        }
     }
 
     private void initViews() {

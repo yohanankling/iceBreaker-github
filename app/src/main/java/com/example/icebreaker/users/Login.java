@@ -40,7 +40,6 @@ public class Login extends AppCompatActivity {
 
     private void initFields() {
         firebaseAuth = FirebaseAuth.getInstance();
-        databaseReference = FirebaseDatabase.getInstance().getReference(firebaseAuth.getUid());
         firebaseFirestore = FirebaseFirestore.getInstance();
         Email = findViewById(R.id.Email);
         Password = findViewById(R.id.Password);
@@ -89,6 +88,7 @@ public class Login extends AppCompatActivity {
 
     private void setAndInitStatus() {
         String UserId = firebaseAuth.getCurrentUser().getUid();
+        databaseReference = FirebaseDatabase.getInstance().getReference(firebaseAuth.getUid());
         databaseReference.setValue(Email.getText().toString(),UserId);
         DocumentReference documentReference = firebaseFirestore.collection("Users").document(UserId);
         Map<String, Object> userData = new HashMap<>();

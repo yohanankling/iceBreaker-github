@@ -309,6 +309,7 @@ public class Home extends AppCompatActivity {
             Toast.makeText(Home.this, "bye-bye!", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(Home.this, MainActivity.class);
             status("offline");
+            firebaseAuth.signOut();
             startActivity(intent);
         });
         builder.setNegativeButton("no", (dialog, which) ->
@@ -316,25 +317,6 @@ public class Home extends AppCompatActivity {
         );
         AlertDialog dialog = builder.create();
         dialog.show();
-    }
-
-    private void setStatus(String state) {
-//        String SaveCurrentDate, SaveCurrentTime;
-//        Calendar date = Calendar.getInstance();
-//        SimpleDateFormat CurrentDate = new SimpleDateFormat("MMM dd yyyy");
-//        SaveCurrentDate = CurrentDate.format(date.getTime());
-//
-//        Calendar time = Calendar.getInstance();
-//        SimpleDateFormat CurrentTime = new SimpleDateFormat("hh:mm a");
-//        SaveCurrentTime = CurrentTime.format(time.getTime());
-//
-//        if (state.equals("offline")) {
-//            user.setOnline(false);
-//            firebaseAuth.signOut();
-//            user.setLastSeen(SaveCurrentDate + " | " + SaveCurrentTime);
-//            databaseReference.child("online").child(user.getId()).removeValue();
-//            databaseReference.child("offline").child(user.getId()).setValue(user.getLastSeen());
-//        } else databaseReference.child("online").child(user.getId());
     }
 
     private void status(String status) {
