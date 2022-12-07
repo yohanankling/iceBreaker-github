@@ -88,7 +88,7 @@
             android:layout_width="350dp"
             android:layout_height="48dp"
             android:background="@drawable/edittextbackground"
-            android:hint="type a messgae"
+            android:hint="type a message"
             android:paddingLeft="20dp"
             android:paddingRight="10dp"
             android:textAlignment="textStart"
@@ -96,7 +96,8 @@
             android:textColorHint="@color/theme"
             android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <Button
             android:id="@+id/send"
@@ -107,6 +108,7 @@
             android:layout_marginLeft="10dp"
             android:background="@drawable/send"
             app:layout_constraintBottom_toBottomOf="@+id/getMessage"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/getMessage"
             app:layout_constraintTop_toTopOf="@+id/getMessage" />
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -114,6 +114,7 @@ public class Chat extends AppCompatActivity {
                     Message message = dataSnapshot.getValue(Message.class);
                     messageArrayList.add(message);
                 }
+                recyclerView.scrollToPosition(messageArrayList.size() - 1);
                 messagesAdapter.notifyDataSetChanged();
 
             }
