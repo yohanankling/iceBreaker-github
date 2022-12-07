@@ -16,6 +16,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.icebreaker.chats.*;
+import com.example.icebreaker.admin.*;
 import com.example.icebreaker.contactUs.Contact;
 import com.example.icebreaker.gameZone.TicTacToe;
 import com.example.icebreaker.users.*;
@@ -109,8 +110,8 @@ public class Home extends AppCompatActivity {
         UserList = findViewById(R.id.UserList);
         UserList.setVisibility(View.VISIBLE);
         UserList.setOnClickListener(v -> {
-//            Intent intent = new Intent(Home.this, UsersList.class);
-//            startActivity(intent);
+            Intent intent = new Intent(Home.this, userslist.class);
+            startActivity(intent);
         });
         RemoveUser = findViewById(R.id.RemoveUser);
         RemoveUser.setVisibility(View.VISIBLE);
