@@ -7,7 +7,7 @@
     android:layout_height="match_parent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/RemovePopUp"
+        android:id="@+id/NewTopicPopUp"
         android:layout_width="match_parent"
         android:layout_height="101dp"
         android:layout_weight="1"
@@ -26,18 +26,18 @@
             android:background="#00FFFFFF"
             android:scaleType="centerInside"
             android:src="@drawable/back_btn"
-            app:layout_constraintBottom_toBottomOf="@+id/TopicMsg"
-            app:layout_constraintEnd_toStartOf="@+id/TopicMsg"
+            app:layout_constraintBottom_toBottomOf="@+id/NewTopic"
+            app:layout_constraintEnd_toStartOf="@+id/NewTopic"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/TopicMsg" />
+            app:layout_constraintTop_toTopOf="@+id/NewTopic" />
 
         <TextView
-            android:id="@+id/TopicMsg"
+            android:id="@+id/NewTopic"
             android:layout_width="wrap_content"
             android:layout_height="38dp"
             android:layout_margin="10dp"
             android:gravity="center"
-            android:text="user mail to remove :"
+            android:text="add a new topic :"
             android:textColor="@color/cardview_shadow_start_color"
             android:textSize="25sp"
             android:textStyle="bold"
@@ -57,44 +57,44 @@
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/RemovePopUp">
+        app:layout_constraintTop_toBottomOf="@+id/NewTopicPopUp">
 
         <EditText
-            android:id="@+id/MailToRemove"
+            android:id="@+id/Topic"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:background="@drawable/edittextbackground"
             android:ems="10"
-            android:hint=" Mail to remove"
+            android:hint=" Topic Title"
             android:minHeight="48dp"
             android:textColor="@color/theme"
             android:textColorHint="@color/theme"
-            app:layout_constraintEnd_toEndOf="@+id/deleteMsg"
+            app:layout_constraintEnd_toEndOf="@+id/Yournewtopic"
             app:layout_constraintHorizontal_bias="0.497"
-            app:layout_constraintStart_toStartOf="@+id/deleteMsg"
-            app:layout_constraintTop_toBottomOf="@+id/deleteMsg" />
+            app:layout_constraintStart_toStartOf="@+id/Yournewtopic"
+            app:layout_constraintTop_toBottomOf="@+id/Yournewtopic" />
 
         <TextView
-            android:id="@+id/deleteMsg"
+            android:id="@+id/Yournewtopic"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="50dp"
-            android:text="deleting user"
+            android:text="Your new topic"
             android:textColor="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <Button
-            android:id="@+id/remove"
+            android:id="@+id/AddTopic"
             android:layout_width="100dp"
             android:layout_height="40dp"
             android:layout_marginStart="50dp"
             android:layout_marginTop="50dp"
-            android:text="Remove"
+            android:text="Add"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/MailToRemove" />
+            app:layout_constraintTop_toBottomOf="@+id/Topic" />
 
         <Button
             android:id="@+id/Cancel"
@@ -102,9 +102,9 @@
             android:layout_height="40dp"
             android:layout_marginEnd="50dp"
             android:text="Cancel"
-            app:layout_constraintBottom_toBottomOf="@+id/remove"
+            app:layout_constraintBottom_toBottomOf="@+id/AddTopic"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/remove" />
+            app:layout_constraintTop_toTopOf="@+id/AddTopic" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

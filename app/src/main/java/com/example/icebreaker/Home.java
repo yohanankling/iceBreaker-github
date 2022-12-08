@@ -124,7 +124,7 @@ public class Home extends AppCompatActivity {
             final View removeuser = getLayoutInflater().inflate(R.layout.remove_user, null);
             ImageButton backBtn = removeuser.findViewById(R.id.back);
             EditText MailToRemove = removeuser.findViewById(R.id.MailToRemove);
-            Button Remove = removeuser.findViewById(R.id.Remove);
+            Button Remove = removeuser.findViewById(R.id.remove);
             Remove.setOnClickListener(v12 -> {
                 otherUser.Email = MailToRemove.getText().toString();
 
@@ -236,7 +236,7 @@ public class Home extends AppCompatActivity {
         TopicMember.setOnClickListener(view -> {
             // TODO: add topic platform
             Intent intent = new Intent(Home.this, TopicMembers.class);
-            intent.putExtra("Topic", MyTopic);
+            intent.putExtra("Email", user.getEmail());
             startActivity(intent);
         });
     }
@@ -259,7 +259,6 @@ public class Home extends AppCompatActivity {
     private void ChatsButton() {
         chat.setOnClickListener(view -> {
             Intent intent = new Intent(Home.this, ChatList.class);
-            intent.putExtra("Email", user.getEmail());
             startActivity(intent);
         });
     }
