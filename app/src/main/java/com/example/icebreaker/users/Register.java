@@ -154,6 +154,7 @@ public class Register extends AppCompatActivity {
                 StoreToDatabase();
                 Toast.makeText(Register.this, "registered successfully!", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(Register.this, MainActivity.class);
+                firebaseAuth.signOut();
                 startActivity(intent);
                 finish();
             }

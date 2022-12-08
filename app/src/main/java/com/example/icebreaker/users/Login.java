@@ -88,7 +88,7 @@ public class Login extends AppCompatActivity {
 
     private void setAndInitStatus() {
         String UserId = firebaseAuth.getCurrentUser().getUid();
-        databaseReference = FirebaseDatabase.getInstance().getReference(firebaseAuth.getUid());
+        databaseReference = FirebaseDatabase.getInstance().getReference("Users");
         databaseReference.setValue(Email.getText().toString(),UserId);
         DocumentReference documentReference = firebaseFirestore.collection("Users").document(UserId);
         Map<String, Object> userData = new HashMap<>();

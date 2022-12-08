@@ -1,31 +1,23 @@
 package com.example.icebreaker.users;
 
-import androidx.annotation.NonNull;
-
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-
 public class User {
     public String Id;
     public String Email;
     public String Name;
     public String Gender;
-    public String Area;
+    public String Topic;
     public String LastSeen;
     public boolean Online;
     public boolean AdminAccess;
     public boolean GameAvailable;
 
 
-    public User(String Id, String Email, String Name, String Gender, String Area, String LastSeen, boolean online, boolean AdminAccess, boolean GameAvailable) {
+    public User(String Id, String Email, String Name, String Gender, String Topic, String LastSeen, boolean online, boolean AdminAccess, boolean GameAvailable) {
         this.Id = Id;
         this.Name = Name;
         this.Email = Email;
         this.Gender = Gender;
-        this.Area = Area;
+        this.Topic = Topic;
         this.LastSeen = LastSeen;
         this.Online = online;
         this.AdminAccess = AdminAccess;
@@ -48,8 +40,8 @@ public class User {
         return Gender;
     }
 
-    public String getArea() {
-        return Area;
+    public String getTopic() {
+        return Topic;
     }
 
     public boolean getOnline() {
@@ -82,8 +74,8 @@ public class User {
 
     public void setLastSeen(String lastSeen) { this.LastSeen = lastSeen;}
 
-    public void setArea(String area) {
-        this.Area = area;
+    public void setTopic(String topic) {
+        this.Topic = topic;
     }
 
     public void setGameAvailable(boolean gameAvailable) {

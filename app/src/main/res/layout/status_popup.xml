@@ -131,12 +131,12 @@
             app:layout_constraintTop_toBottomOf="@+id/MaleUserPic" />
 
         <TextView
-            android:id="@+id/Area"
+            android:id="@+id/Topic"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:gravity="center"
-            android:text="area: "
+            android:text="topic: "
             android:textColor="@color/white"
             app:layout_constraintBottom_toTopOf="@+id/Game"
             app:layout_constraintEnd_toEndOf="parent"

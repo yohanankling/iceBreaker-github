@@ -1,4 +1,4 @@
-package com.example.icebreaker.admin;
+package com.example.icebreaker.users;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -32,13 +32,13 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
-public class userslist extends AppCompatActivity {
+public class TopicMembers extends AppCompatActivity {
 
     private ImageButton back;
     private RecyclerView recyclerView;
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore firebaseFirestore;
-
+    private String Area;
     private FirestoreRecyclerAdapter<FirebaseUser, userDetailes> chatAdapter;
 
     @Override
@@ -55,6 +55,7 @@ public class userslist extends AppCompatActivity {
         firebaseFirestore = FirebaseFirestore.getInstance();
         recyclerView = findViewById(R.id.recyclerview);
         back = findViewById(R.id.back);
+        Area = getIntent().getStringExtra("Topic");
     }
 
     private void backBtn() {
@@ -75,7 +76,7 @@ public class userslist extends AppCompatActivity {
     }
 
     private void initChats() {
-        Query query = firebaseFirestore.collection("Users").whereNotEqualTo("uid",firebaseAuth.getUid());
+        Query query = firebaseFirestore.collection(Area).whereNotEqualTo("uid",firebaseAuth.getUid());
         FirestoreRecyclerOptions<FirebaseUser> allusername = new FirestoreRecyclerOptions.Builder<FirebaseUser>().setQuery(query, FirebaseUser.class).build();
         chatAdapter = new FirestoreRecyclerAdapter<FirebaseUser, userDetailes>(allusername) {
             @Override
@@ -109,7 +110,7 @@ public class userslist extends AppCompatActivity {
         databaseReference.child("users").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(userslist.this);
+                AlertDialog.Builder builder = new AlertDialog.Builder(TopicMembers.this);
                 final View PopUpStatus = getLayoutInflater().inflate(R.layout.status_popup, null);
                 ImageButton backBtn = PopUpStatus.findViewById(R.id.back);
                 ImageView male = PopUpStatus.findViewById(R.id.MaleUserPic);
@@ -118,16 +119,16 @@ public class userslist extends AppCompatActivity {
                 Details.setText("user details:");
                 TextView name = PopUpStatus.findViewById(R.id.Name);
                 TextView mail = PopUpStatus.findViewById(R.id.Mail);
-                TextView topic = PopUpStatus.findViewById(R.id.Topic);
+                TextView area = PopUpStatus.findViewById(R.id.Topic);
                 TextView Game = PopUpStatus.findViewById(R.id.Game);
                 Button chat = PopUpStatus.findViewById(R.id.chatwith);
                 chat.setVisibility(View.VISIBLE);
                 TextView SocialClass = PopUpStatus.findViewById(R.id.SocialClass);
                 backBtn.setOnClickListener(v -> {
-                    Intent intent = new Intent(userslist.this, Home.class);
+                    Intent intent = new Intent(TopicMembers.this, Home.class);
                     startActivity(intent);});
                 chat.setOnClickListener( v -> {
-                    Intent intent = new Intent(userslist.this, Chat.class);
+                    Intent intent = new Intent(TopicMembers.this, Chat.class);
                     intent.putExtra("Uid", userUId);
                     intent.putExtra("Email", snapshot.child(userUId).child("Email").getValue(String.class));
                     startActivity(intent);
@@ -137,9 +138,9 @@ public class userslist extends AppCompatActivity {
                 } else female.setVisibility(View.VISIBLE);
                 name.setText(snapshot.child(userUId).child("Name").getValue(String.class));
                 mail.setText("mail: " + snapshot.child(userUId).child("Email").getValue(String.class));
-                // TODO: add topic and game
-//                topic.setText("topic: " + snapshot.child(userUId).child("Topic").getValue(String.class));
-                topic.setText("topic: " + "  me");
+                // TODO: add area and game
+//                area.setText("area: " + snapshot.child(userUId).child("Area").getValue(String.class));
+                area.setText("area: " + "  here");
 //                if (snapshot.child(userUId).child("Game").getValue(String.class).equals("Available")) {
 //                    Game.setText("game: " + "available");
 //                } else Game.setText("game: " + "not available");
@@ -157,7 +158,7 @@ public class userslist extends AppCompatActivity {
             }
         });}
 
-        @Override
+    @Override
     protected void onStart() {
         super.onStart();
         chatAdapter.startListening();

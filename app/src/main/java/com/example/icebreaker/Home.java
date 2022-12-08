@@ -30,15 +30,19 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Home extends AppCompatActivity {
 
     //Todo:: disconnect from online list
 
     private Button Status, OnlineMember, Broadcast, PlayWith, chat, ContactUs, UserList, RemoveUser, Disconnect;
     private FirebaseAuth firebaseAuth;
-    private DatabaseReference databaseReference;
+    public DatabaseReference databaseReference;
     private FirebaseFirestore firebaseFirestore;
     private User user;
+    String MyTopic;
 
     public class OtherUser{
         private String Uid;
@@ -74,7 +78,7 @@ public class Home extends AppCompatActivity {
         databaseReference = FirebaseDatabase.getInstance().getReference();
         firebaseFirestore = FirebaseFirestore.getInstance();
         Status = findViewById(R.id.Status);
-        OnlineMember = findViewById(R.id.OnlineMember);
+        OnlineMember = findViewById(R.id.TopicMembers);
         Broadcast = findViewById(R.id.Broadcast);
         PlayWith = findViewById(R.id.PlayWith);
         chat = findViewById(R.id.Chats);
@@ -91,7 +95,6 @@ public class Home extends AppCompatActivity {
                 user.setName(snapshot.child(user.getId()).child("Name").getValue(String.class));
                 user.setGender(snapshot.child(user.getId()).child("Gender").getValue(String.class));
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
             }
@@ -115,7 +118,10 @@ public class Home extends AppCompatActivity {
         });
         RemoveUser = findViewById(R.id.RemoveUser);
         RemoveUser.setVisibility(View.VISIBLE);
-        RemoveUser.setOnClickListener(v -> {
+        RemoveUser.setOnClickListener(v -> removeUser());
+    }
+
+    private void removeUser() {
             AlertDialog.Builder builder = new AlertDialog.Builder(Home.this);
             final View removeuser = getLayoutInflater().inflate(R.layout.remove_user, null);
             ImageButton backBtn = removeuser.findViewById(R.id.back);
@@ -123,57 +129,73 @@ public class Home extends AppCompatActivity {
             Button Remove = removeuser.findViewById(R.id.Remove);
             Remove.setOnClickListener(v12 -> {
                 otherUser.Email = MailToRemove.getText().toString();
-                getUIdByMail(otherUser.Email);
-                if (otherUser.Uid.equals("")){
-                    Toast.makeText(this, "mail not found", Toast.LENGTH_SHORT).show();
-                }
-                else {
-                    // TODO:: remove
-                }
+
+                databaseReference.child("users").addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        Boolean validate = false;
+                        if (snapshot.exists()){
+                            for (DataSnapshot dataSnapshot : snapshot.getChildren()){
+                                String Email  = dataSnapshot.child("Email").getValue().toString();
+                                if (Email.equals(otherUser.Email)){
+                                    otherUser.Uid = dataSnapshot.getKey();
+                                    validate = true;
+                                }
+                            }
+                            if (!validate){
+                                Toast.makeText(Home.this, "mail not found", Toast.LENGTH_SHORT).show();
+                            }
+                            else {
+                                DocumentReference documentReference = firebaseFirestore.collection("Banned").document(otherUser.Uid);
+                                Map<String, Object> userData = new HashMap<>();
+                                userData.put("email", otherUser.Email);
+                                documentReference.set(userData);
+                                DocumentReference users = firebaseFirestore.collection("Users").document(otherUser.Uid);
+                                users.delete();
+                                Toast.makeText(Home.this, otherUser.Email + " will banned soon", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        Toast.makeText(Home.this, "faild to get UId..try again", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
             });
             Button CancelBtn = removeuser.findViewById(R.id.Cancel);
-            backBtn.setOnClickListener(v12 -> {
-                Intent intent = new Intent(Home.this, Home.class);
-                startActivity(intent);
-            });
-            CancelBtn.setOnClickListener(v1 -> {
-                Intent intent = new Intent(Home.this, Home.class);
-                startActivity(intent);
-            });
+            backBtn.setOnClickListener(v12 -> finish());
+            CancelBtn.setOnClickListener(v1 -> finish());
             builder.setView(removeuser);
             AlertDialog dialog = builder.create();
             dialog.show();
-        });
-    }
-
-    private void getUIdByMail(String removingMail) {
-        databaseReference.child("users").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()){
-                    boolean validMail = false;
-                    for (DataSnapshot dataSnapshot : snapshot.getChildren()){
-                        String Email  = dataSnapshot.child("Email").getValue().toString();
-                        if (removingMail.equals(Email)){
-                            otherUser.Uid = dataSnapshot.getKey();
-                            validMail = true;
-                        }
-                    }
-                    if (!validMail) otherUser.Uid = "mail not found";
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(Home.this, "faild to get UId..try again", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
+        }
 
     @Override
     protected void onStart() {
         super.onStart();
-        status("online");
+        DocumentReference documentReference = firebaseFirestore.collection("Banned").document(firebaseAuth.getUid());
+        documentReference.addSnapshotListener((value, error) -> {
+            if (value.exists()) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setCancelable(true);
+                builder.setTitle("its appear you are banned");
+                builder.setMessage("if you have an objection you can contact us on the mail :\n ourIceBreaker@gmail.com");
+                builder.setPositiveButton("ok", (dialog, which) ->
+                {
+                    Toast.makeText(Home.this, "bye-bye!", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(Home.this, MainActivity.class);
+                    status("offline");
+                    firebaseAuth.signOut();
+                    startActivity(intent);
+                });
+                builder.setCancelable(false);
+                AlertDialog dialog = builder.create();
+                dialog.show();
+            } else {
+                    Home.this.status("online");
+            }
+        });
     }
 
     @Override
@@ -208,7 +230,7 @@ public class Home extends AppCompatActivity {
                     ImageView female = PopUpStatus.findViewById(R.id.FemaleUserPic);
                     TextView name = PopUpStatus.findViewById(R.id.Name);
                     TextView mail = PopUpStatus.findViewById(R.id.Mail);
-                    TextView area = PopUpStatus.findViewById(R.id.Area);
+                    TextView topic = PopUpStatus.findViewById(R.id.Topic);
                     TextView Game = PopUpStatus.findViewById(R.id.Game);
                     TextView SocialClass = PopUpStatus.findViewById(R.id.SocialClass);
                     backBtn.setOnClickListener(v -> {
@@ -220,7 +242,7 @@ public class Home extends AppCompatActivity {
                     } else female.setVisibility(View.VISIBLE);
                     name.setText(user.getName());
                     mail.setText("mail: " + user.getEmail());
-                    area.setText("area: " + user.getArea());
+                    topic.setText("topic: " + user.getTopic());
                     if (user.isGameAvailable()) {
                         Game.setText("game: " + "available");
                     } else Game.setText("game: " + "not available");
@@ -235,27 +257,11 @@ public class Home extends AppCompatActivity {
     }
 
     private void OnlineButton() {
-//        OnlineMember.setOnClickListener(view -> {
-//            LoginFirebase.child("online").addListenerForSingleValueEvent(new ValueEventListener() {
-//                @Override
-//                public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                    for (DataSnapshot Snapshot : snapshot.getChildren()) {
-//                        String Name = Snapshot.getValue(String.class);
-//                        OnlineMembers.add(Name);
-//                    }
-//                    Intent intent = new Intent(Home.this, OnlineMembers.class);
-//                    intent.putStringArrayListExtra("arraylist", OnlineMembers);
-//                    startActivity(intent);
-//                }
-//
-//                @Override
-//                public void onCancelled(@NonNull DatabaseError error) {
-//                }
-//
-//            });
-//
-//            //TODO: import online members details from fire base
-//        });
+        OnlineMember.setOnClickListener(view -> {
+            Intent intent = new Intent(Home.this, TopicMembers.class);
+            intent.putExtra("Topic", MyTopic);
+            startActivity(intent);
+        });
     }
 
     private void BroadcastButton() {
