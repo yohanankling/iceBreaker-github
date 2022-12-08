@@ -35,9 +35,7 @@ import java.util.Map;
 
 public class Home extends AppCompatActivity {
 
-    //Todo:: disconnect from online list
-
-    private Button Status, OnlineMember, Broadcast, PlayWith, chat, ContactUs, UserList, RemoveUser, Disconnect;
+    private Button Status, TopicMember, Broadcast, PlayWith, chat, ContactUs, UserList, RemoveUser, Disconnect;
     private FirebaseAuth firebaseAuth;
     public DatabaseReference databaseReference;
     private FirebaseFirestore firebaseFirestore;
@@ -65,7 +63,7 @@ public class Home extends AppCompatActivity {
         initAdminFunc();
 //        }
         StatusButton();
-        OnlineButton();
+        TopicButton();
         BroadcastButton();
         PlayWithButton();
         ChatsButton();
@@ -78,7 +76,7 @@ public class Home extends AppCompatActivity {
         databaseReference = FirebaseDatabase.getInstance().getReference();
         firebaseFirestore = FirebaseFirestore.getInstance();
         Status = findViewById(R.id.Status);
-        OnlineMember = findViewById(R.id.TopicMembers);
+        TopicMember = findViewById(R.id.TopicMembers);
         Broadcast = findViewById(R.id.Broadcast);
         PlayWith = findViewById(R.id.PlayWith);
         chat = findViewById(R.id.Chats);
@@ -198,28 +196,6 @@ public class Home extends AppCompatActivity {
         });
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        status("offline");
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        if (this.isFinishing()){
-            status("offline");
-        }
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        if (this.isFinishing()){
-            status("offline");
-        }
-    }
-
     @SuppressLint("SetTextI18n")
     private void StatusButton() {
         Status.setOnClickListener(view -> {
@@ -256,8 +232,9 @@ public class Home extends AppCompatActivity {
         );
     }
 
-    private void OnlineButton() {
-        OnlineMember.setOnClickListener(view -> {
+    private void TopicButton() {
+        TopicMember.setOnClickListener(view -> {
+            // TODO: add topic platform
             Intent intent = new Intent(Home.this, TopicMembers.class);
             intent.putExtra("Topic", MyTopic);
             startActivity(intent);
@@ -281,7 +258,6 @@ public class Home extends AppCompatActivity {
 
     private void ChatsButton() {
         chat.setOnClickListener(view -> {
-            //TODO: chats
             Intent intent = new Intent(Home.this, ChatList.class);
             intent.putExtra("Email", user.getEmail());
             startActivity(intent);
@@ -301,9 +277,31 @@ public class Home extends AppCompatActivity {
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        status("offline");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (this.isFinishing()){
+            status("offline");
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (this.isFinishing()){
+            status("offline");
+        }
+    }
+
+    @Override
     public void onBackPressed() {
         super.onBackPressed();
-        status("offline");
+        DisconnectDialog();
     }
 
     private void DisconnectDialog() {

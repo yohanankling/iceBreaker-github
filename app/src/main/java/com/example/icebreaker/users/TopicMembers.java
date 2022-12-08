@@ -105,7 +105,6 @@ public class TopicMembers extends AppCompatActivity {
 
 
     private void showUserDetails(String userUId) {
-        //TOdo: get user details
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
         databaseReference.child("users").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
