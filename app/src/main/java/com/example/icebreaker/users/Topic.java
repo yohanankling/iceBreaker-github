@@ -2,13 +2,13 @@ package com.example.icebreaker.users;
 
 public class Topic {
     String Title;
-    String Members;
-    String MmbersUid;
+    long Members;
+    String MemberUid;
 
-    public Topic(String title, String members, String mmbersUid) {
+    public Topic(String title, long members, String membersUid) {
         Title = title;
         Members = members;
-        MmbersUid = mmbersUid;
+        MemberUid = membersUid;
     }
 
     public Topic() {
@@ -22,19 +22,19 @@ public class Topic {
         Title = title;
     }
 
-    public String getMembers() {
+    public long getMembers() {
         return Members;
     }
 
-    public void setMembers(String members) {
+    public void setMembers(long members) {
         Members = members;
     }
 
-    public String getMmbersUid() {
-        return MmbersUid;
+    public String getMembersUid() {
+        return MemberUid;
     }
 
-    public void setMmbersUid(String mmbersUid) {
-        MmbersUid = mmbersUid;
+    public void setMembersUid(String membersUid) {
+        MemberUid = membersUid;
     }
 }
