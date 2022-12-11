@@ -28,7 +28,6 @@ public class ChatList extends AppCompatActivity {
     private RecyclerView recyclerView;
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore firebaseFirestore;
-
     private FirestoreRecyclerAdapter<FirebaseUser, userDetailes> chatAdapter;
 
     @Override
@@ -37,7 +36,6 @@ public class ChatList extends AppCompatActivity {
         setContentView(R.layout.activity_chat_list);
         initFields();
         initChats();
-        backBtn();
     }
 
     private void initFields() {
@@ -45,9 +43,6 @@ public class ChatList extends AppCompatActivity {
         firebaseFirestore = FirebaseFirestore.getInstance();
         recyclerView = findViewById(R.id.recyclerview);
         back = findViewById(R.id.back);
-    }
-
-    private void backBtn() {
         back.setOnClickListener(v -> finish());
     }
 

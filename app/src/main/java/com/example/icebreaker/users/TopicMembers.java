@@ -7,8 +7,6 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,22 +14,13 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.icebreaker.Home;
-import com.example.icebreaker.MainActivity;
 import com.example.icebreaker.R;
-import com.example.icebreaker.chats.*;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -45,7 +34,7 @@ public class TopicMembers extends AppCompatActivity {
     private RecyclerView recyclerView;
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore firebaseFirestore;
-//    private FirestoreRecyclerAdapter<Topic, TopicDetails> TopicsAdapter;
+        private FirestoreRecyclerAdapter<Topic, TopicDetails> TopicsAdapter;
     String Email;
     Boolean addedTopic = false;
 
@@ -73,45 +62,45 @@ public class TopicMembers extends AppCompatActivity {
         constraintLayout.setVisibility(View.VISIBLE);
     }
 
-//        public class TopicDetails extends RecyclerView.ViewHolder{
-//
-//        private final TextView TopicName;
-//        private final TextView Members;
-//
-//        public TopicDetails(@NonNull View itemView) {
-//            super(itemView);
-//            TopicName = itemView.findViewById(R.id.TopicName);
-//            Members = itemView.findViewById(R.id.Members);
-//
-//        }
-//    }
+        public class TopicDetails extends RecyclerView.ViewHolder{
+
+        private final TextView TopicName;
+        private final TextView Members;
+
+        public TopicDetails(@NonNull View itemView) {
+            super(itemView);
+            TopicName = itemView.findViewById(R.id.TopicName);
+            Members = itemView.findViewById(R.id.Members);
+
+        }
+    }
 
     private void initTopics() {
-//        Query query = firebaseFirestore.collection("Topics");
-//        FirestoreRecyclerOptions<Topic> topic = new FirestoreRecyclerOptions.Builder<Topic>().setQuery(query, Topic.class).build();
-//        TopicsAdapter = new FirestoreRecyclerAdapter<Topic, TopicDetails>(topic) {
-//            @Override
-//            protected void onBindViewHolder(@NonNull TopicDetails TopicDetails, int i, @NonNull Topic Topic) {
-//                TopicDetails.TopicName.setText(" " + Topic.getName());
-//                TopicDetails.Members.setText(" " + Topic.getMembers());
-//                TopicDetails.itemView.setOnClickListener(v -> {
-//
-//                });
-//
-//                }
-//
-//            @NonNull
-//            @Override
-//            public TopicDetails onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-//                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.topiclistview, parent, false);
-//                return new TopicDetails(view);
-//            }
-//        };
-//        recyclerView.setHasFixedSize(true);
-//        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(recyclerView.getContext());
-//        linearLayoutManager.setOrientation(RecyclerView.VERTICAL);
-//        recyclerView.setLayoutManager(linearLayoutManager);
-//        recyclerView.setAdapter(TopicsAdapter);
+        Query query = firebaseFirestore.collection("Topics");
+        FirestoreRecyclerOptions<Topic> topic = new FirestoreRecyclerOptions.Builder<Topic>().setQuery(query, Topic.class).build();
+        TopicsAdapter = new FirestoreRecyclerAdapter<Topic, TopicDetails>(topic) {
+            @Override
+            protected void onBindViewHolder(@NonNull TopicDetails TopicDetails, int i, @NonNull Topic Topic) {
+                TopicDetails.TopicName.setText(" " + Topic.getMmbersUid());
+                TopicDetails.Members.setText(" " + Topic.getTitle());
+                TopicDetails.itemView.setOnClickListener(v -> {
+
+                });
+
+                }
+
+            @NonNull
+            @Override
+            public TopicDetails onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.topiclistview, parent, false);
+                return new TopicDetails(view);
+            }
+        };
+        recyclerView.setHasFixedSize(true);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(recyclerView.getContext());
+        linearLayoutManager.setOrientation(RecyclerView.VERTICAL);
+        recyclerView.setLayoutManager(linearLayoutManager);
+        recyclerView.setAdapter(TopicsAdapter);
     }
 
     private void AddTopic() {
@@ -143,8 +132,8 @@ public class TopicMembers extends AppCompatActivity {
             else{
                 addedTopic = true;
                 Map<String, Object> userData = new HashMap<>();
-                userData.put("creator", Email);
-                userData.put("creatorUid", firebaseAuth.getUid());
+                userData.put("Members", "1");
+                userData.put("MemberUid", firebaseAuth.getUid());
                 documentReference.set(userData);
             }
         });
@@ -153,7 +142,7 @@ public class TopicMembers extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-//        TopicsAdapter.startListening();
+        TopicsAdapter.startListening();
         status("online");
     }
 

@@ -1,41 +1,40 @@
 package com.example.icebreaker.users;
 
 public class Topic {
-    public String Creator;
-    public String Name;
-    public int Members;
+    String Title;
+    String Members;
+    String MmbersUid;
+
+    public Topic(String title, String members, String mmbersUid) {
+        Title = title;
+        Members = members;
+        MmbersUid = mmbersUid;
+    }
 
     public Topic() {
     }
 
-    public Topic(String creator, String name, int members) {
-        Creator = creator;
-        Name = name;
-        Members = members;
+    public String getTitle() {
+        return Title;
     }
 
-    public String getCreator() {
-        return Creator;
+    public void setTitle(String title) {
+        Title = title;
     }
 
-    public void setCreator(String creator) {
-        Creator = creator;
-    }
-
-    public String getName() {
-        return Name;
-    }
-
-    public void setName(String name) {
-        Name = name;
-    }
-
-    public int getMembers() {
+    public String getMembers() {
         return Members;
     }
 
-    public void setMembers(int members) {
+    public void setMembers(String members) {
         Members = members;
     }
-}
 
+    public String getMmbersUid() {
+        return MmbersUid;
+    }
+
+    public void setMmbersUid(String mmbersUid) {
+        MmbersUid = mmbersUid;
+    }
+}
