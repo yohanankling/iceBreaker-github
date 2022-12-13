@@ -11,10 +11,7 @@ import android.widget.Toast;
 
 import com.example.icebreaker.Home;
 import com.example.icebreaker.R;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -26,7 +23,6 @@ public class Login extends AppCompatActivity {
     private Button LoginBtn, RegisterBtn;
     private EditText Email, Password;
     private FirebaseAuth firebaseAuth;
-    private DatabaseReference databaseReference;
     private FirebaseFirestore firebaseFirestore;
 
     @Override
@@ -88,17 +84,13 @@ public class Login extends AppCompatActivity {
 
     private void setAndInitStatus() {
         String UserId = firebaseAuth.getCurrentUser().getUid();
-        databaseReference = FirebaseDatabase.getInstance().getReference("Users");
-        databaseReference.setValue(Email.getText().toString(),UserId);
         DocumentReference documentReference = firebaseFirestore.collection("Users").document(UserId);
         Map<String, Object> userData = new HashMap<>();
         userData.put("email", Email.getText().toString());
         userData.put("uid", UserId);
         userData.put("status", "online");
-        documentReference.set(userData).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void unused) {
-            }
+        userData.put("topic", "~null");
+        documentReference.set(userData).addOnSuccessListener(unused -> {
         });
     }
 
