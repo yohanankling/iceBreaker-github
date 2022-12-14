@@ -11,7 +11,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -20,50 +19,28 @@ import com.example.icebreaker.admin.*;
 import com.example.icebreaker.contactUs.Contact;
 import com.example.icebreaker.gameZone.TicTacToe;
 import com.example.icebreaker.users.*;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 
-import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Home extends AppCompatActivity {
 
     private Button Status, TopicChooser, TopicMembers, Broadcast, PlayWith, chat, ContactUs, UserList, RemoveUser, Disconnect;
     private FirebaseAuth firebaseAuth;
-    public DatabaseReference databaseReference;
     private FirebaseFirestore firebaseFirestore;
     private User user;
-    String MyTopic;
-
-    public class OtherUser {
-        private String Uid;
-        private String Email;
-
-        public OtherUser(String Uid, String Email) {
-            this.Uid = Uid;
-            this.Email = Email;
-        }
-    }
-
-    private OtherUser otherUser = new OtherUser("", "");
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         initFields();
-//        if (user.haveAdminAccess()) {
-        initAdminFunc();
-//        }
         StatusButton();
         TopicChooserButton();
         TopicMembersButton();
@@ -76,7 +53,6 @@ public class Home extends AppCompatActivity {
 
     private void initFields() {
         firebaseAuth = FirebaseAuth.getInstance();
-        databaseReference = FirebaseDatabase.getInstance().getReference();
         firebaseFirestore = FirebaseFirestore.getInstance();
         Status = findViewById(R.id.Status);
         TopicChooser = findViewById(R.id.TopicChooser);
@@ -90,26 +66,22 @@ public class Home extends AppCompatActivity {
         user = new User("", "", "", "", "", "", true, false, true);
         user.setOnline(true);
         user.setId(firebaseAuth.getCurrentUser().getUid());
-        databaseReference.child("users").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                user.setEmail(snapshot.child(user.getId()).child("Email").getValue(String.class));
-                user.setName(snapshot.child(user.getId()).child("Name").getValue(String.class));
-                user.setGender(snapshot.child(user.getId()).child("Gender").getValue(String.class));
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
+        DocumentReference documentReferenceuser = firebaseFirestore.collection("Users").document(user.getId());
+        documentReferenceuser.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+                if (document.exists()) {
+                    Map<String, Object> userData = document.getData();
+                    user.setEmail(userData.get("email").toString());
+                    user.setName(userData.get("name").toString());
+                    user.setGender(userData.get("gender").toString());
+                }
+                if (user.getEmail().equals("admin@gmail.com")) {
+                    user.setAdminAccess(true);
+                    initAdminFunc();
+                }
             }
         });
-        if (!user.getOnline()) {
-            Intent intent = new Intent(Home.this, MainActivity.class);
-            status("offline");
-            startActivity(intent);
-        }
-        if (user.getEmail().equals("admin@gmail.com")) {
-            user.setAdminAccess(true);
-        }
     }
 
     private void initAdminFunc() {
@@ -131,41 +103,29 @@ public class Home extends AppCompatActivity {
         EditText MailToRemove = removeuser.findViewById(R.id.MailToRemove);
         Button Remove = removeuser.findViewById(R.id.remove);
         Remove.setOnClickListener(v12 -> {
-            otherUser.Email = MailToRemove.getText().toString();
-
-            databaseReference.child("users").addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    Boolean validate = false;
-                    if (snapshot.exists()) {
-                        for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                            String Email = dataSnapshot.child("Email").getValue().toString();
-                            if (Email.equals(otherUser.Email)) {
-                                otherUser.Uid = dataSnapshot.getKey();
-                                validate = true;
-                            }
-                        }
-                        if (!validate) {
-                            Toast.makeText(Home.this, "mail not found", Toast.LENGTH_SHORT).show();
-                        } else {
-                            DocumentReference documentReference = firebaseFirestore.collection("Banned").document(otherUser.Uid);
-                            Map<String, Object> userData = new HashMap<>();
-                            userData.put("email", otherUser.Email);
-                            documentReference.set(userData);
-                            DocumentReference users = firebaseFirestore.collection("Users").document(otherUser.Uid);
-                            users.delete();
-                            Toast.makeText(Home.this, otherUser.Email + " will banned soon", Toast.LENGTH_SHORT).show();
-                        }
+            String removeMail = MailToRemove.getText().toString();
+            Query query = firebaseFirestore.collection("Users").whereEqualTo("email", removeMail);
+            query.get().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    QuerySnapshot querySnapshot = task.getResult();
+                    if (querySnapshot.isEmpty()) {
+                        Toast.makeText(Home.this, "mail not found", Toast.LENGTH_SHORT).show();
+                    } else {
+                        List<DocumentSnapshot> documents = querySnapshot.getDocuments();
+                        DocumentSnapshot document = documents.get(0);
+                        Map<String, Object> userData = document.getData();
+                        String removeUid = userData.get("uid").toString();
+                        firebaseFirestore.collection("Users").document(removeUid).delete();
+//                        DocumentReference documentReference = firebaseFirestore.collection("Banned").document(removeUid);
+//                        documentReference.set(removeMail).addOnSuccessListener(unused -> {
+//                        });
+                        Toast.makeText(Home.this, removeMail + " will banned soon", Toast.LENGTH_SHORT).show();
                     }
-                }
 
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-                    Toast.makeText(Home.this, "faild to get UId..try again", Toast.LENGTH_SHORT).show();
                 }
             });
-
         });
+
         Button CancelBtn = removeuser.findViewById(R.id.Cancel);
         backBtn.setOnClickListener(v12 -> finish());
         CancelBtn.setOnClickListener(v1 -> finish());
@@ -227,7 +187,7 @@ public class Home extends AppCompatActivity {
                     if (user.isGameAvailable()) {
                         Game.setText("game: " + "available");
                     } else Game.setText("game: " + "not available");
-                    if (user.haveAdminAccess()) {
+                    if (!user.haveAdminAccess()) {
                         SocialClass.setText("access: user");
                     } else SocialClass.setText("access: admin");
                     builder.setView(PopUpStatus);
@@ -239,8 +199,7 @@ public class Home extends AppCompatActivity {
 
     private void TopicChooserButton() {
         TopicChooser.setOnClickListener(view -> {
-            // TODO: add topic platform
-            Intent intent = new Intent(Home.this, TopicMembers.class);
+            Intent intent = new Intent(Home.this, ChooseTopic.class);
             intent.putExtra("Email", user.getEmail());
             startActivity(intent);
         });
@@ -348,11 +307,7 @@ public class Home extends AppCompatActivity {
 
     private void status(String status) {
         DocumentReference documentReference = firebaseFirestore.collection("Users").document(firebaseAuth.getUid());
-        documentReference.update("status", status).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void unused) {
-
-            }
+        documentReference.update("status", status).addOnSuccessListener(unused -> {
         });
     }
 

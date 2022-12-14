@@ -133,7 +133,6 @@ public class Chat extends AppCompatActivity {
             } else {
                 currentTime = simpleDateFormat.format(calendar.getTime());
                 Message message = new Message(currentTime, enteredMessage, firebaseAuth.getUid());
-                firebaseDatabase = FirebaseDatabase.getInstance();
                 firebaseDatabase.getReference().child("chats").child(SenderUid).child(RecieverUid).push()
                         .setValue(message).addOnCompleteListener(task -> firebaseDatabase.getReference().
                                 child("chats").child(RecieverUid).child(SenderUid).push()

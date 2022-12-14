@@ -13,9 +13,9 @@ import com.example.icebreaker.Home;
 import com.example.icebreaker.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.HashMap;
 import java.util.Map;
 
 public class Login extends AppCompatActivity {
@@ -84,13 +84,16 @@ public class Login extends AppCompatActivity {
 
     private void setAndInitStatus() {
         String UserId = firebaseAuth.getCurrentUser().getUid();
-        DocumentReference documentReference = firebaseFirestore.collection("Users").document(UserId);
-        Map<String, Object> userData = new HashMap<>();
-        userData.put("email", Email.getText().toString());
-        userData.put("uid", UserId);
-        userData.put("status", "online");
-        userData.put("topic", "~null");
-        documentReference.set(userData).addOnSuccessListener(unused -> {
+        DocumentReference documentReferenceuser = firebaseFirestore.collection("Users").document(UserId);
+        documentReferenceuser.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+                if (document.exists()) {
+                    Map<String, Object> userData = document.getData();
+                    userData.replace("status", "online");
+                    documentReferenceuser.set(userData);
+                }
+            }
         });
     }
 

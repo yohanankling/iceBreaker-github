@@ -16,8 +16,11 @@ import android.widget.Toast;
 import com.example.icebreaker.MainActivity;
 import com.example.icebreaker.R;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class Register extends AppCompatActivity {
 
@@ -27,7 +30,8 @@ public class Register extends AppCompatActivity {
     private ImageButton Male, Female;
     boolean MaleClick = false, FemaleClick = false;
     private FirebaseAuth firebaseAuth;
-    private DatabaseReference databaseReference;
+    private FirebaseFirestore firebaseFirestore;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +45,7 @@ public class Register extends AppCompatActivity {
 
     private void initFields() {
         firebaseAuth = FirebaseAuth.getInstance();
-        databaseReference = FirebaseDatabase.getInstance().getReference();
+        firebaseFirestore = FirebaseFirestore.getInstance();
         GenderNotice = findViewById(R.id.GenderNotice);
         Male = findViewById(R.id.Male);
         Female = findViewById(R.id.Female);
@@ -165,14 +169,19 @@ public class Register extends AppCompatActivity {
 
     private void StoreToDatabase() {
         String UserId = firebaseAuth.getCurrentUser().getUid();
-        String StringGender;
-        if (MaleClick){
-            StringGender = "Male";
-        } else StringGender = "Female";
-        databaseReference.child("users").child(UserId).child("Email").setValue(Email.getText().toString());
-        databaseReference.child("users").child(UserId).child("Name").setValue(Name.getText().toString());
-        databaseReference.child("users").child(UserId).child("Password").setValue(Password.getText().toString());
-        databaseReference.child("users").child(UserId).child("Gender").setValue(StringGender);
+        DocumentReference documentReference = firebaseFirestore.collection("Users").document(UserId);
+        Map<String, Object> userData = new HashMap<>();
+        userData.put("uid", UserId);
+        userData.put("email", Email.getText().toString());
+        userData.put("name", Name.getText().toString());
+        userData.put("password", Password.getText().toString());
+        userData.put("status", "offline");
+        if(MaleClick){
+            userData.put("gender", "Male");
+        } else userData.put("gender", "Female");
+        userData.put("topic", "~null");
+        documentReference.set(userData).addOnSuccessListener(unused -> {
+        });
         finish();
     }
 }

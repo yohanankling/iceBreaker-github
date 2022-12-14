@@ -31,7 +31,7 @@ import com.google.firebase.firestore.Query;
 import java.util.HashMap;
 import java.util.Map;
 
-public class TopicMembers extends AppCompatActivity {
+public class ChooseTopic extends AppCompatActivity {
 
     private ImageButton Add;
     private RecyclerView recyclerView;
@@ -56,7 +56,7 @@ public class TopicMembers extends AppCompatActivity {
         recyclerView = findViewById(R.id.recyclerview);
         ImageButton back = findViewById(R.id.back);
         back.setOnClickListener(v -> {
-            Intent intent = new Intent(TopicMembers.this, MainActivity.class);
+            Intent intent = new Intent(ChooseTopic.this, MainActivity.class);
             startActivity(intent);});
         TextView title = findViewById(R.id.Title);
         title.setText("Topics");
@@ -198,7 +198,7 @@ public class TopicMembers extends AppCompatActivity {
 
     private void AddTopic() {
         Add.setOnClickListener(v -> {
-            AlertDialog.Builder builder = new AlertDialog.Builder(TopicMembers.this);
+            AlertDialog.Builder builder = new AlertDialog.Builder(ChooseTopic.this);
             final View addtopic = getLayoutInflater().inflate(R.layout.addtopic, null);
             ImageButton backBtn = addtopic.findViewById(R.id.back);
             Button CancelBtn = addtopic.findViewById(R.id.Cancel);
@@ -228,16 +228,16 @@ public class TopicMembers extends AppCompatActivity {
             if (task.isSuccessful()) {
                 DocumentSnapshot snapshot = task.getResult();
                 if (snapshot.exists()) {
-                    Toast.makeText(TopicMembers.this, "topic is already exist!\n join or create another one..", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ChooseTopic.this, "topic is already exist!\n join or create another one..", Toast.LENGTH_SHORT).show();
                 } else {
                     Map<String, Object> TopicData = new HashMap<>();
                     TopicData.put("Title", TopicName);
                     TopicData.put(firebaseAuth.getUid(), Email);
                     TopicData.put("Members", 1);
                     documentReference.set(TopicData);
-                    Toast.makeText(TopicMembers.this, "topic added!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ChooseTopic.this, "topic added!", Toast.LENGTH_SHORT).show();
                     changeUserData(TopicName);
-                    Intent intent = new Intent(TopicMembers.this, TopicMembers.class);
+                    Intent intent = new Intent(ChooseTopic.this, ChooseTopic.class);
                     startActivity(intent);
                 }
             }

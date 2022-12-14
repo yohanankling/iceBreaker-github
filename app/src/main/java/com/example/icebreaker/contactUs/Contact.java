@@ -24,9 +24,6 @@ public class Contact extends AppCompatActivity {
     private ImageButton backBtn, yohWhatsapp, yohLinkedin, yohGithub, yohCv,
             tzachWhatsapp, tzachLinkedin, tzachGithub, tzachCv,
             nadavWhatsapp, nadavLinkedin, nadavGithub, nadavCv;
-    private FirebaseAuth firebaseAuth;
-    private DatabaseReference databaseReference;
-    private FirebaseFirestore firebaseFirestore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,9 +47,6 @@ public class Contact extends AppCompatActivity {
         nadavLinkedin = findViewById(R.id.nadavLinkedin);
         nadavGithub = findViewById(R.id.nadavGithub);
         nadavCv = findViewById(R.id.nadavCv);
-        firebaseAuth = FirebaseAuth.getInstance();
-        databaseReference = FirebaseDatabase.getInstance().getReference();
-        firebaseFirestore = FirebaseFirestore.getInstance();
     }
 
     private void SetBtns() {
