@@ -36,7 +36,7 @@
             android:layout_height="38dp"
             android:layout_margin="10dp"
             android:gravity="center"
-            android:text="Topic"
+            android:text="Chats"
             android:textColor="@color/cardview_shadow_start_color"
             android:textSize="25sp"
             android:textStyle="bold"
@@ -62,14 +62,11 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/spacer">
 
-        <ListView
-            android:id="@+id/List"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        </androidx.recyclerview.widget.RecyclerView>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout

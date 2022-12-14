@@ -232,7 +232,7 @@ public class TopicMembers extends AppCompatActivity {
                 } else {
                     Map<String, Object> TopicData = new HashMap<>();
                     TopicData.put("Title", TopicName);
-                    TopicData.put(firebaseAuth.getUid(), firebaseAuth.getUid());
+                    TopicData.put(firebaseAuth.getUid(), Email);
                     TopicData.put("Members", 1);
                     documentReference.set(TopicData);
                     Toast.makeText(TopicMembers.this, "topic added!", Toast.LENGTH_SHORT).show();

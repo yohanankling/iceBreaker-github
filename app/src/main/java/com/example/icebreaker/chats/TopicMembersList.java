@@ -1,30 +1,36 @@
 package com.example.icebreaker.chats;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.widget.ImageButton;
-import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.icebreaker.R;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 public class TopicMembersList extends AppCompatActivity {
 
     private ImageButton back;
-    private ListView List;
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore firebaseFirestore;
     public String Title;
+
+
+
+
+    RecyclerView recyclerView;
+    TopicAdapter topicAdapter;
+    ArrayList<FirebaseUser> userArrayList;
+    LinearLayoutManager linearLayoutManager;
 
 
     @Override
@@ -39,27 +45,40 @@ public class TopicMembersList extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseFirestore = FirebaseFirestore.getInstance();
         back = findViewById(R.id.back);
-        List = findViewById(R.id.List);
         back.setOnClickListener(v -> finish());
         Title = getIntent().getStringExtra("Title");
         TextView title = findViewById(R.id.Title);
         title.setText(Title);
+
+        recyclerView = findViewById(R.id.recyclerview);
+        userArrayList = new ArrayList<>();
+        linearLayoutManager = new LinearLayoutManager(this);
+        linearLayoutManager.setStackFromEnd(false);
+        recyclerView.setLayoutManager(linearLayoutManager);
+        topicAdapter = new TopicAdapter(TopicMembersList.this, userArrayList);
+        recyclerView.setAdapter(topicAdapter);
+
     }
 
     private void initChats() {
+        userArrayList.clear();
         DocumentReference documentReferenceuser = firebaseFirestore.collection("Topics").document(Title);
         documentReferenceuser.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
+                userArrayList.clear();
                 DocumentSnapshot document = task.getResult();
                 if (document.exists()) {
                     Map<String, Object> userData = document.getData();
                     userData.remove("Members");
                     userData.remove("Title");
+                    userData.remove(firebaseAuth.getUid());
                     for (Map.Entry<String, Object> data : userData.entrySet()) {
                         String uid = data.getKey();
                         String Email = data.getValue().toString();
-                        Toast.makeText(this, Email, Toast.LENGTH_SHORT).show();
+                        FirebaseUser firebaseUser = new FirebaseUser(uid, Email, "");
+                        userArrayList.add(firebaseUser);
                     }
+                    topicAdapter.notifyDataSetChanged();
                 }
             }
         });
@@ -68,7 +87,7 @@ public class TopicMembersList extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-//        chatAdapter.startListening();
+        topicAdapter.notifyDataSetChanged();
         status("online");
     }
 
