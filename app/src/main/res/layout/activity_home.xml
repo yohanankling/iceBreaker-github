@@ -32,12 +32,12 @@
         app:layout_constraintTop_toBottomOf="@+id/Menu" />
 
     <Button
-        android:id="@+id/TopicMembers"
+        android:id="@+id/TopicChooser"
         android:layout_width="125dp"
         android:layout_height="50dp"
         android:textSize="12sp"
         android:layout_marginEnd="50dp"
-        android:text="Topic Members"
+        android:text="Topic Chooser"
         app:layout_constraintBottom_toBottomOf="@+id/Status"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/Menu"
@@ -50,9 +50,21 @@
         android:textSize="12sp"
         android:layout_marginTop="30dp"
         android:text="broadcast"
-        app:layout_constraintEnd_toEndOf="@+id/TopicMembers"
-        app:layout_constraintStart_toStartOf="@+id/TopicMembers"
-        app:layout_constraintTop_toBottomOf="@+id/TopicMembers" />
+        app:layout_constraintEnd_toEndOf="@+id/TopicChooser"
+        app:layout_constraintStart_toStartOf="@+id/TopicChooser"
+        app:layout_constraintTop_toBottomOf="@+id/TopicChooser" />
+
+    <Button
+        android:id="@+id/TopicMembers"
+        android:layout_width="125dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="30dp"
+        android:text="Topic Members"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="@+id/Status"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/Status"
+        app:layout_constraintTop_toBottomOf="@+id/Status" />
 
     <Button
         android:id="@+id/PlayWith"
@@ -107,13 +119,13 @@
         android:id="@+id/userslist"
         android:layout_width="300dp"
         android:layout_height="48dp"
-        android:layout_marginTop="80dp"
+        android:layout_marginTop="60dp"
         android:text="talk with the developer"
         android:textSize="12sp"
         app:layout_constraintEnd_toEndOf="@+id/Chats"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/PlayWith"
-        app:layout_constraintTop_toBottomOf="@+id/RemoveUser" />
+        app:layout_constraintTop_toBottomOf="@+id/UserList" />
 
     <Button
         android:id="@+id/Chats"
@@ -125,7 +137,7 @@
         app:layout_constraintEnd_toEndOf="@+id/Status"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/Status"
-        app:layout_constraintTop_toBottomOf="@+id/Status" />
+        app:layout_constraintTop_toBottomOf="@+id/TopicMembers" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

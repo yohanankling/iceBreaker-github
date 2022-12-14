@@ -28,6 +28,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
@@ -35,23 +36,24 @@ import java.util.Map;
 
 public class Home extends AppCompatActivity {
 
-    private Button Status, TopicMember, Broadcast, PlayWith, chat, ContactUs, UserList, RemoveUser, Disconnect;
+    private Button Status, TopicChooser, TopicMembers, Broadcast, PlayWith, chat, ContactUs, UserList, RemoveUser, Disconnect;
     private FirebaseAuth firebaseAuth;
     public DatabaseReference databaseReference;
     private FirebaseFirestore firebaseFirestore;
     private User user;
     String MyTopic;
 
-    public class OtherUser{
+    public class OtherUser {
         private String Uid;
         private String Email;
-        public OtherUser(String Uid, String Email){
+
+        public OtherUser(String Uid, String Email) {
             this.Uid = Uid;
             this.Email = Email;
         }
     }
 
-    private OtherUser otherUser = new OtherUser("","");
+    private OtherUser otherUser = new OtherUser("", "");
 
 
     @Override
@@ -63,7 +65,8 @@ public class Home extends AppCompatActivity {
         initAdminFunc();
 //        }
         StatusButton();
-        TopicButton();
+        TopicChooserButton();
+        TopicMembersButton();
         BroadcastButton();
         PlayWithButton();
         ChatsButton();
@@ -76,7 +79,8 @@ public class Home extends AppCompatActivity {
         databaseReference = FirebaseDatabase.getInstance().getReference();
         firebaseFirestore = FirebaseFirestore.getInstance();
         Status = findViewById(R.id.Status);
-        TopicMember = findViewById(R.id.TopicMembers);
+        TopicChooser = findViewById(R.id.TopicChooser);
+        TopicMembers = findViewById(R.id.TopicMembers);
         Broadcast = findViewById(R.id.Broadcast);
         PlayWith = findViewById(R.id.PlayWith);
         chat = findViewById(R.id.Chats);
@@ -93,6 +97,7 @@ public class Home extends AppCompatActivity {
                 user.setName(snapshot.child(user.getId()).child("Name").getValue(String.class));
                 user.setGender(snapshot.child(user.getId()).child("Gender").getValue(String.class));
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
             }
@@ -120,54 +125,54 @@ public class Home extends AppCompatActivity {
     }
 
     private void removeUser() {
-            AlertDialog.Builder builder = new AlertDialog.Builder(Home.this);
-            final View removeuser = getLayoutInflater().inflate(R.layout.remove_user, null);
-            ImageButton backBtn = removeuser.findViewById(R.id.back);
-            EditText MailToRemove = removeuser.findViewById(R.id.MailToRemove);
-            Button Remove = removeuser.findViewById(R.id.remove);
-            Remove.setOnClickListener(v12 -> {
-                otherUser.Email = MailToRemove.getText().toString();
+        AlertDialog.Builder builder = new AlertDialog.Builder(Home.this);
+        final View removeuser = getLayoutInflater().inflate(R.layout.remove_user, null);
+        ImageButton backBtn = removeuser.findViewById(R.id.back);
+        EditText MailToRemove = removeuser.findViewById(R.id.MailToRemove);
+        Button Remove = removeuser.findViewById(R.id.remove);
+        Remove.setOnClickListener(v12 -> {
+            otherUser.Email = MailToRemove.getText().toString();
 
-                databaseReference.child("users").addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        Boolean validate = false;
-                        if (snapshot.exists()){
-                            for (DataSnapshot dataSnapshot : snapshot.getChildren()){
-                                String Email  = dataSnapshot.child("Email").getValue().toString();
-                                if (Email.equals(otherUser.Email)){
-                                    otherUser.Uid = dataSnapshot.getKey();
-                                    validate = true;
-                                }
-                            }
-                            if (!validate){
-                                Toast.makeText(Home.this, "mail not found", Toast.LENGTH_SHORT).show();
-                            }
-                            else {
-                                DocumentReference documentReference = firebaseFirestore.collection("Banned").document(otherUser.Uid);
-                                Map<String, Object> userData = new HashMap<>();
-                                userData.put("email", otherUser.Email);
-                                documentReference.set(userData);
-                                DocumentReference users = firebaseFirestore.collection("Users").document(otherUser.Uid);
-                                users.delete();
-                                Toast.makeText(Home.this, otherUser.Email + " will banned soon", Toast.LENGTH_SHORT).show();
+            databaseReference.child("users").addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    Boolean validate = false;
+                    if (snapshot.exists()) {
+                        for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                            String Email = dataSnapshot.child("Email").getValue().toString();
+                            if (Email.equals(otherUser.Email)) {
+                                otherUser.Uid = dataSnapshot.getKey();
+                                validate = true;
                             }
                         }
+                        if (!validate) {
+                            Toast.makeText(Home.this, "mail not found", Toast.LENGTH_SHORT).show();
+                        } else {
+                            DocumentReference documentReference = firebaseFirestore.collection("Banned").document(otherUser.Uid);
+                            Map<String, Object> userData = new HashMap<>();
+                            userData.put("email", otherUser.Email);
+                            documentReference.set(userData);
+                            DocumentReference users = firebaseFirestore.collection("Users").document(otherUser.Uid);
+                            users.delete();
+                            Toast.makeText(Home.this, otherUser.Email + " will banned soon", Toast.LENGTH_SHORT).show();
+                        }
                     }
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-                        Toast.makeText(Home.this, "faild to get UId..try again", Toast.LENGTH_SHORT).show();
-                    }
-                });
+                }
 
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    Toast.makeText(Home.this, "faild to get UId..try again", Toast.LENGTH_SHORT).show();
+                }
             });
-            Button CancelBtn = removeuser.findViewById(R.id.Cancel);
-            backBtn.setOnClickListener(v12 -> finish());
-            CancelBtn.setOnClickListener(v1 -> finish());
-            builder.setView(removeuser);
-            AlertDialog dialog = builder.create();
-            dialog.show();
-        }
+
+        });
+        Button CancelBtn = removeuser.findViewById(R.id.Cancel);
+        backBtn.setOnClickListener(v12 -> finish());
+        CancelBtn.setOnClickListener(v1 -> finish());
+        builder.setView(removeuser);
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
 
     @Override
     protected void onStart() {
@@ -191,7 +196,7 @@ public class Home extends AppCompatActivity {
                 AlertDialog dialog = builder.create();
                 dialog.show();
             } else {
-                    Home.this.status("online");
+                Home.this.status("online");
             }
         });
     }
@@ -232,12 +237,30 @@ public class Home extends AppCompatActivity {
         );
     }
 
-    private void TopicButton() {
-        TopicMember.setOnClickListener(view -> {
+    private void TopicChooserButton() {
+        TopicChooser.setOnClickListener(view -> {
             // TODO: add topic platform
             Intent intent = new Intent(Home.this, TopicMembers.class);
             intent.putExtra("Email", user.getEmail());
             startActivity(intent);
+        });
+    }
+
+    private void TopicMembersButton() {
+        TopicMembers.setOnClickListener(view -> {
+            DocumentReference documentReferenceuser = firebaseFirestore.collection("Users").document(firebaseAuth.getUid());
+            documentReferenceuser.get().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        Map<String, Object> userData = document.getData();
+                        String Title = (String) userData.get("topic");
+                        Intent intent = new Intent(Home.this, TopicMembersList.class);
+                        intent.putExtra("Title", Title);
+                        startActivity(intent);
+                    }
+                }
+            });
         });
     }
 
@@ -284,7 +307,7 @@ public class Home extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        if (this.isFinishing()){
+        if (this.isFinishing()) {
             status("offline");
         }
     }
@@ -292,7 +315,7 @@ public class Home extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        if (this.isFinishing()){
+        if (this.isFinishing()) {
             status("offline");
         }
     }

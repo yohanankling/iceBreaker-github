@@ -43,7 +43,6 @@ public class Chat extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private FirebaseDatabase firebaseDatabase;
     private FirebaseFirestore firebaseFirestore;
-    String senderRoom, recieverRoom;
     RecyclerView recyclerView;
     String currentTime;
     Calendar calendar;
@@ -79,8 +78,6 @@ public class Chat extends AppCompatActivity {
         SenderUid = firebaseAuth.getUid();
         RecieverUid = getIntent().getStringExtra("Uid");
         Recievername = getIntent().getStringExtra("Email");
-        senderRoom = SenderUid + RecieverUid;
-        recieverRoom = RecieverUid + SenderUid;
         name.setText(Recievername);
         messageArrayList = new ArrayList<>();
         linearLayoutManager = new LinearLayoutManager(this);
@@ -104,11 +101,10 @@ public class Chat extends AppCompatActivity {
 
         private void initMessages() {
         messageArrayList.clear();
-        DatabaseReference databaseReference = firebaseDatabase.getReference().child("chats").child(senderRoom).child("messages");
+        DatabaseReference databaseReference = firebaseDatabase.getReference().child("chats").child(SenderUid).child(RecieverUid);
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                initStatus();
                 messageArrayList.clear();
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()){
                     Message message = dataSnapshot.getValue(Message.class);
@@ -138,9 +134,9 @@ public class Chat extends AppCompatActivity {
                 currentTime = simpleDateFormat.format(calendar.getTime());
                 Message message = new Message(currentTime, enteredMessage, firebaseAuth.getUid());
                 firebaseDatabase = FirebaseDatabase.getInstance();
-                firebaseDatabase.getReference().child("chats").child(senderRoom).child("messages").push()
+                firebaseDatabase.getReference().child("chats").child(SenderUid).child(RecieverUid).push()
                         .setValue(message).addOnCompleteListener(task -> firebaseDatabase.getReference().
-                                child("chats").child(recieverRoom).child("messages").push()
+                                child("chats").child(RecieverUid).child(SenderUid).push()
                                 .setValue(message).addOnCompleteListener(task1 -> {
                                 }));
                 getMessage.setText(null);

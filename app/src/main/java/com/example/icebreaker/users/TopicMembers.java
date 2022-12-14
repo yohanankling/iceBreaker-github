@@ -109,7 +109,7 @@ public class TopicMembers extends AppCompatActivity {
         builder.setTitle("to join " + Title + " title?");
         builder.setMessage("");
         builder.setPositiveButton("yes please", (dialog, which) ->
-            checkifalreadyin(Title, members));
+            checkIfAlreadyin(Title, members));
         builder.setNegativeButton("no", (dialog, which) ->
                 closeOptionsMenu()
         );
@@ -117,7 +117,7 @@ public class TopicMembers extends AppCompatActivity {
         dialog.show();
     }
 
-    private void checkifalreadyin(String title, long members) {
+    private void checkIfAlreadyin(String title, long members) {
         DocumentReference documentReferenceuser = firebaseFirestore.collection("Users").document(firebaseAuth.getUid());
         documentReferenceuser.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
@@ -169,7 +169,7 @@ public class TopicMembers extends AppCompatActivity {
                 DocumentSnapshot document = task.getResult();
                 if (document.exists()) {
                     Map<String, Object> userData = document.getData();
-                    userData.put(firebaseAuth.getUid(),firebaseAuth.getUid());
+                    userData.put(firebaseAuth.getUid(),Email);
                     userData.replace("Members", members + 1);
                     documentReference.set(userData);
                 }
