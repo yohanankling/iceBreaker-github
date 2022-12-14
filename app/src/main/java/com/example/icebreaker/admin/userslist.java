@@ -29,8 +29,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+
+import java.util.Map;
 
 public class userslist extends AppCompatActivity {
 
@@ -61,7 +64,7 @@ public class userslist extends AppCompatActivity {
         back.setOnClickListener(v -> finish());
     }
 
-    public class userDetailes extends RecyclerView.ViewHolder{
+    public class userDetailes extends RecyclerView.ViewHolder {
 
         private final TextView username;
         private final TextView status;
@@ -75,14 +78,14 @@ public class userslist extends AppCompatActivity {
     }
 
     private void initChats() {
-        Query query = firebaseFirestore.collection("Users").whereNotEqualTo("uid",firebaseAuth.getUid());
+        Query query = firebaseFirestore.collection("Users").whereNotEqualTo("uid", firebaseAuth.getUid());
         FirestoreRecyclerOptions<FirebaseUser> allusername = new FirestoreRecyclerOptions.Builder<FirebaseUser>().setQuery(query, FirebaseUser.class).build();
         chatAdapter = new FirestoreRecyclerAdapter<FirebaseUser, userDetailes>(allusername) {
             @Override
             protected void onBindViewHolder(@NonNull userDetailes userDetailes, int i, @NonNull FirebaseUser FirebaseUser) {
                 userDetailes.username.setText(" " + FirebaseUser.getEmail() + " ");
                 userDetailes.status.setText(" " + FirebaseUser.getStatus() + " ");
-                if (FirebaseUser.getStatus().equals("online")){
+                if (FirebaseUser.getStatus().equals("online")) {
                     userDetailes.status.setTextColor(Color.GREEN);
                 }
                 userDetailes.itemView.setOnClickListener(v -> showUserDetails(FirebaseUser.getUid()));
@@ -104,59 +107,57 @@ public class userslist extends AppCompatActivity {
 
 
     private void showUserDetails(String userUId) {
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
-        databaseReference.child("users").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(userslist.this);
-                final View PopUpStatus = getLayoutInflater().inflate(R.layout.status_popup, null);
-                ImageButton backBtn = PopUpStatus.findViewById(R.id.back);
-                ImageView male = PopUpStatus.findViewById(R.id.MaleUserPic);
-                ImageView female = PopUpStatus.findViewById(R.id.FemaleUserPic);
-                TextView Details = PopUpStatus.findViewById(R.id.Details);
-                Details.setText("user details:");
-                TextView name = PopUpStatus.findViewById(R.id.Name);
-                TextView mail = PopUpStatus.findViewById(R.id.Mail);
-                TextView topic = PopUpStatus.findViewById(R.id.Topic);
-                TextView Game = PopUpStatus.findViewById(R.id.Game);
-                Button chat = PopUpStatus.findViewById(R.id.chatwith);
-                chat.setVisibility(View.VISIBLE);
-                TextView SocialClass = PopUpStatus.findViewById(R.id.SocialClass);
-                backBtn.setOnClickListener(v -> {
-                    Intent intent = new Intent(userslist.this, Home.class);
-                    startActivity(intent);});
-                chat.setOnClickListener( v -> {
-                    Intent intent = new Intent(userslist.this, Chat.class);
-                    intent.putExtra("Uid", userUId);
-                    intent.putExtra("Email", snapshot.child(userUId).child("Email").getValue(String.class));
-                    startActivity(intent);
-                });
-                if (snapshot.child(userUId).child("Gender").getValue(String.class).equals("Male")){
-                    male.setVisibility(View.VISIBLE);
-                } else female.setVisibility(View.VISIBLE);
-                name.setText(snapshot.child(userUId).child("Name").getValue(String.class));
-                mail.setText("mail: " + snapshot.child(userUId).child("Email").getValue(String.class));
-                // TODO: add topic and game
-//                topic.setText("topic: " + snapshot.child(userUId).child("Topic").getValue(String.class));
-                topic.setText("topic: " + "  me");
+        DocumentReference documentReferenceuser = firebaseFirestore.collection("Users").document(userUId);
+        documentReferenceuser.get().addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document.exists()) {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(userslist.this);
+                            final View PopUpStatus = getLayoutInflater().inflate(R.layout.status_popup, null);
+                            ImageButton backBtn = PopUpStatus.findViewById(R.id.back);
+                            ImageView male = PopUpStatus.findViewById(R.id.MaleUserPic);
+                            ImageView female = PopUpStatus.findViewById(R.id.FemaleUserPic);
+                            TextView Details = PopUpStatus.findViewById(R.id.Details);
+                            Details.setText("user details:");
+                            TextView name = PopUpStatus.findViewById(R.id.Name);
+                            TextView mail = PopUpStatus.findViewById(R.id.Mail);
+                            TextView topic = PopUpStatus.findViewById(R.id.Topic);
+                            TextView Game = PopUpStatus.findViewById(R.id.Game);
+                            Button chat = PopUpStatus.findViewById(R.id.chatwith);
+                            chat.setVisibility(View.VISIBLE);
+                            TextView SocialClass = PopUpStatus.findViewById(R.id.SocialClass);
+                            backBtn.setOnClickListener(v -> {
+                                Intent intent = new Intent(userslist.this, Home.class);
+                                startActivity(intent);
+                            });
+                            Map<String, Object> userData = document.getData();
+                            chat.setOnClickListener(v -> {
+                                Intent intent = new Intent(userslist.this, Chat.class);
+                                intent.putExtra("Uid", userUId);
+                                intent.putExtra("Email", userData.get("email").toString());
+                                startActivity(intent);
+                            });
+                            if (userData.get("gender").toString().equals("Male")) {
+                                male.setVisibility(View.VISIBLE);
+                            } else female.setVisibility(View.VISIBLE);
+                            name.setText(userData.get("name").toString());
+                            mail.setText("mail: " + userData.get("email").toString());
+                            // TODO: add topic and game
+                            topic.setText("topic: " + userData.get("topic").toString());
 //                if (snapshot.child(userUId).child("Game").getValue(String.class).equals("Available")) {
 //                    Game.setText("game: " + "available");
 //                } else Game.setText("game: " + "not available");
-                if (snapshot.child(userUId).child("Email").getValue(String.class).equals("admin@gmail.com")) {
-                    SocialClass.setText("access: admin");
-                } else SocialClass.setText("access: user");
-                builder.setView(PopUpStatus);
-                AlertDialog dialog = builder.create();
-                dialog.show();
-            }
+                            SocialClass.setText("access: user");
+                            builder.setView(PopUpStatus);
+                            AlertDialog dialog = builder.create();
+                            dialog.show();
+                        }
+                    }
+                }
+        );
+    }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });}
-
-        @Override
+    @Override
     protected void onStart() {
         super.onStart();
         chatAdapter.startListening();

@@ -2,6 +2,7 @@ package com.example.icebreaker.chats;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,7 +38,7 @@ public class TopicAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         FirebaseUser firebaseUser = usersArrayList.get(position);
         userDetailes viewHolder = (userDetailes) holder;
-            viewHolder.username.setText(firebaseUser.getEmail());
+            viewHolder.username.setText(" " + firebaseUser.getEmail() + " ");
             viewHolder.status.setText(firebaseUser.getStatus());
             viewHolder.send.setOnClickListener(v -> {
                 Intent intent = new Intent(context, Chat.class);

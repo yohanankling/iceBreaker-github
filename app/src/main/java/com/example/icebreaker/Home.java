@@ -150,6 +150,7 @@ public class Home extends AppCompatActivity {
                 builder.setMessage("if you have an objection you can contact us on the mail :\nourIceBreaker@gmail.com");
                 builder.setPositiveButton("ok", (dialog, which) ->
                 {
+                    firebaseFirestore.collection("Users").document(firebaseAuth.getUid()).delete();
                     Toast.makeText(Home.this, "bye-bye!", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(Home.this, MainActivity.class);
                     status("offline");
