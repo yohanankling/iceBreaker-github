@@ -26,6 +26,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -115,10 +116,13 @@ public class Home extends AppCompatActivity {
                         DocumentSnapshot document = documents.get(0);
                         Map<String, Object> userData = document.getData();
                         String removeUid = userData.get("uid").toString();
+                        String removedEmail = userData.get("email").toString();
                         firebaseFirestore.collection("Users").document(removeUid).delete();
-//                        DocumentReference documentReference = firebaseFirestore.collection("Banned").document(removeUid);
-//                        documentReference.set(removeMail).addOnSuccessListener(unused -> {
-//                        });
+                        DocumentReference documentReference = firebaseFirestore.collection("Banned").document(removeUid);
+                        Map<String, Object> BannedData = new HashMap<>();
+                        BannedData.put("email", removedEmail);
+                        documentReference.set(BannedData).addOnSuccessListener(unused -> {
+                        });
                         Toast.makeText(Home.this, removeMail + " will banned soon", Toast.LENGTH_SHORT).show();
                     }
 
@@ -143,7 +147,7 @@ public class Home extends AppCompatActivity {
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setCancelable(true);
                 builder.setTitle("its appear you are banned");
-                builder.setMessage("if you have an objection you can contact us on the mail :\n ourIceBreaker@gmail.com");
+                builder.setMessage("if you have an objection you can contact us on the mail :\nourIceBreaker@gmail.com");
                 builder.setPositiveButton("ok", (dialog, which) ->
                 {
                     Toast.makeText(Home.this, "bye-bye!", Toast.LENGTH_SHORT).show();
