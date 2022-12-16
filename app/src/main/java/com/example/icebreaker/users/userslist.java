@@ -1,4 +1,4 @@
-package com.example.icebreaker.admin;
+package com.example.icebreaker.users;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -23,11 +23,6 @@ import com.example.icebreaker.chats.*;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -142,7 +137,7 @@ public class userslist extends AppCompatActivity {
                             } else female.setVisibility(View.VISIBLE);
                             name.setText(userData.get("name").toString());
                             mail.setText("mail: " + userData.get("email").toString());
-                            // TODO: add topic and game
+                            // TODO: add game
                             topic.setText("topic: " + userData.get("topic").toString());
 //                if (snapshot.child(userUId).child("Game").getValue(String.class).equals("Available")) {
 //                    Game.setText("game: " + "available");

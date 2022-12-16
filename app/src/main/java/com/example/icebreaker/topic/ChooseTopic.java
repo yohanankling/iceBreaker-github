@@ -1,4 +1,4 @@
-package com.example.icebreaker.users;
+package com.example.icebreaker.topic;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;

@@ -1,4 +1,4 @@
-package com.example.icebreaker.chats;
+package com.example.icebreaker.topic;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -9,6 +9,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.example.icebreaker.R;
+import com.example.icebreaker.chats.FirebaseUser;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;

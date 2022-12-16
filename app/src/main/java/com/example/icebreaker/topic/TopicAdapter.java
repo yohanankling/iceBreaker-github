@@ -1,4 +1,4 @@
-package com.example.icebreaker.chats;
+package com.example.icebreaker.topic;
 
 import android.content.Context;
 import android.content.Intent;
@@ -14,6 +14,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.icebreaker.R;
+import com.example.icebreaker.chats.Chat;
+import com.example.icebreaker.chats.FirebaseUser;
 
 import java.util.ArrayList;
 

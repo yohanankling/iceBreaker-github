@@ -15,9 +15,10 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.icebreaker.chats.*;
-import com.example.icebreaker.admin.*;
 import com.example.icebreaker.contactUs.Contact;
 import com.example.icebreaker.gameZone.TicTacToe;
+import com.example.icebreaker.topic.ChooseTopic;
+import com.example.icebreaker.topic.TopicMembersList;
 import com.example.icebreaker.users.*;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
@@ -76,6 +77,7 @@ public class Home extends AppCompatActivity {
                     user.setEmail(userData.get("email").toString());
                     user.setName(userData.get("name").toString());
                     user.setGender(userData.get("gender").toString());
+                    user.setTopic(userData.get("topic").toString());
                 }
                 if (user.getEmail().equals("admin@gmail.com")) {
                     user.setAdminAccess(true);

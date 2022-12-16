@@ -1,4 +1,4 @@
-package com.example.icebreaker.users;
+package com.example.icebreaker.topic;
 
 public class Topic {
     String Title;
