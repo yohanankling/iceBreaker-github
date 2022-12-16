@@ -13,22 +13,37 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.icebreaker.R;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Map;
 
 public class ChatList extends AppCompatActivity {
 
     private ImageButton back;
-    private RecyclerView recyclerView;
     private FirebaseAuth firebaseAuth;
+    private FirebaseDatabase firebaseDatabase;
     private FirebaseFirestore firebaseFirestore;
-    private FirestoreRecyclerAdapter<FirebaseUser, userDetailes> chatAdapter;
+    RecyclerView recyclerView;
+    usersAdapter usersAdapter;
+    ArrayList<FirebaseUser> usersArrayList;
+    LinearLayoutManager linearLayoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,62 +55,61 @@ public class ChatList extends AppCompatActivity {
 
     private void initFields() {
         firebaseAuth = FirebaseAuth.getInstance();
+        firebaseDatabase = FirebaseDatabase.getInstance();
         firebaseFirestore = FirebaseFirestore.getInstance();
         recyclerView = findViewById(R.id.recyclerview);
         back = findViewById(R.id.back);
         back.setOnClickListener(v -> finish());
-    }
+        usersArrayList = new ArrayList<>();
+        linearLayoutManager = new LinearLayoutManager(this);
+        linearLayoutManager.setStackFromEnd(false);
+        recyclerView.setLayoutManager(linearLayoutManager);
+        usersAdapter = new usersAdapter(ChatList.this, usersArrayList);
+        recyclerView.setAdapter(usersAdapter);
 
-    public class userDetailes extends RecyclerView.ViewHolder{
 
-        private final TextView username;
-        private final TextView status;
-
-        public userDetailes(@NonNull View itemView) {
-            super(itemView);
-            username = itemView.findViewById(R.id.UserName);
-            status = itemView.findViewById(R.id.Status);
-
-        }
     }
 
     private void initChats() {
-        Query query = firebaseFirestore.collection("Users").whereNotEqualTo("uid",firebaseAuth.getUid());
-        FirestoreRecyclerOptions<FirebaseUser> allusername = new FirestoreRecyclerOptions.Builder<FirebaseUser>().setQuery(query, FirebaseUser.class).build();
-        chatAdapter = new FirestoreRecyclerAdapter<FirebaseUser, userDetailes>(allusername) {
+        usersArrayList.clear();
+        DatabaseReference databaseReference = firebaseDatabase.getReference().child("chats").child(firebaseAuth.getUid());
+        databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
-            protected void onBindViewHolder(@NonNull userDetailes userDetailes, int i, @NonNull FirebaseUser FirebaseUser) {
-                userDetailes.username.setText(" " + FirebaseUser.Email + " ");
-                userDetailes.status.setText(" " + FirebaseUser.getStatus() + " ");
-                if (FirebaseUser.getStatus().equals("online")){
-                    userDetailes.status.setTextColor(Color.GREEN);
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                usersArrayList.clear();
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    DocumentReference documentReference = firebaseFirestore.collection("Users").document(dataSnapshot.getKey());
+                    documentReference.get().addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot document = task.getResult();
+                            if (document.exists()) {
+                                Map<String, Object> userData = document.getData();
+                                FirebaseUser firebaseUser = new FirebaseUser(dataSnapshot.getKey() , userData.get("email").toString(), userData.get("status").toString());
+                                usersArrayList.add(firebaseUser);
+                            }
+                        }
+                    });
+
                 }
-                userDetailes.itemView.setOnClickListener(v -> {
-                    Intent intent = new Intent(ChatList.this, Chat.class);
-                    intent.putExtra("Uid", FirebaseUser.getUid());
-                    intent.putExtra("Email", FirebaseUser.getEmail());
-                    startActivity(intent);
-                });
+                usersAdapter.notifyDataSetChanged();
+
             }
 
-            @NonNull
             @Override
-            public userDetailes onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.chatlistview, parent, false);
-                return new userDetailes(view);
+            public void onCancelled(@NonNull DatabaseError error) {
+
             }
-        };
-        recyclerView.setHasFixedSize(true);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(recyclerView.getContext());
-        linearLayoutManager.setOrientation(RecyclerView.VERTICAL);
-        recyclerView.setLayoutManager(linearLayoutManager);
-        recyclerView.setAdapter(chatAdapter);
+        });
+    }
+
+    private void ConvertTOfirebaseUser(String userid) {
+
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        chatAdapter.startListening();
+        usersAdapter.notifyDataSetChanged();
         status("online");
     }
 
