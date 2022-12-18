@@ -84,15 +84,13 @@ public class ChatList extends AppCompatActivity {
                             DocumentSnapshot document = task.getResult();
                             if (document.exists()) {
                                 Map<String, Object> userData = document.getData();
-                                FirebaseUser firebaseUser = new FirebaseUser(dataSnapshot.getKey() , userData.get("email").toString(), userData.get("status").toString());
+                                FirebaseUser firebaseUser = new FirebaseUser(dataSnapshot.getKey() , userData.get("name").toString(), userData.get("status").toString());
                                 usersArrayList.add(firebaseUser);
+                                usersAdapter.notifyDataSetChanged();
                             }
                         }
                     });
-
                 }
-                usersAdapter.notifyDataSetChanged();
-
             }
 
             @Override
@@ -100,10 +98,6 @@ public class ChatList extends AppCompatActivity {
 
             }
         });
-    }
-
-    private void ConvertTOfirebaseUser(String userid) {
-
     }
 
     @Override

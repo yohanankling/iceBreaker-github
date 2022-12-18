@@ -38,7 +38,7 @@ public class ChooseTopic extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore firebaseFirestore;
     private FirestoreRecyclerAdapter<Topic, TopicDetails> TopicsAdapter;
-    String Email;
+    String Name;
 
 
     @Override
@@ -60,7 +60,7 @@ public class ChooseTopic extends AppCompatActivity {
             startActivity(intent);});
         TextView title = findViewById(R.id.Title);
         title.setText("Topics");
-        Email = getIntent().getStringExtra("Email");
+        Name = getIntent().getStringExtra("Name");
         ConstraintLayout constraintLayout = findViewById(R.id.Add);
         Add = findViewById(R.id.AddBtn);
         constraintLayout.setVisibility(View.VISIBLE);
@@ -169,7 +169,7 @@ public class ChooseTopic extends AppCompatActivity {
                 DocumentSnapshot document = task.getResult();
                 if (document.exists()) {
                     Map<String, Object> userData = document.getData();
-                    userData.put(firebaseAuth.getUid(),Email);
+                    userData.put(firebaseAuth.getUid(),Name);
                     userData.replace("Members", members + 1);
                     documentReference.set(userData);
                 }
@@ -232,7 +232,7 @@ public class ChooseTopic extends AppCompatActivity {
                 } else {
                     Map<String, Object> TopicData = new HashMap<>();
                     TopicData.put("Title", TopicName);
-                    TopicData.put(firebaseAuth.getUid(), Email);
+                    TopicData.put(firebaseAuth.getUid(), Name);
                     TopicData.put("Members", 1);
                     documentReference.set(TopicData);
                     Toast.makeText(ChooseTopic.this, "topic added!", Toast.LENGTH_SHORT).show();

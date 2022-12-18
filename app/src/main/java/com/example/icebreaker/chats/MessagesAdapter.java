@@ -53,7 +53,7 @@ public class MessagesAdapter extends RecyclerView.Adapter {
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         Message message = messageArrayList.get(position);
-        if (holder.getClass()== SenderViewHolder.class){
+        if (holder.getClass() == SenderViewHolder.class){
             SenderViewHolder viewHolder = (SenderViewHolder) holder;
             viewHolder.time.setText(message.getCurrentTime());
             viewHolder.message.setText(message.getMessage());

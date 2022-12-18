@@ -9,17 +9,23 @@ import android.view.WindowManager;
 
 public class WelcomingActivity extends AppCompatActivity {
 
-    private static final int TIMER = 2000;
+    // Constant for the delay time in milliseconds
+    private static final int DELAY_TIME = 2000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcoming);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        new Handler().postDelayed(() -> {
-            Intent intent = new Intent(WelcomingActivity.this, MainActivity.class);
-            startActivity(intent);
-            finish();
-        },TIMER);
+
+        // Set up a handler to start the next activity after the specified delay time
+        new Handler().postDelayed(this::startNextActivity, DELAY_TIME);
+    }
+
+    // Method to start the next activity
+    private void startNextActivity() {
+        Intent intent = new Intent(WelcomingActivity.this, MainActivity.class);
+        startActivity(intent);
+        finish();
     }
 }

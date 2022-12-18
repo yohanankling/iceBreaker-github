@@ -51,6 +51,12 @@ public class Home extends AppCompatActivity {
         ChatsButton();
         ContactUsBtn();
         DisconnectButton();
+        // TODO:: add offline ststus
+        // TODO:: add alert to new message
+        // TODO:: add not read yet logo to messages
+        // TODO: set X O platform
+        // TODO:: fix keyboard resizeable
+        // TODO:: fix auto resizeable to any screen
     }
 
     private void initFields() {
@@ -207,7 +213,7 @@ public class Home extends AppCompatActivity {
     private void TopicChooserButton() {
         TopicChooser.setOnClickListener(view -> {
             Intent intent = new Intent(Home.this, ChooseTopic.class);
-            intent.putExtra("Email", user.getEmail());
+            intent.putExtra("Name", user.getName());
             startActivity(intent);
         });
     }
@@ -221,9 +227,12 @@ public class Home extends AppCompatActivity {
                     if (document.exists()) {
                         Map<String, Object> userData = document.getData();
                         String Title = (String) userData.get("topic");
-                        Intent intent = new Intent(Home.this, TopicMembersList.class);
-                        intent.putExtra("Title", Title);
-                        startActivity(intent);
+                        if(!Title.equals("~null")){
+                            Intent intent = new Intent(Home.this, TopicMembersList.class);
+                            intent.putExtra("Title", Title);
+                            startActivity(intent);
+                        }
+                        else Toast.makeText(this, "must have topic first..", Toast.LENGTH_SHORT).show();
                     }
                 }
             });
@@ -232,13 +241,29 @@ public class Home extends AppCompatActivity {
 
     private void BroadcastButton() {
         Broadcast.setOnClickListener(view -> {
-            //TODO: set message platform to broadcast
+            DocumentReference documentReferenceuser = firebaseFirestore.collection("Users").document(firebaseAuth.getUid());
+            documentReferenceuser.get().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        Map<String, Object> userData = document.getData();
+                        String Title = (String) userData.get("topic");
+                        String UserName = (String) userData.get("name");
+                        if(!Title.equals("~null")){
+                            Intent intent = new Intent(Home.this, Broadcast.class);
+                            intent.putExtra("Title", Title);
+                            intent.putExtra("Name", UserName);
+                            startActivity(intent);
+                        }
+                        else Toast.makeText(this, "must have topic first..", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
         });
     }
 
     private void PlayWithButton() {
         PlayWith.setOnClickListener(view -> {
-            //TODO: set playwith X O platform
             Intent intent = new Intent(Home.this, TicTacToe.class);
             intent.putExtra("Email", user.getEmail());
             startActivity(intent);
