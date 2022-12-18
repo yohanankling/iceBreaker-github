@@ -33,9 +33,21 @@ import java.util.Map;
 
 public class Home extends AppCompatActivity {
 
-    private Button Status, TopicChooser, TopicMembers, Broadcast, PlayWith, chat, ContactUs, UserList, RemoveUser, Disconnect;
+    // Declare variables for UI elements
+    private Button Status;
+    private Button TopicChooser;
+    private Button TopicMembers;
+    private Button Broadcast;
+    private Button PlayWith;
+    private Button chat;
+    private Button ContactUs;
+    private Button Disconnect;
+
+    // Declare Firebase variables
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore firebaseFirestore;
+
+    // Declare User object
     private User user;
 
     @Override
@@ -52,16 +64,24 @@ public class Home extends AppCompatActivity {
         ContactUsBtn();
         DisconnectButton();
         // TODO:: add offline ststus
+        // TODO:: add last message review
         // TODO:: add alert to new message
         // TODO:: add not read yet logo to messages
         // TODO: set X O platform
         // TODO:: fix keyboard resizeable
         // TODO:: fix auto resizeable to any screen
+        // TODO:: fix comments
+        // TODO:: improve the styling
+
     }
 
+    // Initialize fields and retrieve user data from Firebase
     private void initFields() {
+        // Initialize Firebase instances
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseFirestore = FirebaseFirestore.getInstance();
+
+        // Initialize UI elements
         Status = findViewById(R.id.Status);
         TopicChooser = findViewById(R.id.TopicChooser);
         TopicMembers = findViewById(R.id.TopicMembers);
@@ -71,9 +91,12 @@ public class Home extends AppCompatActivity {
         ContactUs = findViewById(R.id.userslist);
         Disconnect = findViewById(R.id.Disconnect);
 
+        // Initialize User object with default values
         user = new User("", "", "", "", "", "", true, false, true);
         user.setOnline(true);
         user.setId(firebaseAuth.getCurrentUser().getUid());
+
+        // Retrieve user data from Firebase
         DocumentReference documentReferenceuser = firebaseFirestore.collection("Users").document(user.getId());
         documentReferenceuser.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
@@ -85,6 +108,7 @@ public class Home extends AppCompatActivity {
                     user.setGender(userData.get("gender").toString());
                     user.setTopic(userData.get("topic").toString());
                 }
+                // If user has admin access, initialize admin functions
                 if (user.getEmail().equals("admin@gmail.com")) {
                     user.setAdminAccess(true);
                     initAdminFunc();
@@ -94,15 +118,15 @@ public class Home extends AppCompatActivity {
     }
 
     private void initAdminFunc() {
-        UserList = findViewById(R.id.UserList);
-        UserList.setVisibility(View.VISIBLE);
-        UserList.setOnClickListener(v -> {
+        Button userList = findViewById(R.id.UserList);
+        userList.setVisibility(View.VISIBLE);
+        userList.setOnClickListener(v -> {
             Intent intent = new Intent(Home.this, userslist.class);
             startActivity(intent);
         });
-        RemoveUser = findViewById(R.id.RemoveUser);
-        RemoveUser.setVisibility(View.VISIBLE);
-        RemoveUser.setOnClickListener(v -> removeUser());
+        Button removeUser = findViewById(R.id.RemoveUser);
+        removeUser.setVisibility(View.VISIBLE);
+        removeUser.setOnClickListener(v -> removeUser());
     }
 
     private void removeUser() {
@@ -174,10 +198,11 @@ public class Home extends AppCompatActivity {
         });
     }
 
-    @SuppressLint("SetTextI18n")
+    // Set OnClickListener for Status button
     private void StatusButton() {
         Status.setOnClickListener(view -> {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(Home.this);
+            // Show dialog to allow user to see their details
+            AlertDialog.Builder builder = new AlertDialog.Builder(Home.this);
                     final View PopUpStatus = getLayoutInflater().inflate(R.layout.status_popup, null);
                     ImageButton backBtn = PopUpStatus.findViewById(R.id.back);
                     ImageView male = PopUpStatus.findViewById(R.id.MaleUserPic);
@@ -210,6 +235,7 @@ public class Home extends AppCompatActivity {
         );
     }
 
+    // Set OnClickListener for Topic Chooser button
     private void TopicChooserButton() {
         TopicChooser.setOnClickListener(view -> {
             Intent intent = new Intent(Home.this, ChooseTopic.class);
@@ -218,6 +244,7 @@ public class Home extends AppCompatActivity {
         });
     }
 
+    // Set OnClickListener for Topic Members button
     private void TopicMembersButton() {
         TopicMembers.setOnClickListener(view -> {
             DocumentReference documentReferenceuser = firebaseFirestore.collection("Users").document(firebaseAuth.getUid());
@@ -239,6 +266,7 @@ public class Home extends AppCompatActivity {
         });
     }
 
+    // Set OnClickListener for Broadcast button
     private void BroadcastButton() {
         Broadcast.setOnClickListener(view -> {
             DocumentReference documentReferenceuser = firebaseFirestore.collection("Users").document(firebaseAuth.getUid());
@@ -262,6 +290,7 @@ public class Home extends AppCompatActivity {
         });
     }
 
+    // Set OnClickListener for Play With button
     private void PlayWithButton() {
         PlayWith.setOnClickListener(view -> {
             Intent intent = new Intent(Home.this, TicTacToe.class);
@@ -270,6 +299,7 @@ public class Home extends AppCompatActivity {
         });
     }
 
+    // Set OnClickListener for Chats button
     private void ChatsButton() {
         chat.setOnClickListener(view -> {
             Intent intent = new Intent(Home.this, ChatList.class);
@@ -277,6 +307,7 @@ public class Home extends AppCompatActivity {
         });
     }
 
+    // Set OnClickListener for Contact Us button
     private void ContactUsBtn() {
         ContactUs.setOnClickListener(view -> {
             Intent intent = new Intent(Home.this, Contact.class);
@@ -284,9 +315,36 @@ public class Home extends AppCompatActivity {
         });
     }
 
+    // Set OnClickListener for Disconnect button
     private void DisconnectButton() {
         Disconnect.setOnClickListener(view ->
                 DisconnectDialog());
+    }
+
+    private void DisconnectDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setCancelable(true);
+        builder.setTitle(user.getName() + " ,you sure?");
+        builder.setMessage("");
+        builder.setPositiveButton("yes please", (dialog, which) ->
+        {
+            Toast.makeText(Home.this, "bye-bye!", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(Home.this, MainActivity.class);
+            status("offline");
+            firebaseAuth.signOut();
+            startActivity(intent);
+        });
+        builder.setNegativeButton("no", (dialog, which) ->
+                Toast.makeText(Home.this, "good to have you back!", Toast.LENGTH_SHORT).show()
+        );
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    private void status(String status) {
+        DocumentReference documentReference = firebaseFirestore.collection("Users").document(firebaseAuth.getUid());
+        documentReference.update("status", status).addOnSuccessListener(unused -> {
+        });
     }
 
     @Override
@@ -316,31 +374,4 @@ public class Home extends AppCompatActivity {
         super.onBackPressed();
         DisconnectDialog();
     }
-
-    private void DisconnectDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setCancelable(true);
-        builder.setTitle(user.getName() + " ,you sure?");
-        builder.setMessage("");
-        builder.setPositiveButton("yes please", (dialog, which) ->
-        {
-            Toast.makeText(Home.this, "bye-bye!", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(Home.this, MainActivity.class);
-            status("offline");
-            firebaseAuth.signOut();
-            startActivity(intent);
-        });
-        builder.setNegativeButton("no", (dialog, which) ->
-                Toast.makeText(Home.this, "good to have you back!", Toast.LENGTH_SHORT).show()
-        );
-        AlertDialog dialog = builder.create();
-        dialog.show();
-    }
-
-    private void status(String status) {
-        DocumentReference documentReference = firebaseFirestore.collection("Users").document(firebaseAuth.getUid());
-        documentReference.update("status", status).addOnSuccessListener(unused -> {
-        });
-    }
-
 }

@@ -12,14 +12,23 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Button Login, register;
+    // Button views
+    private Button loginButton;
+    private Button registerButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Initialize the button views
         initViews();
-        LoginButton();
-        RegisterButton();
+
+        // Set up the login button
+        setupLoginButton();
+
+        // Set up the register button
+        setupRegisterButton();
     }
 
     @Override
@@ -27,26 +36,30 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
-        if(firebaseUser != null){
-            startActivity (new Intent(this, Home.class));
+        if (firebaseUser != null) {
+            // If the user is already logged in, start the home activity
+            startActivity(new Intent(this, Home.class));
         }
     }
 
+    // Method to initialize the button views
     private void initViews() {
-        Login = findViewById(R.id.Login);
-        register = findViewById(R.id.register);
+        loginButton = findViewById(R.id.Login);
+        registerButton = findViewById(R.id.register);
     }
 
-    private void LoginButton() {
-        Login.setOnClickListener(view -> {
-            Intent  intent = new Intent(MainActivity.this, Login.class);
+    // Method to set up the login button
+    private void setupLoginButton() {
+        loginButton.setOnClickListener(view -> {
+            Intent intent = new Intent(MainActivity.this, Login.class);
             startActivity(intent);
         });
     }
 
-    private void RegisterButton() {
-        register.setOnClickListener(view -> {
-            Intent  intent = new Intent(MainActivity.this, Register.class);
+    // Method to set up the register button
+    private void setupRegisterButton() {
+        registerButton.setOnClickListener(view -> {
+            Intent intent = new Intent(MainActivity.this, Register.class);
             startActivity(intent);
         });
     }
