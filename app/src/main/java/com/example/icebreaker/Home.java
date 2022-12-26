@@ -63,14 +63,15 @@ public class Home extends AppCompatActivity {
         ChatsButton();
         ContactUsBtn();
         DisconnectButton();
-        // TODO:: add offline status
+
+        // TODO:: add offline status - to qa this
         // TODO:: add last message review
         // TODO:: add alert to new message
         // TODO:: add not read yet logo to messages
         // TODO: set X O platform
         // TODO:: fix keyboard resizeable
         // TODO:: fix auto resizeable to any screen
-        // TODO:: fix comments
+        // TODO:: add comments
         // TODO:: improve the styling
 
     }
@@ -295,7 +296,7 @@ public class Home extends AppCompatActivity {
 //            Intent intent = new Intent(Home.this, TicTacToe.class);
 //            intent.putExtra("Email", user.getEmail());
 //            startActivity(intent);
-            Toast.makeText(this, "area in shiputsim", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "area under construction..", Toast.LENGTH_SHORT).show();
         });
     }
 

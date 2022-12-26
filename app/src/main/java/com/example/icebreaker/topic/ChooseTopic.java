@@ -159,7 +159,7 @@ public class ChooseTopic extends AppCompatActivity {
                     long members = (long) topicData.get("Members");
                     topicData.replace("Members", members - 1);
                     documentReference.set(topicData);
-                    if (members == 0){
+                    if (members == 1){
                         documentReference.delete();
                     }
                 }
@@ -241,10 +241,28 @@ public class ChooseTopic extends AppCompatActivity {
                     TopicData.put("Members", 1);
                     documentReference.set(TopicData);
                     Toast.makeText(ChooseTopic.this, "topic added!", Toast.LENGTH_SHORT).show();
+                    CurrnetTitle();
                     changeUserData(TopicName);
                     Intent intent = new Intent(ChooseTopic.this, ChooseTopic.class);
                     intent.putExtra("Name", Name);
                     startActivity(intent);
+                }
+            }
+        });
+    }
+
+    private void CurrnetTitle() {
+        DocumentReference documentReferenceuser = firebaseFirestore.collection("Users").document(firebaseAuth.getUid());
+        documentReferenceuser.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+                if (document.exists()) {
+                    Map<String, Object> userData = document.getData();
+                    String tiltleRegistered = (String) userData
+                            .get("topic");
+                    if (!tiltleRegistered.equals("~null")){
+                        leaveTitle(tiltleRegistered);
+                    }
                 }
             }
         });
