@@ -64,14 +64,12 @@ public class Home extends AppCompatActivity {
         ContactUsBtn();
         DisconnectButton();
 
-        // TODO:: add offline status - to qa this
         // TODO:: add last message review
         // TODO:: add alert to new message
         // TODO:: add not read yet logo to messages
         // TODO: set X O platform
         // TODO:: fix keyboard resizeable
         // TODO:: fix auto resizeable to any screen
-        // TODO:: add comments
         // TODO:: improve the styling
 
     }

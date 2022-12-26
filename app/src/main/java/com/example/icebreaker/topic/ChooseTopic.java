@@ -114,7 +114,6 @@ public class ChooseTopic extends AppCompatActivity {
         builder.setMessage("");
         builder.setPositiveButton("yes please", (dialog, which) ->
             checkIfAlreadyin(Title, members));
-        Toast.makeText(this, Name, Toast.LENGTH_SHORT).show();
         builder.setNegativeButton("no", (dialog, which) ->
                 closeOptionsMenu()
         );
@@ -155,12 +154,15 @@ public class ChooseTopic extends AppCompatActivity {
                 DocumentSnapshot document = task.getResult();
                 if (document.exists()) {
                     Map<String, Object> topicData = document.getData();
-                    topicData.remove(firebaseAuth.getUid());
+                    if (topicData.containsKey(firebaseAuth.getUid())){
                     long members = (long) topicData.get("Members");
-                    topicData.replace("Members", members - 1);
-                    documentReference.set(topicData);
                     if (members == 1){
                         documentReference.delete();
+                    }else {
+                        topicData.remove(firebaseAuth.getUid());
+                        topicData.replace("Members", members - 1);
+                        documentReference.set(topicData);
+                    }
                     }
                 }
             }
