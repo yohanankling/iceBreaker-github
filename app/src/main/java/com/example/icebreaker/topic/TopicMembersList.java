@@ -91,15 +91,19 @@ public class TopicMembersList extends AppCompatActivity {
         topicAdapter.notifyDataSetChanged();
         status("online");
     }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        status("offline");
+    }
 
-//    @Override
-//    protected void onStop() {
-//        super.onStop();
-//        if (chatAdapter != null){
-//            chatAdapter.stopListening();
-//            status("offline");
-//        }
-//    }
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (this.isFinishing()) {
+            status("offline");
+        }
+    }
 
     private void status(String status) {
         DocumentReference documentReference = firebaseFirestore.collection("Users").document(firebaseAuth.getUid());

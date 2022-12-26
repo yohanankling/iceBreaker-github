@@ -78,6 +78,7 @@ public class ChatList extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 usersArrayList.clear();
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    findViewById(R.id.noChats).setVisibility(View.INVISIBLE);
                     DocumentReference documentReference = firebaseFirestore.collection("Users").document(dataSnapshot.getKey());
                     documentReference.get().addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {

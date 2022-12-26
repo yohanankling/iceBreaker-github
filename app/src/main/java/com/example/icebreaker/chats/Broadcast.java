@@ -56,7 +56,21 @@ public class Broadcast extends AppCompatActivity {
         backBtn();
         sendBtn();
     }
-//
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        status("offline");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (this.isFinishing()) {
+            status("offline");
+        }
+    }
+
     @SuppressLint("SimpleDateFormat")
     private void initFields() {
         firebaseAuth = FirebaseAuth.getInstance();

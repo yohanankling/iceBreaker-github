@@ -151,14 +151,19 @@ public class Chat extends AppCompatActivity {
         status("online");
     }
 
-//    @Override
-//    protected void onStop() {
-//        super.onStop();
-//        if (messagesAdapter != null){
-//            messagesAdapter.notifyDataSetChanged();
-//            status("offline");
-//        }
-//    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        status("offline");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (this.isFinishing()) {
+            status("offline");
+        }
+    }
 
     private void status(String status) {
         DocumentReference documentReference = firebaseFirestore.collection("Users").document(firebaseAuth.getUid());

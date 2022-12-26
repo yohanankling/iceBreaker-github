@@ -39,6 +39,7 @@ public class ChooseTopic extends AppCompatActivity {
     private FirebaseFirestore firebaseFirestore;
     private FirestoreRecyclerAdapter<Topic, TopicDetails> TopicsAdapter;
     String Name;
+    TextView noChats;
 
 
     @Override
@@ -63,6 +64,8 @@ public class ChooseTopic extends AppCompatActivity {
         Name = getIntent().getStringExtra("Name");
         ConstraintLayout constraintLayout = findViewById(R.id.Add);
         Add = findViewById(R.id.AddBtn);
+        noChats = findViewById(R.id.noChats);
+        noChats.setText("no topics added");
         constraintLayout.setVisibility(View.VISIBLE);
     }
 
@@ -85,6 +88,7 @@ public class ChooseTopic extends AppCompatActivity {
         TopicsAdapter = new FirestoreRecyclerAdapter<Topic, TopicDetails>(topic) {
             @Override
             protected void onBindViewHolder(@NonNull TopicDetails TopicDetails, int i, @NonNull Topic Topic) {
+                noChats.setVisibility(View.INVISIBLE);
                 TopicDetails.TopicName.setText(" " + Topic.getTitle());
                 TopicDetails.Members.setText(" " + Topic.getMembers() +" Friends ");
                 TopicDetails.itemView.setOnClickListener(v -> joinTopic(Topic.getTitle(), Topic.getMembers()));
@@ -110,6 +114,7 @@ public class ChooseTopic extends AppCompatActivity {
         builder.setMessage("");
         builder.setPositiveButton("yes please", (dialog, which) ->
             checkIfAlreadyin(Title, members));
+        Toast.makeText(this, Name, Toast.LENGTH_SHORT).show();
         builder.setNegativeButton("no", (dialog, which) ->
                 closeOptionsMenu()
         );
@@ -134,11 +139,6 @@ public class ChooseTopic extends AppCompatActivity {
                         changeUserData(title);
                     }
                     else{
-
-
-
-
-
                         leaveTitle(tiltleRegistered);
                         registerdToTopic(title,members);
                         changeUserData(title);
@@ -243,6 +243,7 @@ public class ChooseTopic extends AppCompatActivity {
                     Toast.makeText(ChooseTopic.this, "topic added!", Toast.LENGTH_SHORT).show();
                     changeUserData(TopicName);
                     Intent intent = new Intent(ChooseTopic.this, ChooseTopic.class);
+                    intent.putExtra("Name", Name);
                     startActivity(intent);
                 }
             }
@@ -256,14 +257,19 @@ public class ChooseTopic extends AppCompatActivity {
         status("online");
     }
 
-//    @Override
-//    protected void onStop() {
-//        super.onStop();
-//        if (chatAdapter != null){
-//            chatAdapter.stopListening();
-//            status("offline");
-//        }
-//    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        status("offline");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (this.isFinishing()) {
+            status("offline");
+        }
+    }
 
     private void status(String status) {
         DocumentReference documentReference = firebaseFirestore.collection("Users").document(firebaseAuth.getUid());

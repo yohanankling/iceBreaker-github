@@ -24,6 +24,8 @@ public class Contact extends AppCompatActivity {
     private ImageButton backBtn, yohWhatsapp, yohLinkedin, yohGithub, yohCv,
             tzachWhatsapp, tzachLinkedin, tzachGithub, tzachCv,
             nadavWhatsapp, nadavLinkedin, nadavGithub, nadavCv;
+    private FirebaseAuth firebaseAuth;
+    private FirebaseFirestore firebaseFirestore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +36,8 @@ public class Contact extends AppCompatActivity {
     }
 
     private void initFields() {
+        firebaseAuth = FirebaseAuth.getInstance();
+        firebaseFirestore = FirebaseFirestore.getInstance();
         backBtn = findViewById(R.id.back);
         yohWhatsapp = findViewById(R.id.yohWhatsapp);
         yohLinkedin = findViewById(R.id.yohLinkedin);
@@ -126,29 +130,30 @@ public class Contact extends AppCompatActivity {
 //            startActivity(intent);
         });
     }
+    @Override
+    protected void onStart() {
+        super.onStart();
+        status("online");
+    }
 
-//    @Override
-//    protected void onStart() {
-//        super.onStart();
-//        status("online");
-//    }
-//
-//    @Override
-//    protected void onStop() {
-//        super.onStop();
-//        if (this.isFinishing()){
-//            status("offline");
-//        }
-//    }
-//
-//    private void status(String status) {
-//        DocumentReference documentReference = firebaseFirestore.collection("Users").document(firebaseAuth.getUid());
-//        documentReference.update("status", status).addOnSuccessListener(new OnSuccessListener<Void>() {
-//            @Override
-//            public void onSuccess(Void unused) {
-//
-//            }
-//        });
-//    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        status("offline");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (this.isFinishing()) {
+            status("offline");
+        }
+    }
+
+    private void status(String status) {
+        DocumentReference documentReference = firebaseFirestore.collection("Users").document(firebaseAuth.getUid());
+        documentReference.update("status", status).addOnSuccessListener(unused -> {
+        });
+    }
 
 }
