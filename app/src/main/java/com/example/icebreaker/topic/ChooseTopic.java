@@ -134,6 +134,11 @@ public class ChooseTopic extends AppCompatActivity {
                         changeUserData(title);
                     }
                     else{
+
+
+
+
+
                         leaveTitle(tiltleRegistered);
                         registerdToTopic(title,members);
                         changeUserData(title);
@@ -149,12 +154,12 @@ public class ChooseTopic extends AppCompatActivity {
             if (task.isSuccessful()) {
                 DocumentSnapshot document = task.getResult();
                 if (document.exists()) {
-                    Map<String, Object> userData = document.getData();
-                    userData.remove(firebaseAuth.getUid());
-                    long members = (long) userData.get("Members");
-                    userData.replace("Members", members - 1);
-                    documentReference.set(userData);
-                    if (members == 1){
+                    Map<String, Object> topicData = document.getData();
+                    topicData.remove(firebaseAuth.getUid());
+                    long members = (long) topicData.get("Members");
+                    topicData.replace("Members", members - 1);
+                    documentReference.set(topicData);
+                    if (members == 0){
                         documentReference.delete();
                     }
                 }

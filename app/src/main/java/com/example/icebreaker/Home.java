@@ -63,7 +63,7 @@ public class Home extends AppCompatActivity {
         ChatsButton();
         ContactUsBtn();
         DisconnectButton();
-        // TODO:: add offline ststus
+        // TODO:: add offline status
         // TODO:: add last message review
         // TODO:: add alert to new message
         // TODO:: add not read yet logo to messages
@@ -93,7 +93,6 @@ public class Home extends AppCompatActivity {
 
         // Initialize User object with default values
         user = new User("", "", "", "", "", "", true, false, true);
-        user.setOnline(true);
         user.setId(firebaseAuth.getCurrentUser().getUid());
 
         // Retrieve user data from Firebase
@@ -293,9 +292,10 @@ public class Home extends AppCompatActivity {
     // Set OnClickListener for Play With button
     private void PlayWithButton() {
         PlayWith.setOnClickListener(view -> {
-            Intent intent = new Intent(Home.this, TicTacToe.class);
-            intent.putExtra("Email", user.getEmail());
-            startActivity(intent);
+//            Intent intent = new Intent(Home.this, TicTacToe.class);
+//            intent.putExtra("Email", user.getEmail());
+//            startActivity(intent);
+            Toast.makeText(this, "area in shiputsim", Toast.LENGTH_SHORT).show();
         });
     }
 
@@ -351,14 +351,6 @@ public class Home extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         status("offline");
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        if (this.isFinishing()) {
-            status("offline");
-        }
     }
 
     @Override
