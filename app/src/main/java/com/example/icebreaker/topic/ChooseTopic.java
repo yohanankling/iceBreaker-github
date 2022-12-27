@@ -62,11 +62,10 @@ public class ChooseTopic extends AppCompatActivity {
         TextView title = findViewById(R.id.Title);
         title.setText("Topics");
         Name = getIntent().getStringExtra("Name");
-        ConstraintLayout constraintLayout = findViewById(R.id.Add);
         Add = findViewById(R.id.AddBtn);
+        Add.setVisibility(View.VISIBLE);
         noChats = findViewById(R.id.noChats);
         noChats.setText("no topics added");
-        constraintLayout.setVisibility(View.VISIBLE);
     }
 
     public class TopicDetails extends RecyclerView.ViewHolder {
