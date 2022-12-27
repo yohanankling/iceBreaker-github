@@ -3,6 +3,9 @@ package com.example.icebreaker;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -11,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -34,14 +38,12 @@ import java.util.Map;
 public class Home extends AppCompatActivity {
 
     // Declare variables for UI elements
-    private Button Status;
     private Button TopicChooser;
     private Button TopicMembers;
-    private Button Broadcast;
-    private Button PlayWith;
-    private Button chat;
     private Button ContactUs;
-    private Button Disconnect;
+    private ImageButton chat;
+    private ImageButton PlayWith;
+    private ImageButton Broadcast;
 
     // Declare Firebase variables
     private FirebaseAuth firebaseAuth;
@@ -55,14 +57,12 @@ public class Home extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         initFields();
-        StatusButton();
         TopicChooserButton();
         TopicMembersButton();
         BroadcastButton();
         PlayWithButton();
         ChatsButton();
         ContactUsBtn();
-        DisconnectButton();
 
         // TODO:: add last message review
         // TODO:: add alert to new message
@@ -74,6 +74,25 @@ public class Home extends AppCompatActivity {
 
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.profile:
+                StatusButton();
+                return true;
+            case R.id.disconnect:
+                DisconnectDialog();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     // Initialize fields and retrieve user data from Firebase
     private void initFields() {
         // Initialize Firebase instances
@@ -81,14 +100,12 @@ public class Home extends AppCompatActivity {
         firebaseFirestore = FirebaseFirestore.getInstance();
 
         // Initialize UI elements
-        Status = findViewById(R.id.Status);
         TopicChooser = findViewById(R.id.TopicChooser);
         TopicMembers = findViewById(R.id.TopicMembers);
-        Broadcast = findViewById(R.id.Broadcast);
-        PlayWith = findViewById(R.id.PlayWith);
-        chat = findViewById(R.id.Chats);
-        ContactUs = findViewById(R.id.userslist);
-        Disconnect = findViewById(R.id.Disconnect);
+        Broadcast = findViewById(R.id.broadcast);
+        PlayWith = findViewById(R.id.game);
+        chat = findViewById(R.id.chats);
+        ContactUs = findViewById(R.id.contactUs);
 
         // Initialize User object with default values
         user = new User("", "", "", "", "", "", true, false, true);
@@ -198,39 +215,36 @@ public class Home extends AppCompatActivity {
 
     // Set OnClickListener for Status button
     private void StatusButton() {
-        Status.setOnClickListener(view -> {
-            // Show dialog to allow user to see their details
-            AlertDialog.Builder builder = new AlertDialog.Builder(Home.this);
-                    final View PopUpStatus = getLayoutInflater().inflate(R.layout.status_popup, null);
-                    ImageButton backBtn = PopUpStatus.findViewById(R.id.back);
-                    ImageView male = PopUpStatus.findViewById(R.id.MaleUserPic);
-                    ImageView female = PopUpStatus.findViewById(R.id.FemaleUserPic);
-                    TextView name = PopUpStatus.findViewById(R.id.Name);
-                    TextView mail = PopUpStatus.findViewById(R.id.Mail);
-                    TextView topic = PopUpStatus.findViewById(R.id.Topic);
-                    TextView Game = PopUpStatus.findViewById(R.id.Game);
-                    TextView SocialClass = PopUpStatus.findViewById(R.id.SocialClass);
-                    backBtn.setOnClickListener(v -> {
-                        Intent intent = new Intent(Home.this, Home.class);
-                        startActivity(intent);
-                    });
-                    if (user.getGender().equals("Male")) {
-                        male.setVisibility(View.VISIBLE);
-                    } else female.setVisibility(View.VISIBLE);
-                    name.setText(user.getName());
-                    mail.setText("mail: " + user.getEmail());
-                    topic.setText("topic: " + user.getTopic());
-                    if (user.isGameAvailable()) {
-                        Game.setText("game: " + "available");
-                    } else Game.setText("game: " + "not available");
-                    if (!user.haveAdminAccess()) {
-                        SocialClass.setText("access: user");
-                    } else SocialClass.setText("access: admin");
-                    builder.setView(PopUpStatus);
-                    AlertDialog dialog = builder.create();
-                    dialog.show();
-                }
-        );
+        // Show dialog to allow user to see their details
+        AlertDialog.Builder builder = new AlertDialog.Builder(Home.this);
+        final View PopUpStatus = getLayoutInflater().inflate(R.layout.status_popup, null);
+        ImageButton backBtn = PopUpStatus.findViewById(R.id.back);
+        ImageView male = PopUpStatus.findViewById(R.id.MaleUserPic);
+        ImageView female = PopUpStatus.findViewById(R.id.FemaleUserPic);
+        TextView name = PopUpStatus.findViewById(R.id.Name);
+        TextView mail = PopUpStatus.findViewById(R.id.Mail);
+        TextView topic = PopUpStatus.findViewById(R.id.Topic);
+        TextView Game = PopUpStatus.findViewById(R.id.Game);
+        TextView SocialClass = PopUpStatus.findViewById(R.id.SocialClass);
+        backBtn.setOnClickListener(v -> {
+            Intent intent = new Intent(Home.this, Home.class);
+            startActivity(intent);
+        });
+        if (user.getGender().equals("Male")) {
+            male.setVisibility(View.VISIBLE);
+        } else female.setVisibility(View.VISIBLE);
+        name.setText(user.getName());
+        mail.setText("mail: " + user.getEmail());
+        topic.setText("topic: " + user.getTopic());
+        if (user.isGameAvailable()) {
+            Game.setText("game: " + "available");
+        } else Game.setText("game: " + "not available");
+        if (!user.haveAdminAccess()) {
+            SocialClass.setText("access: user");
+        } else SocialClass.setText("access: admin");
+        builder.setView(PopUpStatus);
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     // Set OnClickListener for Topic Chooser button
@@ -312,12 +326,6 @@ public class Home extends AppCompatActivity {
             Intent intent = new Intent(Home.this, Contact.class);
             startActivity(intent);
         });
-    }
-
-    // Set OnClickListener for Disconnect button
-    private void DisconnectButton() {
-        Disconnect.setOnClickListener(view ->
-                DisconnectDialog());
     }
 
     private void DisconnectDialog() {

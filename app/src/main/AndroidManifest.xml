@@ -82,6 +82,7 @@
         </activity>
         <activity
             android:name=".Home"
+         android:theme="@style/ThemeBar.IceBreaker"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"

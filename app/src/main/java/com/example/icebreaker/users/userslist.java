@@ -66,6 +66,9 @@ public class userslist extends AppCompatActivity {
         firebaseFirestore = FirebaseFirestore.getInstance();
         recyclerView = findViewById(R.id.recyclerview);
         back = findViewById(R.id.back);
+        TextView title = findViewById(R.id.Title);
+        title.setText("Users");
+        findViewById(R.id.noChats).setVisibility(View.INVISIBLE);
     }
 
     // Set up the back button to finish the activity
