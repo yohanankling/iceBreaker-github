@@ -76,7 +76,7 @@
         android:id="@+id/buttonBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="68dp"
+        android:layout_marginTop="55dp"
         android:background="#335955"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -122,9 +122,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="37dp"
+        android:layout_marginTop="5dp"
+        android:fontFamily="casual"
         android:text="chats"
-        app:layout_constraintBottom_toTopOf="@+id/buttonBar"
-        app:layout_constraintStart_toStartOf="@+id/buttonBar" />
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/buttonBar"
+        app:layout_constraintTop_toBottomOf="@+id/buttonBar" />
 
     <TextView
         android:id="@+id/textView3"
@@ -132,9 +135,12 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:text="group"
-        app:layout_constraintBottom_toTopOf="@+id/buttonBar"
+        android:fontFamily="casual"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/textView2"
         app:layout_constraintEnd_toStartOf="@+id/textView4"
-        app:layout_constraintStart_toEndOf="@+id/textView2" />
+        app:layout_constraintStart_toEndOf="@+id/textView2"
+        app:layout_constraintTop_toTopOf="@+id/textView2" />
 
     <TextView
         android:id="@+id/textView4"
@@ -142,14 +148,17 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="23dp"
         android:text="play zone"
-        app:layout_constraintBottom_toTopOf="@+id/buttonBar"
-        app:layout_constraintEnd_toEndOf="@+id/buttonBar" />
+        android:fontFamily="casual"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/textView3"
+        app:layout_constraintEnd_toEndOf="@+id/buttonBar"
+        app:layout_constraintTop_toTopOf="@+id/textView3" />
 
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="55dp"
         android:alpha="0.2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
