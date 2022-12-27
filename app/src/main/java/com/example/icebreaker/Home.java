@@ -25,6 +25,12 @@ import com.example.icebreaker.topic.ChooseTopic;
 import com.example.icebreaker.topic.TopicMembersList;
 import com.example.icebreaker.users.*;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -47,6 +53,7 @@ public class Home extends AppCompatActivity {
 
     // Declare Firebase variables
     private FirebaseAuth firebaseAuth;
+    private FirebaseDatabase firebaseDatabase;
     private FirebaseFirestore firebaseFirestore;
 
     // Declare User object
@@ -70,7 +77,6 @@ public class Home extends AppCompatActivity {
         // TODO: set X O platform
         // TODO:: fix keyboard resizeable
         // TODO:: fix auto resizeable to any screen
-        // TODO:: improve the styling
 
     }
 
@@ -97,6 +103,7 @@ public class Home extends AppCompatActivity {
     private void initFields() {
         // Initialize Firebase instances
         firebaseAuth = FirebaseAuth.getInstance();
+        firebaseDatabase = FirebaseDatabase.getInstance();
         firebaseFirestore = FirebaseFirestore.getInstance();
 
         // Initialize UI elements
@@ -188,6 +195,11 @@ public class Home extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        checkifbanned();
+        listenToNewMessages();
+    }
+
+    private void checkifbanned() {
         DocumentReference documentReference = firebaseFirestore.collection("Banned").document(firebaseAuth.getUid());
         documentReference.addSnapshotListener((value, error) -> {
             if (value.exists()) {
@@ -213,7 +225,22 @@ public class Home extends AppCompatActivity {
         });
     }
 
-    // Set OnClickListener for Status button
+    private void listenToNewMessages() {
+        DatabaseReference databaseReference = firebaseDatabase.getReference().child("chats").child(firebaseAuth.getUid());
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Toast.makeText(Home.this, "you have got a message!", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+        // Set OnClickListener for Status button
     private void StatusButton() {
         // Show dialog to allow user to see their details
         AlertDialog.Builder builder = new AlertDialog.Builder(Home.this);
