@@ -229,6 +229,10 @@ public class ChooseTopic extends AppCompatActivity {
             Toast.makeText(this, "cant fill empty title", Toast.LENGTH_SHORT).show();
             return;
         }
+        if (TopicName.length()>15){
+            Toast.makeText(this, "too long title! \n up tp 15 characters", Toast.LENGTH_SHORT).show();
+            return;
+        }
         DocumentReference documentReference = firebaseFirestore.collection("Topics").document(TopicName);
         documentReference.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
