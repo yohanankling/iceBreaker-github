@@ -12,5 +12,6 @@
     <color name="theme">#75C5BD</color>
     <color name="clear">#00FFFFFF</color>
     <color name="red">#FF0000</color>
+    <color name="dark_blue">#101132</color>
 
 </resources>

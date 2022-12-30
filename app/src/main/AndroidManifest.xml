@@ -16,6 +16,27 @@
         tools:replace="android:supportsRtl"
         tools:targetApi="31">
         <activity
+            android:name=".gameZone.WinDialog"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".gameZone.theGame"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".gameZone.PlayerName"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".chats.Broadcast"
             android:exported="false"
             android:windowSoftInputMode="adjustPan|stateHidden">
@@ -60,13 +81,6 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".gameZone.TicTacToe"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
             android:name=".contactUs.Contact"
             android:exported="false">
             <meta-data
@@ -82,8 +96,8 @@
         </activity>
         <activity
             android:name=".Home"
-         android:theme="@style/ThemeBar.IceBreaker"
-            android:exported="false">
+            android:exported="false"
+            android:theme="@style/ThemeBar.IceBreaker">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
