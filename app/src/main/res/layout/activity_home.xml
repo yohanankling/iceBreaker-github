@@ -13,7 +13,6 @@
         android:layout_width="125dp"
         android:layout_height="50dp"
         android:layout_marginStart="30dp"
-        android:layout_marginTop="30dp"
         android:background="@drawable/buttons"
         android:text="choose a topic"
         android:textSize="12sp"
@@ -63,13 +62,15 @@
         android:id="@+id/contactUs"
         android:layout_width="300dp"
         android:layout_height="48dp"
+        android:layout_marginTop="30dp"
         android:layout_marginBottom="10dp"
         android:background="@drawable/buttons"
         android:text="talk with the developers"
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/UserList" />
 
 
     <androidx.constraintlayout.widget.ConstraintLayout

@@ -76,7 +76,6 @@ public class Home extends AppCompatActivity {
         // TODO:: add not read yet logo to messages
         // TODO: set X O platform
         // TODO:: fix keyboard resizeable
-        // TODO:: fix auto resizeable to any screen
 
     }
 
@@ -171,7 +170,7 @@ public class Home extends AppCompatActivity {
                         Map<String, Object> userData = document.getData();
                         String removeUid = userData.get("uid").toString();
                         String removedEmail = userData.get("email").toString();
-                        firebaseFirestore.collection("Users").document(removeUid).delete();
+//                        firebaseFirestore.collection("Users").document(removeUid).delete();
                         DocumentReference documentReference = firebaseFirestore.collection("Banned").document(removeUid);
                         Map<String, Object> BannedData = new HashMap<>();
                         BannedData.put("email", removedEmail);
@@ -196,7 +195,7 @@ public class Home extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         checkifbanned();
-        listenToNewMessages();
+//        listenToNewMessages();
     }
 
     private void checkifbanned() {
@@ -227,7 +226,7 @@ public class Home extends AppCompatActivity {
 
     private void listenToNewMessages() {
         DatabaseReference databaseReference = firebaseDatabase.getReference().child("chats").child(firebaseAuth.getUid());
-        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+        databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 Toast.makeText(Home.this, "you have got a message!", Toast.LENGTH_SHORT).show();

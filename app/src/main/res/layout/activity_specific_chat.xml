@@ -85,7 +85,7 @@
 
         <EditText
             android:id="@+id/getMessage"
-            android:layout_width="350dp"
+            android:layout_width="300dp"
             android:layout_height="48dp"
             android:background="@drawable/edittextbackground"
             android:hint="type a message"
@@ -105,11 +105,9 @@
             android:layout_height="50dp"
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
-            android:layout_marginLeft="10dp"
             android:background="@drawable/send"
             app:layout_constraintBottom_toBottomOf="@+id/getMessage"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/getMessage"
             app:layout_constraintTop_toTopOf="@+id/getMessage" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
