@@ -19,9 +19,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.icebreaker.chats.*;
 import com.example.icebreaker.contactUs.Contact;
-import com.example.icebreaker.gameZone.PlayerName;
-import com.example.icebreaker.topic.ChooseTopic;
-import com.example.icebreaker.topic.TopicMembersList;
+import com.example.icebreaker.gameZone.*;
+import com.example.icebreaker.topic.*;
 import com.example.icebreaker.users.*;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -329,10 +328,9 @@ public class Home extends AppCompatActivity {
     // Set OnClickListener for Play With button
     private void PlayWithButton() {
         PlayWith.setOnClickListener(view -> {
-            Intent intent = new Intent(Home.this, PlayerName.class);
-            intent.putExtra("Email", user.getEmail());
+            Intent intent = new Intent(Home.this, theGame.class);
+            intent.putExtra("Name", user.getName());
             startActivity(intent);
-//            Toast.makeText(this, "area under construction..", Toast.LENGTH_SHORT).show();
         });
     }
 

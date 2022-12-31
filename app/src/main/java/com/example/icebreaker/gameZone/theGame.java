@@ -1,28 +1,33 @@
 package com.example.icebreaker.gameZone;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
+import com.example.icebreaker.Home;
 import com.example.icebreaker.R;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class theGame extends AppCompatActivity {
 
-    private LinearLayout player1Layout, player2Layout;
+    private ConstraintLayout player1Layout, player2Layout;
     private ImageView image1,image2,image3,image4,image5,image6,image7,image8,image9;
     private TextView player1TV, player2TV;
 
@@ -30,14 +35,16 @@ public class theGame extends AppCompatActivity {
     private final List<String> doneBoxes = new ArrayList<>();
 
     private String playerUniqueId = "0";
-
-    DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://icebreaker-7db2a-default-rtdb.firebaseio.com/");
+    private FirebaseAuth firebaseAuth;
+    private FirebaseDatabase firebaseDatabase;
+    private FirebaseFirestore firebaseFirestore;
 
     private boolean opponentFound = false;
 
     private String opponentUniqueId = "0";
 
     private String status = "matching";
+    private String  myName;
 
     private String playerTurn = "";
     private String connectionId = "";
@@ -50,7 +57,19 @@ public class theGame extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_the_game);
+        initFields();
+        waitForOpponent();
+        setGame();
+        turnsListener();
+        wonListener();
+        boardListener();
+    }
 
+    private void initFields() {
+        firebaseAuth = FirebaseAuth.getInstance();
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        firebaseFirestore = FirebaseFirestore.getInstance();
+        playerUniqueId = firebaseAuth.getUid();
         player1Layout = findViewById(R.id.player1Layout);
         player2Layout = findViewById(R.id.player2Layout);
         image1 = findViewById(R.id.image1);
@@ -62,13 +81,10 @@ public class theGame extends AppCompatActivity {
         image7 = findViewById(R.id.image7);
         image8 = findViewById(R.id.image8);
         image9 = findViewById(R.id.image9);
-
+        myName = getIntent().getStringExtra("Name");
         player1TV = findViewById(R.id.player1TV);
         player2TV = findViewById(R.id.player2TV);
 
-
-
-        final String getPlayerName = getIntent().getStringExtra("playerName");
         combinationsList.add(new int[]{0,1,2});
         combinationsList.add(new int[]{3,4,5});
         combinationsList.add(new int[]{6,7,8});
@@ -77,17 +93,18 @@ public class theGame extends AppCompatActivity {
         combinationsList.add(new int[]{2,5,8});
         combinationsList.add(new int[]{2,4,6});
         combinationsList.add(new int[]{0,4,8});
+    }
 
-        ProgressDialog progressDialog = new ProgressDialog(this);
-        progressDialog.setCancelable(false);
-        progressDialog.setMessage("Waiting For Opponent");
-        progressDialog.show();
+    private void waitForOpponent() {
 
-        playerUniqueId = String.valueOf(System.currentTimeMillis());
+        AlertDialog.Builder builder = new AlertDialog.Builder(theGame.this);
+        final View PopUp = getLayoutInflater().inflate(R.layout.waitingpopout, null);
+        builder.setView(PopUp);
+        builder.setCancelable(false);
+        AlertDialog dialog = builder.create();
+        dialog.show();
 
-        player1TV.setText(getPlayerName);
-
-        databaseReference.child("connections").addValueEventListener(new ValueEventListener() {
+        firebaseDatabase.getReference().child("connections").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
@@ -117,13 +134,12 @@ public class theGame extends AppCompatActivity {
                                             connectionId = conId;
                                             opponentFound = true;
 
-                                            databaseReference.child("turns").child(connectionId).addValueEventListener(turnsEventListener);
-                                            databaseReference.child("won").child(connectionId).addValueEventListener(wonEventListener);
+                                            firebaseDatabase.getReference().child("turns").child(connectionId).addValueEventListener(turnsEventListener);
+                                            firebaseDatabase.getReference().child("won").child(connectionId).addValueEventListener(wonEventListener);
 
-                                            if(progressDialog.isShowing()){
-                                                progressDialog.dismiss();
-                                            }
-                                            databaseReference.child("connections").removeEventListener(this);
+                                            dialog.dismiss();
+
+                                            firebaseDatabase.getReference().child("connections").removeEventListener(this);
 
                                         }
                                     }
@@ -131,7 +147,7 @@ public class theGame extends AppCompatActivity {
                             }
                             else{
                                 if(getPlayersCount == 1){
-                                    connections.child(playerUniqueId).child("player_name").getRef().setValue(getPlayerName);
+                                    connections.child(playerUniqueId).child("player_name").getRef().setValue(myName);
                                     for(DataSnapshot players : connections.getChildren()){
                                         String getOpponentName = players.child("player_name").getValue(String.class);
                                         opponentUniqueId = players.getKey();
@@ -142,13 +158,12 @@ public class theGame extends AppCompatActivity {
                                         opponentFound = true;
 
 
-                                        databaseReference.child("turns").child(connectionId).addValueEventListener(turnsEventListener);
-                                        databaseReference.child("won").child(connectionId).addValueEventListener(wonEventListener);
+                                        firebaseDatabase.getReference().child("turns").child(connectionId).addValueEventListener(turnsEventListener);
+                                        firebaseDatabase.getReference().child("won").child(connectionId).addValueEventListener(wonEventListener);
 
-                                        if(progressDialog.isShowing()){
-                                            progressDialog.dismiss();
-                                        }
-                                        databaseReference.child("connections").removeEventListener(this);
+                                        dialog.dismiss();
+
+                                        firebaseDatabase.getReference().child("connections").removeEventListener(this);
                                         break;
                                     }
                                 }
@@ -158,14 +173,14 @@ public class theGame extends AppCompatActivity {
 
                         if(!opponentFound && !status.equals("waiting")){
                             String connectionUniqueId = String.valueOf((System.currentTimeMillis()));
-                            snapshot.child(connectionUniqueId).child(playerUniqueId).child("player_name").getRef().setValue(getPlayerName);
+                            snapshot.child(connectionUniqueId).child(playerUniqueId).child("player_name").getRef().setValue(myName);
                             status = "waiting";
                         }
                     }
 
                     else{
                         String connectionUniqueId = String.valueOf((System.currentTimeMillis()));
-                        snapshot.child(connectionUniqueId).child(playerUniqueId).child("player_name").getRef().setValue(getPlayerName);
+                        snapshot.child(connectionUniqueId).child(playerUniqueId).child("player_name").getRef().setValue(myName);
                         status = "waiting";
                     }
                 }
@@ -176,6 +191,13 @@ public class theGame extends AppCompatActivity {
 
             }
         });
+    }
+
+    private void setGame() {
+        player1TV.setText(myName);
+    }
+
+    private void turnsListener() {
         turnsEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -235,25 +257,27 @@ public class theGame extends AppCompatActivity {
             }
         };
 
+    }
+
+    private void wonListener() {
         wonEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.hasChild("player_id")){
+                if (snapshot.hasChild("player_id")) {
                     String getWinPlayerId = snapshot.child("player_id").getValue(String.class);
                     final WinDialog winDialog;
-                    if(getWinPlayerId.equals(playerUniqueId)){
-                        winDialog = new WinDialog(theGame.this,"You won the game");
+                    if (getWinPlayerId.equals(playerUniqueId)) {
+                        winDialog = new WinDialog(theGame.this, "You won the game");
 
-                    }
-                    else{
+                    } else {
                         winDialog = new WinDialog(theGame.this, "Opponent won the game");
 
                     }
                     winDialog.setCancelable(false);
                     winDialog.show();
 
-                    databaseReference.child("turns").child(connectionId).removeEventListener(turnsEventListener);
-                    databaseReference.child("won").child(connectionId).removeEventListener(wonEventListener);
+                    firebaseDatabase.getReference().child("turns").child(connectionId).removeEventListener(turnsEventListener);
+                    firebaseDatabase.getReference().child("won").child(connectionId).removeEventListener(wonEventListener);
                 }
             }
 
@@ -262,108 +286,82 @@ public class theGame extends AppCompatActivity {
 
             }
         };
+    }
 
-        image1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(!doneBoxes.contains("1") && playerTurn.equals(playerUniqueId)){
-                    ((ImageView)v).setImageResource(R.drawable.x);
-                    databaseReference.child("turns").child(connectionId).child(String.valueOf(doneBoxes.size()+1)).child("box_position").setValue("1");
-                    databaseReference.child("turns").child(connectionId).child(String.valueOf(doneBoxes.size()+1)).child("player_id").setValue(playerUniqueId);
-                    playerTurn = opponentUniqueId;
-                }
+    private void boardListener(){
+        image1.setOnClickListener(v -> {
+            if(!doneBoxes.contains("1") && playerTurn.equals(playerUniqueId)){
+                ((ImageView)v).setImageResource(R.drawable.x);
+                firebaseDatabase.getReference().child("turns").child(connectionId).child(String.valueOf(doneBoxes.size()+1)).child("box_position").setValue("1");
+                firebaseDatabase.getReference().child("turns").child(connectionId).child(String.valueOf(doneBoxes.size()+1)).child("player_id").setValue(playerUniqueId);
+                playerTurn = opponentUniqueId;
             }
         });
-        image2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(!doneBoxes.contains("2") && playerTurn.equals(playerUniqueId)){
-                    ((ImageView)v).setImageResource(R.drawable.x);
-                    databaseReference.child("turns").child(connectionId).child(String.valueOf(doneBoxes.size()+1)).child("box_position").setValue("2");
-                    databaseReference.child("turns").child(connectionId).child(String.valueOf(doneBoxes.size()+1)).child("player_id").setValue(playerUniqueId);
-                    playerTurn = opponentUniqueId;
-                }
+        image2.setOnClickListener(v -> {
+            if(!doneBoxes.contains("2") && playerTurn.equals(playerUniqueId)){
+                ((ImageView)v).setImageResource(R.drawable.x);
+                firebaseDatabase.getReference().child("turns").child(connectionId).child(String.valueOf(doneBoxes.size()+1)).child("box_position").setValue("2");
+                firebaseDatabase.getReference().child("turns").child(connectionId).child(String.valueOf(doneBoxes.size()+1)).child("player_id").setValue(playerUniqueId);
+                playerTurn = opponentUniqueId;
             }
         });
-        image3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(!doneBoxes.contains("3") && playerTurn.equals(playerUniqueId)){
-                    ((ImageView)v).setImageResource(R.drawable.x);
-                    databaseReference.child("turns").child(connectionId).child(String.valueOf(doneBoxes.size()+1)).child("box_position").setValue("3");
-                    databaseReference.child("turns").child(connectionId).child(String.valueOf(doneBoxes.size()+1)).child("player_id").setValue(playerUniqueId);
-                    playerTurn = opponentUniqueId;
-                }
+        image3.setOnClickListener(v -> {
+            if(!doneBoxes.contains("3") && playerTurn.equals(playerUniqueId)){
+                ((ImageView)v).setImageResource(R.drawable.x);
+                firebaseDatabase.getReference().child("turns").child(connectionId).child(String.valueOf(doneBoxes.size()+1)).child("box_position").setValue("3");
+                firebaseDatabase.getReference().child("turns").child(connectionId).child(String.valueOf(doneBoxes.size()+1)).child("player_id").setValue(playerUniqueId);
+                playerTurn = opponentUniqueId;
             }
         });
-        image4.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(!doneBoxes.contains("4") && playerTurn.equals(playerUniqueId)){
-                    ((ImageView)v).setImageResource(R.drawable.x);
-                    databaseReference.child("turns").child(connectionId).child(String.valueOf(doneBoxes.size()+1)).child("box_position").setValue("4");
-                    databaseReference.child("turns").child(connectionId).child(String.valueOf(doneBoxes.size()+1)).child("player_id").setValue(playerUniqueId);
-                    playerTurn = opponentUniqueId;
-                }
+        image4.setOnClickListener(v -> {
+            if(!doneBoxes.contains("4") && playerTurn.equals(playerUniqueId)){
+                ((ImageView)v).setImageResource(R.drawable.x);
+                firebaseDatabase.getReference().child("turns").child(connectionId).child(String.valueOf(doneBoxes.size()+1)).child("box_position").setValue("4");
+                firebaseDatabase.getReference().child("turns").child(connectionId).child(String.valueOf(doneBoxes.size()+1)).child("player_id").setValue(playerUniqueId);
+                playerTurn = opponentUniqueId;
             }
         });
-        image5.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(!doneBoxes.contains("5") && playerTurn.equals(playerUniqueId)){
-                    ((ImageView)v).setImageResource(R.drawable.x);
-                    databaseReference.child("turns").child(connectionId).child(String.valueOf(doneBoxes.size()+1)).child("box_position").setValue("5");
-                    databaseReference.child("turns").child(connectionId).child(String.valueOf(doneBoxes.size()+1)).child("player_id").setValue(playerUniqueId);
-                    playerTurn = opponentUniqueId;
-                }
+        image5.setOnClickListener(v -> {
+            if(!doneBoxes.contains("5") && playerTurn.equals(playerUniqueId)){
+                ((ImageView)v).setImageResource(R.drawable.x);
+                firebaseDatabase.getReference().child("turns").child(connectionId).child(String.valueOf(doneBoxes.size()+1)).child("box_position").setValue("5");
+                firebaseDatabase.getReference().child("turns").child(connectionId).child(String.valueOf(doneBoxes.size()+1)).child("player_id").setValue(playerUniqueId);
+                playerTurn = opponentUniqueId;
             }
         });
-        image6.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(!doneBoxes.contains("6") && playerTurn.equals(playerUniqueId)){
-                    ((ImageView)v).setImageResource(R.drawable.x);
-                    databaseReference.child("turns").child(connectionId).child(String.valueOf(doneBoxes.size()+1)).child("box_position").setValue("6");
-                    databaseReference.child("turns").child(connectionId).child(String.valueOf(doneBoxes.size()+1)).child("player_id").setValue(playerUniqueId);
-                    playerTurn = opponentUniqueId;
-                }
+        image6.setOnClickListener(v -> {
+            if(!doneBoxes.contains("6") && playerTurn.equals(playerUniqueId)){
+                ((ImageView)v).setImageResource(R.drawable.x);
+                firebaseDatabase.getReference().child("turns").child(connectionId).child(String.valueOf(doneBoxes.size()+1)).child("box_position").setValue("6");
+                firebaseDatabase.getReference().child("turns").child(connectionId).child(String.valueOf(doneBoxes.size()+1)).child("player_id").setValue(playerUniqueId);
+                playerTurn = opponentUniqueId;
             }
         });
-        image7.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(!doneBoxes.contains("7") && playerTurn.equals(playerUniqueId)){
-                    ((ImageView)v).setImageResource(R.drawable.x);
-                    databaseReference.child("turns").child(connectionId).child(String.valueOf(doneBoxes.size()+1)).child("box_position").setValue("7");
-                    databaseReference.child("turns").child(connectionId).child(String.valueOf(doneBoxes.size()+1)).child("player_id").setValue(playerUniqueId);
-                    playerTurn = opponentUniqueId;
-                }
+        image7.setOnClickListener(v -> {
+            if(!doneBoxes.contains("7") && playerTurn.equals(playerUniqueId)){
+                ((ImageView)v).setImageResource(R.drawable.x);
+                firebaseDatabase.getReference().child("turns").child(connectionId).child(String.valueOf(doneBoxes.size()+1)).child("box_position").setValue("7");
+                firebaseDatabase.getReference().child("turns").child(connectionId).child(String.valueOf(doneBoxes.size()+1)).child("player_id").setValue(playerUniqueId);
+                playerTurn = opponentUniqueId;
             }
         });
-        image8.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(!doneBoxes.contains("8") && playerTurn.equals(playerUniqueId)){
-                    ((ImageView)v).setImageResource(R.drawable.x);
-                    databaseReference.child("turns").child(connectionId).child(String.valueOf(doneBoxes.size()+1)).child("box_position").setValue("8");
-                    databaseReference.child("turns").child(connectionId).child(String.valueOf(doneBoxes.size()+1)).child("player_id").setValue(playerUniqueId);
-                    playerTurn = opponentUniqueId;
-                }
+        image8.setOnClickListener(v -> {
+            if(!doneBoxes.contains("8") && playerTurn.equals(playerUniqueId)){
+                ((ImageView)v).setImageResource(R.drawable.x);
+                firebaseDatabase.getReference().child("turns").child(connectionId).child(String.valueOf(doneBoxes.size()+1)).child("box_position").setValue("8");
+                firebaseDatabase.getReference().child("turns").child(connectionId).child(String.valueOf(doneBoxes.size()+1)).child("player_id").setValue(playerUniqueId);
+                playerTurn = opponentUniqueId;
             }
         });
-        image9.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(!doneBoxes.contains("9") && playerTurn.equals(playerUniqueId)){
-                    ((ImageView)v).setImageResource(R.drawable.x);
-                    databaseReference.child("turns").child(connectionId).child(String.valueOf(doneBoxes.size()+1)).child("box_position").setValue("9");
-                    databaseReference.child("turns").child(connectionId).child(String.valueOf(doneBoxes.size()+1)).child("player_id").setValue(playerUniqueId);
-                    playerTurn = opponentUniqueId;
-                }
+        image9.setOnClickListener(v -> {
+            if(!doneBoxes.contains("9") && playerTurn.equals(playerUniqueId)){
+                ((ImageView)v).setImageResource(R.drawable.x);
+                firebaseDatabase.getReference().child("turns").child(connectionId).child(String.valueOf(doneBoxes.size()+1)).child("box_position").setValue("9");
+                firebaseDatabase.getReference().child("turns").child(connectionId).child(String.valueOf(doneBoxes.size()+1)).child("player_id").setValue(playerUniqueId);
+                playerTurn = opponentUniqueId;
             }
         });
     }
-
 
     private void applyPlayerTurn(String playerUniqueId2) {
         if(playerUniqueId2.equals(playerUniqueId)) {
@@ -387,7 +385,7 @@ public class theGame extends AppCompatActivity {
         }
         applyPlayerTurn(playerTurn);
         if(checkPlayerWin(selectedByPlayer)){
-            databaseReference.child("won").child(connectionId).child("player_id").setValue(selectedByPlayer);
+            firebaseDatabase.getReference().child("won").child(connectionId).child("player_id").setValue(selectedByPlayer);
 
         }
         if(doneBoxes.size()==9){

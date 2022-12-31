@@ -4,7 +4,6 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -14,11 +13,11 @@ import com.example.icebreaker.R;
 
 public class WinDialog extends Dialog {
     private  String message;
-    private final theGame mainActivity;
+    private final theGame theGame;
     public WinDialog(@NonNull Context context,String message) {
         super(context);
         this.message = message;
-        this.mainActivity = ((theGame) context);
+        this.theGame = ((theGame) context);
     }
 
     @Override
@@ -30,13 +29,10 @@ public class WinDialog extends Dialog {
         final Button startBtn = findViewById(R.id.startNewMatch);
         messageTV.setText(message);
 
-        startBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dismiss();
-                getContext().startActivity(new Intent(getContext(),PlayerName.class));
-                mainActivity.finish();
-            }
+        startBtn.setOnClickListener(v -> {
+            dismiss();
+            getContext().startActivity(new Intent(getContext(),theGame.class));
+            theGame.finish();
         });
 
     }

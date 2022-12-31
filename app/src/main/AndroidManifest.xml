@@ -30,13 +30,6 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".gameZone.PlayerName"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
             android:name=".chats.Broadcast"
             android:exported="false"
             android:windowSoftInputMode="adjustPan|stateHidden">

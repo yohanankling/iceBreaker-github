@@ -8,7 +8,7 @@
     tools:context=".gameZone.theGame">
 
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="357dp"
         android:layout_above="@+id/gameContainer"
@@ -16,12 +16,16 @@
         android:gravity="center"
         android:orientation="horizontal">
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/player1Layout"
             android:layout_width="120dp"
-            android:layout_height="wrap_content"
+            android:layout_height="120dp"
+            android:layout_marginStart="50dp"
             android:background="@drawable/round_back_dark_blue_stroke"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
             <TextView
                 android:id="@+id/player1TV"
@@ -32,24 +36,32 @@
                 android:text="Player One"
                 android:textColor="#FFFFFF"
                 android:textSize="16sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_gravity="center"
-                android:layout_marginTop="20dp"
                 android:layout_marginBottom="20dp"
-                android:src="@drawable/x" />
-        </LinearLayout>
+                android:src="@drawable/x"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/player2Layout"
             android:layout_width="120dp"
             android:layout_height="120dp"
-            android:layout_marginStart="50dp"
+            android:layout_marginEnd="50dp"
             android:background="@drawable/round_back_dark_blue_20"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="@+id/player1Layout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/player1Layout">
 
             <TextView
                 android:id="@+id/player2TV"
@@ -60,18 +72,23 @@
                 android:text="Player Two"
                 android:textColor="#FFFFFF"
                 android:textSize="16sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:layout_gravity="center"
-                android:layout_marginTop="14dp"
                 android:layout_marginBottom="20dp"
-                android:src="@drawable/o" />
-        </LinearLayout>
+                android:src="@drawable/o"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <LinearLayout
         android:id="@+id/gameContainer"
