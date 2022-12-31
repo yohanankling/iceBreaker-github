@@ -10,16 +10,15 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
-import com.example.icebreaker.MainActivity;
 import com.example.icebreaker.R;
 
 public class WinDialog extends Dialog {
     private  String message;
-    private final theGame theGame;
+    private final theGame mainActivity;
     public WinDialog(@NonNull Context context,String message) {
         super(context);
         this.message = message;
-        this.theGame = ((theGame) context);
+        this.mainActivity = ((theGame) context);
     }
 
     @Override
@@ -36,7 +35,7 @@ public class WinDialog extends Dialog {
             public void onClick(View v) {
                 dismiss();
                 getContext().startActivity(new Intent(getContext(),PlayerName.class));
-                theGame.finish();
+                mainActivity.finish();
             }
         });
 

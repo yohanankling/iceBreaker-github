@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#0A2F5C"
-    tools:context=".MainActivity">
+    tools:context=".gameZone.theGame">
 
 
     <LinearLayout
@@ -40,7 +40,7 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="20dp"
                 android:layout_marginBottom="20dp"
-                android:src="@drawable/xsign"/>
+                android:src="@drawable/x" />
         </LinearLayout>
 
         <LinearLayout
@@ -68,7 +68,7 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="14dp"
                 android:layout_marginBottom="20dp"
-                android:src="@drawable/osign" />
+                android:src="@drawable/o" />
         </LinearLayout>
 
     </LinearLayout>

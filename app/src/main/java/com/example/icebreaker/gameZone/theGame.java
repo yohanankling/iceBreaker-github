@@ -54,14 +54,14 @@ public class theGame extends AppCompatActivity {
         player1Layout = findViewById(R.id.player1Layout);
         player2Layout = findViewById(R.id.player2Layout);
         image1 = findViewById(R.id.image1);
-        image1 = findViewById(R.id.image2);
-        image1 = findViewById(R.id.image3);
-        image1 = findViewById(R.id.image4);
-        image1 = findViewById(R.id.image5);
-        image1 = findViewById(R.id.image6);
-        image1 = findViewById(R.id.image7);
-        image1 = findViewById(R.id.image8);
-        image1 = findViewById(R.id.image9);
+        image2 = findViewById(R.id.image2);
+        image3 = findViewById(R.id.image3);
+        image4 = findViewById(R.id.image4);
+        image5 = findViewById(R.id.image5);
+        image6 = findViewById(R.id.image6);
+        image7 = findViewById(R.id.image7);
+        image8 = findViewById(R.id.image8);
+        image9 = findViewById(R.id.image9);
 
         player1TV = findViewById(R.id.player1TV);
         player2TV = findViewById(R.id.player2TV);
@@ -267,7 +267,7 @@ public class theGame extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(!doneBoxes.contains("1") && playerTurn.equals(playerUniqueId)){
-                    ((ImageView)v).setImageResource(R.drawable.xsign);
+                    ((ImageView)v).setImageResource(R.drawable.x);
                     databaseReference.child("turns").child(connectionId).child(String.valueOf(doneBoxes.size()+1)).child("box_position").setValue("1");
                     databaseReference.child("turns").child(connectionId).child(String.valueOf(doneBoxes.size()+1)).child("player_id").setValue(playerUniqueId);
                     playerTurn = opponentUniqueId;
@@ -278,7 +278,7 @@ public class theGame extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(!doneBoxes.contains("2") && playerTurn.equals(playerUniqueId)){
-                    ((ImageView)v).setImageResource(R.drawable.xsign);
+                    ((ImageView)v).setImageResource(R.drawable.x);
                     databaseReference.child("turns").child(connectionId).child(String.valueOf(doneBoxes.size()+1)).child("box_position").setValue("2");
                     databaseReference.child("turns").child(connectionId).child(String.valueOf(doneBoxes.size()+1)).child("player_id").setValue(playerUniqueId);
                     playerTurn = opponentUniqueId;
@@ -289,7 +289,7 @@ public class theGame extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(!doneBoxes.contains("3") && playerTurn.equals(playerUniqueId)){
-                    ((ImageView)v).setImageResource(R.drawable.xsign);
+                    ((ImageView)v).setImageResource(R.drawable.x);
                     databaseReference.child("turns").child(connectionId).child(String.valueOf(doneBoxes.size()+1)).child("box_position").setValue("3");
                     databaseReference.child("turns").child(connectionId).child(String.valueOf(doneBoxes.size()+1)).child("player_id").setValue(playerUniqueId);
                     playerTurn = opponentUniqueId;
@@ -300,7 +300,7 @@ public class theGame extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(!doneBoxes.contains("4") && playerTurn.equals(playerUniqueId)){
-                    ((ImageView)v).setImageResource(R.drawable.xsign);
+                    ((ImageView)v).setImageResource(R.drawable.x);
                     databaseReference.child("turns").child(connectionId).child(String.valueOf(doneBoxes.size()+1)).child("box_position").setValue("4");
                     databaseReference.child("turns").child(connectionId).child(String.valueOf(doneBoxes.size()+1)).child("player_id").setValue(playerUniqueId);
                     playerTurn = opponentUniqueId;
@@ -311,7 +311,7 @@ public class theGame extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(!doneBoxes.contains("5") && playerTurn.equals(playerUniqueId)){
-                    ((ImageView)v).setImageResource(R.drawable.xsign);
+                    ((ImageView)v).setImageResource(R.drawable.x);
                     databaseReference.child("turns").child(connectionId).child(String.valueOf(doneBoxes.size()+1)).child("box_position").setValue("5");
                     databaseReference.child("turns").child(connectionId).child(String.valueOf(doneBoxes.size()+1)).child("player_id").setValue(playerUniqueId);
                     playerTurn = opponentUniqueId;
@@ -322,7 +322,7 @@ public class theGame extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(!doneBoxes.contains("6") && playerTurn.equals(playerUniqueId)){
-                    ((ImageView)v).setImageResource(R.drawable.xsign);
+                    ((ImageView)v).setImageResource(R.drawable.x);
                     databaseReference.child("turns").child(connectionId).child(String.valueOf(doneBoxes.size()+1)).child("box_position").setValue("6");
                     databaseReference.child("turns").child(connectionId).child(String.valueOf(doneBoxes.size()+1)).child("player_id").setValue(playerUniqueId);
                     playerTurn = opponentUniqueId;
@@ -333,7 +333,7 @@ public class theGame extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(!doneBoxes.contains("7") && playerTurn.equals(playerUniqueId)){
-                    ((ImageView)v).setImageResource(R.drawable.xsign);
+                    ((ImageView)v).setImageResource(R.drawable.x);
                     databaseReference.child("turns").child(connectionId).child(String.valueOf(doneBoxes.size()+1)).child("box_position").setValue("7");
                     databaseReference.child("turns").child(connectionId).child(String.valueOf(doneBoxes.size()+1)).child("player_id").setValue(playerUniqueId);
                     playerTurn = opponentUniqueId;
@@ -344,7 +344,7 @@ public class theGame extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(!doneBoxes.contains("8") && playerTurn.equals(playerUniqueId)){
-                    ((ImageView)v).setImageResource(R.drawable.xsign);
+                    ((ImageView)v).setImageResource(R.drawable.x);
                     databaseReference.child("turns").child(connectionId).child(String.valueOf(doneBoxes.size()+1)).child("box_position").setValue("8");
                     databaseReference.child("turns").child(connectionId).child(String.valueOf(doneBoxes.size()+1)).child("player_id").setValue(playerUniqueId);
                     playerTurn = opponentUniqueId;
@@ -355,7 +355,7 @@ public class theGame extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(!doneBoxes.contains("9") && playerTurn.equals(playerUniqueId)){
-                    ((ImageView)v).setImageResource(R.drawable.xsign);
+                    ((ImageView)v).setImageResource(R.drawable.x);
                     databaseReference.child("turns").child(connectionId).child(String.valueOf(doneBoxes.size()+1)).child("box_position").setValue("9");
                     databaseReference.child("turns").child(connectionId).child(String.valueOf(doneBoxes.size()+1)).child("player_id").setValue(playerUniqueId);
                     playerTurn = opponentUniqueId;
@@ -378,11 +378,11 @@ public class theGame extends AppCompatActivity {
     private void selectBox(ImageView imageView, int selectedBoxPosition,String selectedByPlayer){
         boxesSelectedBy[selectedBoxPosition-1] = selectedByPlayer;
         if(selectedByPlayer.equals(playerUniqueId)){
-            imageView.setImageResource(R.drawable.xsign);
+            imageView.setImageResource(R.drawable.x);
             playerTurn = opponentUniqueId;
         }
         else{
-            imageView.setImageResource(R.drawable.osign);
+            imageView.setImageResource(R.drawable.o);
             playerTurn = playerUniqueId;
         }
         applyPlayerTurn(playerTurn);
