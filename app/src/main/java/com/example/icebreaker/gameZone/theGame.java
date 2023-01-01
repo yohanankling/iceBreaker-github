@@ -507,14 +507,14 @@ public class theGame extends AppCompatActivity {
             final TextView messageTV = findViewById(R.id.messageTV);
                 messageTV.setText("It's a draw!");
 
-//                    final Button startBtn = findViewById(R.id.startNewMatch);
-//                    startBtn.setOnClickListener(v -> {
-//                        dialog.dismiss();
-//                        Intent intent = new Intent(theGame.this, theGame.class);
-//                        intent.putExtra("Name", myName);
-//                        startActivity(intent);
-//                        theGame.this.finish();
-//                    });
+                    final Button startBtn = findViewById(R.id.startNewMatch);
+                    startBtn.setOnClickListener(v -> {
+                        dialog.dismiss();
+                        Intent intent = new Intent(theGame.this, theGame.class);
+                        intent.putExtra("Name", myName);
+                        startActivity(intent);
+                        theGame.this.finish();
+                    });
             dialog.show();
         }
     }

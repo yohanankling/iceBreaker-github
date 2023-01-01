@@ -328,7 +328,7 @@ public class Home extends AppCompatActivity {
     // Set OnClickListener for Play With button
     private void PlayWithButton() {
         PlayWith.setOnClickListener(view -> {
-            Intent intent = new Intent(Home.this, theGame.class);
+            Intent intent = new Intent(Home.this, original.class);
             intent.putExtra("Name", user.getName());
             startActivity(intent);
         });
