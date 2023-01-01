@@ -25,7 +25,7 @@
             android:id="@+id/startNewMatch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Start New Match"
+            android:text="Re-match"
             android:textColor="#ffffff"
             android:background="@drawable/round_back_blue_100"/>
     </LinearLayout>

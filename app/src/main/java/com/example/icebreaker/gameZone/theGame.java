@@ -58,108 +58,10 @@ public class theGame extends AppCompatActivity {
         setContentView(R.layout.activity_the_game);
         initFields();
         setGame();
-        temp();
-//        waitForOpponent();
+        waitForOpponent();
         turnsListener();
         wonListener();
         boardListener();
-    }
-
-    private void temp() {
-        ProgressDialog progressDialog = new ProgressDialog(this);
-        progressDialog.setCancelable(false);
-        progressDialog.setMessage("Waiting For Opponent");
-        progressDialog.show();
-
-        firebaseDatabase.getReference().child("connections").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-
-                if(!opponentFound){
-
-                    if(snapshot.hasChildren()){
-
-                        for(DataSnapshot connections : snapshot.getChildren()){
-                            String conId  =connections.getKey();
-                            int getPlayersCount = (int)connections.getChildrenCount();
-                            if(status.equals("waiting")){
-
-                                if(getPlayersCount==2){
-                                    playerTurn = playerUniqueId;
-                                    applyPlayerTurn(playerTurn);
-
-                                    boolean playerFound = false;
-                                    for(DataSnapshot players : connections.getChildren()){
-                                        String getPlayerUniqueId = players.getKey();
-                                        if(getPlayerUniqueId.equals(playerUniqueId)){
-                                            playerFound = true;
-                                        }
-                                        else if(playerFound){
-                                            String getOpponentPlayerName = players.child("player_name").getValue(String.class);
-                                            opponentUniqueId = players.getKey();
-                                            player2TV.setText(getOpponentPlayerName);
-                                            connectionId = conId;
-                                            opponentFound = true;
-
-                                            firebaseDatabase.getReference().child("turns").child(connectionId).addValueEventListener(turnsEventListener);
-                                            firebaseDatabase.getReference().child("won").child(connectionId).addValueEventListener(wonEventListener);
-
-                                            if(progressDialog.isShowing()){
-                                                progressDialog.dismiss();
-                                            }
-                                            firebaseDatabase.getReference().child("connections").removeEventListener(this);
-
-                                        }
-                                    }
-                                }
-                            }
-                            else{
-                                if(getPlayersCount == 1){
-                                    connections.child(playerUniqueId).child("player_name").getRef().setValue(myName);
-                                    for(DataSnapshot players : connections.getChildren()){
-                                        String getOpponentName = players.child("player_name").getValue(String.class);
-                                        opponentUniqueId = players.getKey();
-                                        playerTurn = opponentUniqueId;
-                                        applyPlayerTurn(playerTurn);
-                                        player2TV.setText(getOpponentName);
-                                        connectionId = conId;
-                                        opponentFound = true;
-
-
-                                        firebaseDatabase.getReference().child("turns").child(connectionId).addValueEventListener(turnsEventListener);
-                                        firebaseDatabase.getReference().child("won").child(connectionId).addValueEventListener(wonEventListener);
-
-                                        if(progressDialog.isShowing()){
-                                            progressDialog.dismiss();
-                                        }
-                                        firebaseDatabase.getReference().child("connections").removeEventListener(this);
-                                        break;
-                                    }
-                                }
-
-                            }
-                        }
-
-                        if(!opponentFound && !status.equals("waiting")){
-                            String connectionUniqueId = String.valueOf((System.currentTimeMillis()));
-                            snapshot.child(connectionUniqueId).child(playerUniqueId).child("player_name").getRef().setValue(myName);
-                            status = "waiting";
-                        }
-                    }
-
-                    else{
-                        String connectionUniqueId = String.valueOf((System.currentTimeMillis()));
-                        snapshot.child(connectionUniqueId).child(playerUniqueId).child("player_name").getRef().setValue(myName);
-                        status = "waiting";
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
     }
 
     private void initFields() {
@@ -191,7 +93,9 @@ public class theGame extends AppCompatActivity {
         combinationsList.add(new int[]{2,4,6});
         combinationsList.add(new int[]{0,4,8});
     }
-
+    private void setGame() {
+        player1TV.setText(myName);
+    }
     private void waitForOpponent() {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(theGame.this);
@@ -213,12 +117,12 @@ public class theGame extends AppCompatActivity {
                             String conId  =connections.getKey();
                             int getPlayersCount = (int)connections.getChildrenCount();
                             if(status.equals("waiting")){
-                                boolean playerFound = false;
 
                                 if(getPlayersCount==2){
                                     playerTurn = playerUniqueId;
                                     applyPlayerTurn(playerTurn);
 
+                                    boolean playerFound = false;
                                     for(DataSnapshot players : connections.getChildren()){
                                         String getPlayerUniqueId = players.getKey();
                                         if(getPlayerUniqueId.equals(playerUniqueId)){
@@ -290,9 +194,6 @@ public class theGame extends AppCompatActivity {
         });
     }
 
-    private void setGame() {
-        player1TV.setText(myName);
-    }
 
     private void turnsListener() {
         turnsEventListener = new ValueEventListener() {
