@@ -5,6 +5,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -25,7 +26,7 @@ public class receiver extends AppCompatActivity {
 
     private ConstraintLayout player1Layout, player2Layout;
     private ImageView image1, image2, image3, image4, image5, image6, image7, image8, image9;
-    private TextView player1TV, player2TV;
+    private TextView player1TV, player2TV, score;
 
     private final List<int[]> combinationsList = new ArrayList<>();
     private final List<String> doneBoxes = new ArrayList<>();
@@ -37,6 +38,9 @@ public class receiver extends AppCompatActivity {
     private String myUid;
     private String opponentName;
     private String opponentUid;
+
+    private int winning = 0;
+    private int loses = 0;
 
     private String playerTurn = "";
 
@@ -58,6 +62,7 @@ public class receiver extends AppCompatActivity {
         myUid = firebaseAuth.getUid();
         player1Layout = findViewById(R.id.player1Layout);
         player2Layout = findViewById(R.id.player2Layout);
+        score = findViewById(R.id.score);
         image1 = findViewById(R.id.image1);
         image2 = findViewById(R.id.image2);
         image3 = findViewById(R.id.image3);
@@ -82,11 +87,12 @@ public class receiver extends AppCompatActivity {
         combinationsList.add(new int[]{2, 5, 8});
         combinationsList.add(new int[]{2, 4, 6});
         combinationsList.add(new int[]{0, 4, 8});
+
     }
 
     private void setGame() {
-        player1TV.setText(myName);
-        player2TV.setText(opponentName);
+        player1TV.setText(opponentName);
+        player2TV.setText(myName);
         waitForOpponent();
         turnsListener();
         wonListener();
@@ -189,8 +195,14 @@ public class receiver extends AppCompatActivity {
                     final TextView messageTV = PopUp.findViewById(R.id.messageTV);
                     if (getWinPlayerId.equals(myUid)) {
                         messageTV.setText("You won the game!");
+                        winning++;
+                        String newScore = winning + ":" + loses;
+                        score.setText(newScore);
                     } else {
                         messageTV.setText(opponentName + " won the game!");
+                        loses++;
+                        String newScore = winning + ":" + loses;
+                        score.setText(newScore);
                     }
 
                     final Button startBtn = PopUp.findViewById(R.id.startNewMatch);
@@ -363,7 +375,6 @@ public class receiver extends AppCompatActivity {
         for (int i = 0; i < 9; i++) {
             boxesSelectedBy[i] = "";
         }
-        firebaseDatabase.getReference().child("turns").child(myUid).removeValue();
         doneBoxes.clear();
         setGame();
     }
