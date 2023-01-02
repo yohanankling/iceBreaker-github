@@ -292,7 +292,7 @@ public class Home extends AppCompatActivity {
                         if(!Title.equals("~null")){
                             Intent intent = new Intent(Home.this, TopicMembersList.class);
                             intent.putExtra("Title", Title);
-//                            intent.putExtra("Name", user.getName());
+                            intent.putExtra("MyName", user.getName());
                             startActivity(intent);
                         }
                         else Toast.makeText(this, "must have topic first..", Toast.LENGTH_SHORT).show();
@@ -340,6 +340,7 @@ public class Home extends AppCompatActivity {
     private void ChatsButton() {
         chat.setOnClickListener(view -> {
             Intent intent = new Intent(Home.this, ChatList.class);
+            intent.putExtra("MyName", user.getName());
             startActivity(intent);
         });
     }

@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -39,7 +38,7 @@ public class Chat extends AppCompatActivity {
     private Button sendBtn;
     private TextView name, status;
     private String enteredMessage;
-    String Recievername, RecieverUid, SenderUid;
+    String Recievername, RecieverUid, SenderUid, MyName;
     private FirebaseAuth firebaseAuth;
     private FirebaseDatabase firebaseDatabase;
     private FirebaseFirestore firebaseFirestore;
@@ -80,6 +79,7 @@ public class Chat extends AppCompatActivity {
         SenderUid = firebaseAuth.getUid();
         RecieverUid = getIntent().getStringExtra("Uid");
         Recievername = getIntent().getStringExtra("Email");
+        MyName = getIntent().getStringExtra("MyName");
         name.setText(Recievername);
         messageArrayList = new ArrayList<>();
         linearLayoutManager = new LinearLayoutManager(this);
@@ -152,6 +152,7 @@ public class Chat extends AppCompatActivity {
     }
         else{
             Intent intent = new Intent(Chat.this, inviter.class);
+            intent.putExtra("inviterName", MyName);
             intent.putExtra("opponentName", Recievername);
             intent.putExtra("opponentUid", RecieverUid);
             startActivity(intent);}

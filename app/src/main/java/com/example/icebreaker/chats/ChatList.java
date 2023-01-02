@@ -53,10 +53,8 @@ public class ChatList extends AppCompatActivity {
         linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setStackFromEnd(false);
         recyclerView.setLayoutManager(linearLayoutManager);
-        usersAdapter = new usersAdapter(ChatList.this, usersArrayList);
+        usersAdapter = new usersAdapter(ChatList.this, usersArrayList, ChatList.this.getIntent());
         recyclerView.setAdapter(usersAdapter);
-
-
     }
 
     private void initChats() {

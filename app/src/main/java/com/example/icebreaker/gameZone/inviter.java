@@ -1,6 +1,5 @@
 package com.example.icebreaker.gameZone;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -74,7 +73,7 @@ public class inviter extends AppCompatActivity {
         image7 = findViewById(R.id.image7);
         image8 = findViewById(R.id.image8);
         image9 = findViewById(R.id.image9);
-        myName = "yoh";
+        myName = getIntent().getStringExtra("inviterName");
         opponentName = getIntent().getStringExtra("opponentName");
         opponentUid = getIntent().getStringExtra("opponentUid");
         player1TV = findViewById(R.id.player1TV);

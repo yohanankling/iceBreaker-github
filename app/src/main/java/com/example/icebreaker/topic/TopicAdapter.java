@@ -23,10 +23,13 @@ public class TopicAdapter extends RecyclerView.Adapter {
 
     private final Context context;
     private final ArrayList<FirebaseUser> usersArrayList;
+    private String MyName;
 
-    public TopicAdapter(Context context, ArrayList<FirebaseUser> usersArrayList) {
+
+    public TopicAdapter(Context context, ArrayList<FirebaseUser> usersArrayList, Intent intent) {
         this.context = context;
         this.usersArrayList = usersArrayList;
+        MyName = intent.getStringExtra("MyName");
     }
 
     @NonNull
@@ -46,6 +49,7 @@ public class TopicAdapter extends RecyclerView.Adapter {
                 Intent intent = new Intent(context, Chat.class);
                 intent.putExtra("Uid", firebaseUser.getUid());
                 intent.putExtra("Email", firebaseUser.getEmail());
+                intent.putExtra("MyName", MyName);
                 context.startActivity(intent);
             });
     }

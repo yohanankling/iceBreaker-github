@@ -53,7 +53,7 @@ public class TopicMembersList extends AppCompatActivity {
         linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setStackFromEnd(false);
         recyclerView.setLayoutManager(linearLayoutManager);
-        topicAdapter = new TopicAdapter(TopicMembersList.this, userArrayList);
+        topicAdapter = new TopicAdapter(TopicMembersList.this, userArrayList, TopicMembersList.this.getIntent());
         recyclerView.setAdapter(topicAdapter);
 
     }

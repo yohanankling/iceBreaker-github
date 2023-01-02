@@ -171,6 +171,7 @@ public class userslist extends AppCompatActivity {
                                 Intent intent = new Intent(userslist.this, Chat.class);
                                 intent.putExtra("Uid", userUId);
                                 intent.putExtra("Email", userData.get("email").toString());
+                                intent.putExtra("MyName", "admin");
                                 startActivity(intent);
                             });
 
