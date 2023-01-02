@@ -1,5 +1,7 @@
 package com.example.icebreaker.gameZone;
 
+import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -12,6 +14,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import com.example.icebreaker.Home;
 import com.example.icebreaker.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -213,17 +216,24 @@ public class inviter extends AppCompatActivity {
                         String newScore = winning + ":" + loses;
                         score.setText(newScore);
                     }
-
+                    firebaseDatabase.getReference().child("turns").child(myUid).removeEventListener(turnsEventListener);
+                    firebaseDatabase.getReference().child("won").child(myUid).removeEventListener(wonEventListener);
                     final Button startBtn = PopUp.findViewById(R.id.startNewMatch);
                     startBtn.setOnClickListener(v -> {
                         dialog.dismiss();
                         resetGameData();
                     });
+
+                    final Button quitBtn = PopUp.findViewById(R.id.QuitBtn);
+                    quitBtn.setOnClickListener(v -> {
+                        dialog.dismiss();
+                        firebaseDatabase.getReference().child("connections").child(opponentUid).removeValue();
+                        firebaseDatabase.getReference().child("turns").child(opponentUid).removeValue();
+                        firebaseDatabase.getReference().child("won").child(opponentUid).removeValue();
+                        Intent intent = new Intent(inviter.this, Home.class);
+                        startActivity(intent);
+                    });
                     dialog.show();
-
-
-                    firebaseDatabase.getReference().child("turns").child(myUid).removeEventListener(turnsEventListener);
-                    firebaseDatabase.getReference().child("won").child(myUid).removeEventListener(wonEventListener);
                 }
             }
 
@@ -343,15 +353,27 @@ public class inviter extends AppCompatActivity {
 
             final TextView messageTV = findViewById(R.id.messageTV);
             messageTV.setText("It's a draw!");
-
+            firebaseDatabase.getReference().child("turns").child(myUid).removeEventListener(turnsEventListener);
+            firebaseDatabase.getReference().child("won").child(myUid).removeEventListener(wonEventListener);
             final Button startBtn = findViewById(R.id.startNewMatch);
             startBtn.setOnClickListener(v -> {
                 dialog.dismiss();
                 resetGameData();
             });
+
+            final Button quitBtn = findViewById(R.id.QuitBtn);
+            quitBtn.setOnClickListener(v -> {
+                dialog.dismiss();
+                firebaseDatabase.getReference().child("connections").child(opponentUid).removeValue();
+                firebaseDatabase.getReference().child("turns").child(opponentUid).removeValue();
+                firebaseDatabase.getReference().child("won").child(opponentUid).removeValue();
+                Intent intent = new Intent(inviter.this, Home.class);
+                startActivity(intent);
+            });
             dialog.show();
         }
     }
+
 
     private boolean checkPlayerWin(String playerId) {
         boolean isPlayerWon = false;
