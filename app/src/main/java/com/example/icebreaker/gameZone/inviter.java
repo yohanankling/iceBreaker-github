@@ -369,6 +369,8 @@ public class inviter extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        firebaseDatabase.getReference().child("turns").child(myUid).removeValue();
+        firebaseDatabase.getReference().child("won").child(myUid).removeValue();
         firebaseDatabase.getReference().child("connections").child(firebaseAuth.getUid()).removeValue();
     }
 
@@ -376,17 +378,29 @@ public class inviter extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         if (this.isFinishing()) {
-            firebaseDatabase.getReference().child("connections").child(firebaseAuth.getUid()).removeValue();
-        }
+            firebaseDatabase.getReference().child("turns").child(myUid).removeValue();
+            firebaseDatabase.getReference().child("won").child(myUid).removeValue();
+            firebaseDatabase.getReference().child("connections").child(firebaseAuth.getUid()).removeValue();        }
     }
 
     private void resetGameData() {
         for (int i = 0; i < 9; i++) {
             boxesSelectedBy[i] = "";
         }
+        image1.setImageResource(R.drawable.transparent_back);
+        image2.setImageResource(R.drawable.transparent_back);
+        image3.setImageResource(R.drawable.transparent_back);
+        image4.setImageResource(R.drawable.transparent_back);
+        image5.setImageResource(R.drawable.transparent_back);
+        image6.setImageResource(R.drawable.transparent_back);
+        image7.setImageResource(R.drawable.transparent_back);
+        image8.setImageResource(R.drawable.transparent_back);
+        image9.setImageResource(R.drawable.transparent_back);
+        firebaseDatabase.getReference().child("connections").child(myUid).removeValue();
         firebaseDatabase.getReference().child("turns").child(myUid).removeValue();
         firebaseDatabase.getReference().child("won").child(myUid).removeValue();
         doneBoxes.clear();
+        opponentFound = false;
         setGame();
     }
 

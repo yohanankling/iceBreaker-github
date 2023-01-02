@@ -87,7 +87,6 @@ public class receiver extends AppCompatActivity {
         combinationsList.add(new int[]{2, 5, 8});
         combinationsList.add(new int[]{2, 4, 6});
         combinationsList.add(new int[]{0, 4, 8});
-
     }
 
     private void setGame() {
@@ -360,14 +359,17 @@ public class receiver extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        firebaseDatabase.getReference().child("connections").child(firebaseAuth.getUid()).removeValue();
-    }
+        firebaseDatabase.getReference().child("connections").child(opponentUid).removeValue();
+        firebaseDatabase.getReference().child("turns").child(opponentUid).removeValue();
+        firebaseDatabase.getReference().child("won").child(opponentUid).removeValue();    }
 
     @Override
     protected void onStop() {
         super.onStop();
         if (this.isFinishing()) {
-            firebaseDatabase.getReference().child("connections").child(firebaseAuth.getUid()).removeValue();
+            firebaseDatabase.getReference().child("connections").child(opponentUid).removeValue();
+            firebaseDatabase.getReference().child("turns").child(opponentUid).removeValue();
+            firebaseDatabase.getReference().child("won").child(opponentUid).removeValue();
         }
     }
 
@@ -375,8 +377,46 @@ public class receiver extends AppCompatActivity {
         for (int i = 0; i < 9; i++) {
             boxesSelectedBy[i] = "";
         }
+        image1.setImageResource(R.drawable.transparent_back);
+        image2.setImageResource(R.drawable.transparent_back);
+        image3.setImageResource(R.drawable.transparent_back);
+        image4.setImageResource(R.drawable.transparent_back);
+        image5.setImageResource(R.drawable.transparent_back);
+        image6.setImageResource(R.drawable.transparent_back);
+        image7.setImageResource(R.drawable.transparent_back);
+        image8.setImageResource(R.drawable.transparent_back);
+        image9.setImageResource(R.drawable.transparent_back);
         doneBoxes.clear();
-        setGame();
+        waitForinviter();
     }
 
+    private void waitForinviter() {
+        firebaseDatabase.getReference().child("turns").child(opponentUid).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Toast.makeText(receiver.this, "1", Toast.LENGTH_SHORT).show();
+                while (true) {
+                    if (!dataSnapshot.exists()) {
+                        break;
+                    }
+                    try {
+                        Toast.makeText(receiver.this, "2", Toast.LENGTH_SHORT).show();
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                        Toast.makeText(receiver.this, "3", Toast.LENGTH_SHORT).show();
+                    }
+                }
+//                Toast.makeText(receiver.this, "4", Toast.LENGTH_SHORT).show();
+//                setGame();
+                Toast.makeText(receiver.this, "3", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // error occurred
+            }
+        });
+
+    }
 }
