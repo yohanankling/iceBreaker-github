@@ -292,6 +292,7 @@ public class Home extends AppCompatActivity {
                         if(!Title.equals("~null")){
                             Intent intent = new Intent(Home.this, TopicMembersList.class);
                             intent.putExtra("Title", Title);
+//                            intent.putExtra("Name", user.getName());
                             startActivity(intent);
                         }
                         else Toast.makeText(this, "must have topic first..", Toast.LENGTH_SHORT).show();
@@ -328,8 +329,9 @@ public class Home extends AppCompatActivity {
     // Set OnClickListener for Play With button
     private void PlayWithButton() {
         PlayWith.setOnClickListener(view -> {
-            Intent intent = new Intent(Home.this, original.class);
-            intent.putExtra("Name", user.getName());
+            Intent intent = new Intent(Home.this, receiver.class);
+            intent.putExtra("opponentName", user.getName());
+            intent.putExtra("opponentUid", "Gb3udWjamUgStC4bZqscuQlgyTI3");
             startActivity(intent);
         });
     }
@@ -352,7 +354,7 @@ public class Home extends AppCompatActivity {
 
     private void DisconnectDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setCancelable(true);
+        builder.setCancelable(false);
         builder.setTitle(user.getName() + " ,you sure?");
         builder.setMessage("");
         builder.setPositiveButton("yes please", (dialog, which) ->

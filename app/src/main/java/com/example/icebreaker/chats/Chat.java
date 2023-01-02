@@ -6,7 +6,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -14,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.icebreaker.R;
+import com.example.icebreaker.gameZone.*;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -32,6 +35,7 @@ public class Chat extends AppCompatActivity {
 
     private EditText getMessage;
     private ImageButton back;
+    private ImageButton inviteGame;
     private Button sendBtn;
     private TextView name, status;
     private String enteredMessage;
@@ -56,6 +60,7 @@ public class Chat extends AppCompatActivity {
         initMessages();
         backBtn();
         sendBtn();
+        inviteGameBtn();
     }
 
     @SuppressLint("SimpleDateFormat")
@@ -66,6 +71,7 @@ public class Chat extends AppCompatActivity {
         calendar = Calendar.getInstance();
         simpleDateFormat = new SimpleDateFormat("hh:mm a");
         back = findViewById(R.id.Back);
+        inviteGame = findViewById(R.id.inviteGame);
         getMessage = findViewById(R.id.getMessage);
         status = findViewById(R.id.Status);
         recyclerView = findViewById(R.id.recyclerview);
@@ -137,7 +143,19 @@ public class Chat extends AppCompatActivity {
                 getMessage.setText(null);
             }
         });
+    }
 
+    private void inviteGameBtn() {
+        inviteGame.setOnClickListener(v -> {
+            if(status.getText().equals("offline")){
+        Toast.makeText(Chat.this, "cant invite offline member..", Toast.LENGTH_SHORT).show();
+    }
+        else{
+            Intent intent = new Intent(Chat.this, inviter.class);
+            intent.putExtra("opponentName", Recievername);
+            intent.putExtra("opponentUid", RecieverUid);
+            startActivity(intent);}
+        });
     }
 
     @Override

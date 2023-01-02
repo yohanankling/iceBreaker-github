@@ -23,6 +23,20 @@
                 android:value="" />
         </activity>
         <activity
+            android:name=".gameZone.receiver"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".gameZone.inviter"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".gameZone.original"
             android:exported="false">
             <meta-data

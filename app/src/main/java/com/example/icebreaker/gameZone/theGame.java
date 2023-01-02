@@ -1,25 +1,27 @@
 package com.example.icebreaker.gameZone;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import com.example.icebreaker.Home;
+import com.example.icebreaker.MainActivity;
 import com.example.icebreaker.R;
+import com.example.icebreaker.chats.ChatList;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,20 +36,24 @@ public class theGame extends AppCompatActivity {
     private final List<String> doneBoxes = new ArrayList<>();
 
     private String playerUniqueId = "0";
+
     private FirebaseAuth firebaseAuth;
     private FirebaseDatabase firebaseDatabase;
-    private FirebaseFirestore firebaseFirestore;
 
     private boolean opponentFound = false;
 
     private String opponentUniqueId = "0";
 
     private String status = "matching";
-    private String  myName;
+    private String myName;
+    private String myUid;
+    private String opponentUid;
+    private String opponentName;
 
     private String playerTurn = "";
     private String connectionId = "";
 
+    private String connectionUniqueId = "";
     ValueEventListener turnsEventListener, wonEventListener;
 
     private final String [] boxesSelectedBy = {"","","","","","","","",""};
@@ -61,13 +67,11 @@ public class theGame extends AppCompatActivity {
         waitForOpponent();
         turnsListener();
         wonListener();
-        boardListener();
-    }
+        boardListener();    }
 
     private void initFields() {
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
-        firebaseFirestore = FirebaseFirestore.getInstance();
         playerUniqueId = firebaseAuth.getUid();
         player1Layout = findViewById(R.id.player1Layout);
         player2Layout = findViewById(R.id.player2Layout);
@@ -81,6 +85,9 @@ public class theGame extends AppCompatActivity {
         image8 = findViewById(R.id.image8);
         image9 = findViewById(R.id.image9);
         myName = getIntent().getStringExtra("Name");
+        myUid = firebaseAuth.getUid();
+        opponentUid = getIntent().getStringExtra("invitedUid");
+        opponentName = getIntent().getStringExtra("invitedName");
         player1TV = findViewById(R.id.player1TV);
         player2TV = findViewById(R.id.player2TV);
 
@@ -93,17 +100,20 @@ public class theGame extends AppCompatActivity {
         combinationsList.add(new int[]{2,4,6});
         combinationsList.add(new int[]{0,4,8});
     }
+
     private void setGame() {
         player1TV.setText(myName);
+        player2TV.setText(opponentName);
     }
-    private void waitForOpponent() {
 
+    private void waitForOpponent() {
         AlertDialog.Builder builder = new AlertDialog.Builder(theGame.this);
         final View PopUp = getLayoutInflater().inflate(R.layout.waitingpopout, null);
         builder.setView(PopUp);
         builder.setCancelable(false);
         AlertDialog dialog = builder.create();
         dialog.show();
+
 
         firebaseDatabase.getReference().child("connections").addValueEventListener(new ValueEventListener() {
             @Override
@@ -171,16 +181,15 @@ public class theGame extends AppCompatActivity {
 
                             }
                         }
-
                         if(!opponentFound && !status.equals("waiting")){
-                            String connectionUniqueId = String.valueOf((System.currentTimeMillis()));
+                            connectionUniqueId = String.valueOf((System.currentTimeMillis()));
                             snapshot.child(connectionUniqueId).child(playerUniqueId).child("player_name").getRef().setValue(myName);
                             status = "waiting";
                         }
                     }
 
                     else{
-                        String connectionUniqueId = String.valueOf((System.currentTimeMillis()));
+                        connectionUniqueId = String.valueOf((System.currentTimeMillis()));
                         snapshot.child(connectionUniqueId).child(playerUniqueId).child("player_name").getRef().setValue(myName);
                         status = "waiting";
                     }
@@ -193,7 +202,6 @@ public class theGame extends AppCompatActivity {
             }
         });
     }
-
 
     private void turnsListener() {
         turnsEventListener = new ValueEventListener() {
@@ -254,7 +262,6 @@ public class theGame extends AppCompatActivity {
 
             }
         };
-
     }
 
     private void wonListener() {
@@ -280,6 +287,7 @@ public class theGame extends AppCompatActivity {
                         dialog.dismiss();
                         Intent intent = new Intent(theGame.this, theGame.class);
                         intent.putExtra("Name", myName);
+                        resetGameData();
                         startActivity(intent);
                         theGame.this.finish();
                     });
@@ -373,6 +381,7 @@ public class theGame extends AppCompatActivity {
         });
     }
 
+
     private void applyPlayerTurn(String playerUniqueId2) {
         if(playerUniqueId2.equals(playerUniqueId)) {
             player1Layout.setBackgroundResource(R.drawable.round_back_dark_blue_stroke);
@@ -383,6 +392,7 @@ public class theGame extends AppCompatActivity {
             player2Layout.setBackgroundResource(R.drawable.round_back_dark_blue_stroke);
         }
     }
+
     private void selectBox(ImageView imageView, int selectedBoxPosition,String selectedByPlayer){
         boxesSelectedBy[selectedBoxPosition-1] = selectedByPlayer;
         if(selectedByPlayer.equals(playerUniqueId)){
@@ -406,19 +416,21 @@ public class theGame extends AppCompatActivity {
             AlertDialog dialog = builder.create();
 
             final TextView messageTV = findViewById(R.id.messageTV);
-                messageTV.setText("It's a draw!");
+            messageTV.setText("It's a draw!");
 
-                    final Button startBtn = findViewById(R.id.startNewMatch);
-                    startBtn.setOnClickListener(v -> {
-                        dialog.dismiss();
-                        Intent intent = new Intent(theGame.this, theGame.class);
-                        intent.putExtra("Name", myName);
-                        startActivity(intent);
-                        theGame.this.finish();
-                    });
+            final Button startBtn = findViewById(R.id.startNewMatch);
+            startBtn.setOnClickListener(v -> {
+                dialog.dismiss();
+//                Intent intent = new Intent(original.this, theGame.class);
+//                intent.putExtra("Name", myName);
+                resetGameData();
+//                startActivity(intent);
+//                original.this.finish();
+            });
             dialog.show();
         }
     }
+
     private boolean checkPlayerWin(String playerId){
         boolean isPlayerWon = false;
         for ( int i=0; i< combinationsList.size(); i++){
@@ -431,4 +443,26 @@ public class theGame extends AppCompatActivity {
         }
         return isPlayerWon;
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        firebaseDatabase.getReference().child("connections").child("temp").removeValue();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (this.isFinishing()) {
+            firebaseDatabase.getReference().child("connections").child("temp").removeValue();
+        }
+    }
+
+    private void resetGameData() {
+        for(int i = 0; i < 9; i++){
+            boxesSelectedBy[i] = "";
+        }
+        doneBoxes.clear();
+    }
+
 }

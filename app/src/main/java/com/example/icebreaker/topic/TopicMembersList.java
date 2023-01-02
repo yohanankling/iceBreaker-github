@@ -25,9 +25,6 @@ public class TopicMembersList extends AppCompatActivity {
     private FirebaseFirestore firebaseFirestore;
     public String Title;
 
-
-
-
     RecyclerView recyclerView;
     TopicAdapter topicAdapter;
     ArrayList<FirebaseUser> userArrayList;
