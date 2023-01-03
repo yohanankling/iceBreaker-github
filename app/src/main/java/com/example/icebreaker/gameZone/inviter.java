@@ -33,6 +33,7 @@ public class inviter extends AppCompatActivity {
 
     private final List<int[]> combinationsList = new ArrayList<>();
     private final List<String> doneBoxes = new ArrayList<>();
+    private final List<ImageView> board = new ArrayList<>();
 
     private FirebaseAuth firebaseAuth;
     private FirebaseDatabase firebaseDatabase;
@@ -99,14 +100,32 @@ public class inviter extends AppCompatActivity {
         waitForOpponent();
         turnsListener();
         wonListener();
-        boardListener();
-    }
+        board.add(image1);
+        board.add(image2);
+        board.add(image3);
+        board.add(image4);
+        board.add(image5);
+        board.add(image6);
+        board.add(image7);
+        board.add(image8);
+        board.add(image9);
+        for (int i = 0; i < 9; i++) {
+            boardListener(board.get(i),i+1);
+        }    }
 
     private void waitForOpponent() {
         AlertDialog.Builder builder = new AlertDialog.Builder(inviter.this);
         final View PopUp = getLayoutInflater().inflate(R.layout.waitingpopout, null);
         builder.setView(PopUp);
         builder.setCancelable(false);
+        Button exit = PopUp.findViewById(R.id.exit);
+        exit.setOnClickListener(v -> {
+            firebaseDatabase.getReference().child("connections").child(myUid).removeValue();
+            firebaseDatabase.getReference().child("turns").child(myUid).removeValue();
+            firebaseDatabase.getReference().child("won").child(myUid).removeValue();
+            Intent intent = new Intent(inviter.this, Home.class);
+            startActivity(intent);
+        });
         AlertDialog dialog = builder.create();
         dialog.show();
 
@@ -148,41 +167,11 @@ public class inviter extends AppCompatActivity {
                         final String getPlayerId = dataSnapshot.child("player_id").getValue(String.class);
                         if (!doneBoxes.contains(String.valueOf(getBoxPosition))) {
                             doneBoxes.add(String.valueOf(getBoxPosition));
-                            if (getBoxPosition == 1) {
-                                selectBox(image1, getBoxPosition, getPlayerId);
-
-                            } else if (getBoxPosition == 2) {
-                                selectBox(image2, getBoxPosition, getPlayerId);
-
-                            } else if (getBoxPosition == 3) {
-                                selectBox(image3, getBoxPosition, getPlayerId);
-
-                            } else if (getBoxPosition == 4) {
-                                selectBox(image4, getBoxPosition, getPlayerId);
-
-                            } else if (getBoxPosition == 5) {
-                                selectBox(image5, getBoxPosition, getPlayerId);
-
-                            } else if (getBoxPosition == 6) {
-                                selectBox(image6, getBoxPosition, getPlayerId);
-
-                            } else if (getBoxPosition == 7) {
-                                selectBox(image7, getBoxPosition, getPlayerId);
-
-                            } else if (getBoxPosition == 8) {
-                                selectBox(image8, getBoxPosition, getPlayerId);
-
-                            } else if (getBoxPosition == 9) {
-                                selectBox(image9, getBoxPosition, getPlayerId);
-
-                            }
-
-
+                            selectBox(board.get(getBoxPosition-1), getBoxPosition, getPlayerId);
                         }
                     }
                 }
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
@@ -243,81 +232,17 @@ public class inviter extends AppCompatActivity {
         };
     }
 
-    private void boardListener() {
-        image1.setOnClickListener(v -> {
-            if (!doneBoxes.contains("1") && playerTurn.equals(myUid)) {
+    private void boardListener(ImageView imageView, int i) {
+        String position = Integer.toString(i);
+        imageView.setOnClickListener(v ->{
+            if (!doneBoxes.contains(position) && playerTurn.equals(myUid)) {
                 ((ImageView) v).setImageResource(R.drawable.x);
-                firebaseDatabase.getReference().child("turns").child(myUid).child(String.valueOf(doneBoxes.size() + 1)).child("box_position").setValue("1");
-                firebaseDatabase.getReference().child("turns").child(myUid).child(String.valueOf(doneBoxes.size() + 1)).child("player_id").setValue(myUid);
-                playerTurn = opponentUid;
-            }
-        });
-        image2.setOnClickListener(v -> {
-            if (!doneBoxes.contains("2") && playerTurn.equals(myUid)) {
-                ((ImageView) v).setImageResource(R.drawable.x);
-                firebaseDatabase.getReference().child("turns").child(myUid).child(String.valueOf(doneBoxes.size() + 1)).child("box_position").setValue("2");
-                firebaseDatabase.getReference().child("turns").child(myUid).child(String.valueOf(doneBoxes.size() + 1)).child("player_id").setValue(myUid);
-                playerTurn = opponentUid;
-            }
-        });
-        image3.setOnClickListener(v -> {
-            if (!doneBoxes.contains("3") && playerTurn.equals(myUid)) {
-                ((ImageView) v).setImageResource(R.drawable.x);
-                firebaseDatabase.getReference().child("turns").child(myUid).child(String.valueOf(doneBoxes.size() + 1)).child("box_position").setValue("3");
-                firebaseDatabase.getReference().child("turns").child(myUid).child(String.valueOf(doneBoxes.size() + 1)).child("player_id").setValue(myUid);
-                playerTurn = opponentUid;
-            }
-        });
-        image4.setOnClickListener(v -> {
-            if (!doneBoxes.contains("4") && playerTurn.equals(myUid)) {
-                ((ImageView) v).setImageResource(R.drawable.x);
-                firebaseDatabase.getReference().child("turns").child(myUid).child(String.valueOf(doneBoxes.size() + 1)).child("box_position").setValue("4");
-                firebaseDatabase.getReference().child("turns").child(myUid).child(String.valueOf(doneBoxes.size() + 1)).child("player_id").setValue(myUid);
-                playerTurn = opponentUid;
-            }
-        });
-        image5.setOnClickListener(v -> {
-            if (!doneBoxes.contains("5") && playerTurn.equals(myUid)) {
-                ((ImageView) v).setImageResource(R.drawable.x);
-                firebaseDatabase.getReference().child("turns").child(myUid).child(String.valueOf(doneBoxes.size() + 1)).child("box_position").setValue("5");
-                firebaseDatabase.getReference().child("turns").child(myUid).child(String.valueOf(doneBoxes.size() + 1)).child("player_id").setValue(myUid);
-                playerTurn = opponentUid;
-            }
-        });
-        image6.setOnClickListener(v -> {
-            if (!doneBoxes.contains("6") && playerTurn.equals(myUid)) {
-                ((ImageView) v).setImageResource(R.drawable.x);
-                firebaseDatabase.getReference().child("turns").child(myUid).child(String.valueOf(doneBoxes.size() + 1)).child("box_position").setValue("6");
-                firebaseDatabase.getReference().child("turns").child(myUid).child(String.valueOf(doneBoxes.size() + 1)).child("player_id").setValue(myUid);
-                playerTurn = opponentUid;
-            }
-        });
-        image7.setOnClickListener(v -> {
-            if (!doneBoxes.contains("7") && playerTurn.equals(myUid)) {
-                ((ImageView) v).setImageResource(R.drawable.x);
-                firebaseDatabase.getReference().child("turns").child(myUid).child(String.valueOf(doneBoxes.size() + 1)).child("box_position").setValue("7");
-                firebaseDatabase.getReference().child("turns").child(myUid).child(String.valueOf(doneBoxes.size() + 1)).child("player_id").setValue(myUid);
-                playerTurn = opponentUid;
-            }
-        });
-        image8.setOnClickListener(v -> {
-            if (!doneBoxes.contains("8") && playerTurn.equals(myUid)) {
-                ((ImageView) v).setImageResource(R.drawable.x);
-                firebaseDatabase.getReference().child("turns").child(myUid).child(String.valueOf(doneBoxes.size() + 1)).child("box_position").setValue("8");
-                firebaseDatabase.getReference().child("turns").child(myUid).child(String.valueOf(doneBoxes.size() + 1)).child("player_id").setValue(myUid);
-                playerTurn = opponentUid;
-            }
-        });
-        image9.setOnClickListener(v -> {
-            if (!doneBoxes.contains("9") && playerTurn.equals(myUid)) {
-                ((ImageView) v).setImageResource(R.drawable.x);
-                firebaseDatabase.getReference().child("turns").child(myUid).child(String.valueOf(doneBoxes.size() + 1)).child("box_position").setValue("9");
+                firebaseDatabase.getReference().child("turns").child(myUid).child(String.valueOf(doneBoxes.size() + 1)).child("box_position").setValue(position);
                 firebaseDatabase.getReference().child("turns").child(myUid).child(String.valueOf(doneBoxes.size() + 1)).child("player_id").setValue(myUid);
                 playerTurn = opponentUid;
             }
         });
     }
-
 
     private void applyPlayerTurn(String playerUniqueId2) {
         if (playerUniqueId2.equals(myUid)) {
@@ -407,16 +332,8 @@ public class inviter extends AppCompatActivity {
     private void resetGameData() {
         for (int i = 0; i < 9; i++) {
             boxesSelectedBy[i] = "";
+            board.get(i).setImageResource(R.drawable.transparent_back);
         }
-        image1.setImageResource(R.drawable.transparent_back);
-        image2.setImageResource(R.drawable.transparent_back);
-        image3.setImageResource(R.drawable.transparent_back);
-        image4.setImageResource(R.drawable.transparent_back);
-        image5.setImageResource(R.drawable.transparent_back);
-        image6.setImageResource(R.drawable.transparent_back);
-        image7.setImageResource(R.drawable.transparent_back);
-        image8.setImageResource(R.drawable.transparent_back);
-        image9.setImageResource(R.drawable.transparent_back);
         doneBoxes.clear();
         opponentFound = false;
         setGame();

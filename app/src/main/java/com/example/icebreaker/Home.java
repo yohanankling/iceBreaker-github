@@ -71,7 +71,7 @@ public class Home extends AppCompatActivity {
         // TODO:: add last message review
         // TODO:: add alert to new message
         // TODO:: add not read yet logo to messages
-        // TODO: set X O platform
+        // TODO: get X O invetation
         // TODO:: fix keyboard resizeable
 
     }

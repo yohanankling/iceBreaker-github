@@ -1,4 +1,5 @@
-game working with invetaion but manually,
- need to get invator id,
- need to reset,
- and increase won score
+        // TODO:: add last message review
+        // TODO:: add alert to new message
+        // TODO:: add not read yet logo to messages
+        // TODO: get X O invetation and id of invetator
+        // TODO:: fix keyboard resizeable
