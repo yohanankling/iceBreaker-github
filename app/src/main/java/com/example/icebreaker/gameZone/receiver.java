@@ -1,6 +1,8 @@
 package com.example.icebreaker.gameZone;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -102,6 +104,7 @@ public class receiver extends AppCompatActivity {
         boardListener();
     }
 
+    @SuppressLint("StaticFieldLeak")
     private void waitForOpponent() {
         AlertDialog.Builder builder = new AlertDialog.Builder(receiver.this);
         final View PopUp = getLayoutInflater().inflate(R.layout.waitingpopout, null);
@@ -118,7 +121,6 @@ public class receiver extends AppCompatActivity {
                         playerTurn = opponentUid;
                         applyPlayerTurn(playerTurn);
                         if ((int) snapshot.getChildrenCount() == 2) {
-                            dialog.dismiss();
                             opponentFound = true;
                             firebaseDatabase.getReference().child("turns").child(opponentUid).addValueEventListener(turnsEventListener);
                             firebaseDatabase.getReference().child("won").child(opponentUid).addValueEventListener(wonEventListener);
@@ -131,6 +133,36 @@ public class receiver extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError error) {
             }
         });
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                for (int i = 0; i < 10; i++) {
+                    if (opponentFound) {
+                        break;
+                    }
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+                if (opponentFound) {
+                    dialog.dismiss();
+                    // show an error message
+                }
+            }
+        }.execute();
+        if(!opponentFound){
+            Toast.makeText(this, "its seems your opponent fear of showing up...", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(receiver.this, Home.class);
+            startActivity(intent);
+        }
     }
 
     private void turnsListener() {
@@ -199,6 +231,10 @@ public class receiver extends AppCompatActivity {
                     builder.setCancelable(false);
                     AlertDialog dialog = builder.create();
 
+                    firebaseDatabase.getReference().child("connections").child(opponentUid).removeValue();
+                    firebaseDatabase.getReference().child("turns").child(opponentUid).removeValue();
+                    firebaseDatabase.getReference().child("won").child(opponentUid).removeValue();
+
                     final TextView messageTV = PopUp.findViewById(R.id.messageTV);
                     if (getWinPlayerId.equals(myUid)) {
                         messageTV.setText("You won the game!");
@@ -211,7 +247,6 @@ public class receiver extends AppCompatActivity {
                         String newScore = winning + ":" + loses;
                         score.setText(newScore);
                     }
-                    firebaseDatabase.getReference().child("connections").child(opponentUid).removeValue();
                     firebaseDatabase.getReference().child("turns").child(opponentUid).removeEventListener(turnsEventListener);
                     firebaseDatabase.getReference().child("won").child(opponentUid).removeEventListener(wonEventListener);
                     final Button startBtn = PopUp.findViewById(R.id.startNewMatch);
@@ -228,9 +263,8 @@ public class receiver extends AppCompatActivity {
                         firebaseDatabase.getReference().child("won").child(opponentUid).removeValue();
                         Intent intent = new Intent(receiver.this, Home.class);
                         startActivity(intent);
-                    });                    dialog.show();
-
-                    firebaseDatabase.getReference().child("won").child(opponentUid).removeEventListener(wonEventListener);
+                    });
+                    dialog.show();
                 }
             }
 
@@ -348,9 +382,12 @@ public class receiver extends AppCompatActivity {
             builder.setCancelable(false);
             AlertDialog dialog = builder.create();
 
+            firebaseDatabase.getReference().child("connections").child(opponentUid).removeValue();
+            firebaseDatabase.getReference().child("turns").child(opponentUid).removeValue();
+            firebaseDatabase.getReference().child("won").child(opponentUid).removeValue();
+
             final TextView messageTV = findViewById(R.id.messageTV);
             messageTV.setText("It's a draw!");
-            firebaseDatabase.getReference().child("connections").child(opponentUid).removeValue();
             firebaseDatabase.getReference().child("turns").child(opponentUid).removeEventListener(turnsEventListener);
             firebaseDatabase.getReference().child("won").child(opponentUid).removeEventListener(wonEventListener);
             final Button startBtn = PopUp.findViewById(R.id.startNewMatch);

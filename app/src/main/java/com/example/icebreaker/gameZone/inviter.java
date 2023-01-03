@@ -114,7 +114,6 @@ public class inviter extends AppCompatActivity {
         firebaseDatabase.getReference().child("connections").child(firebaseAuth.getUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-
                 if (!opponentFound) {
                     if (snapshot.hasChildren()) {
                         playerTurn = myUid;
@@ -227,9 +226,9 @@ public class inviter extends AppCompatActivity {
                     final Button quitBtn = PopUp.findViewById(R.id.QuitBtn);
                     quitBtn.setOnClickListener(v -> {
                         dialog.dismiss();
-                        firebaseDatabase.getReference().child("connections").child(opponentUid).removeValue();
-                        firebaseDatabase.getReference().child("turns").child(opponentUid).removeValue();
-                        firebaseDatabase.getReference().child("won").child(opponentUid).removeValue();
+                        firebaseDatabase.getReference().child("connections").child(myUid).removeValue();
+                        firebaseDatabase.getReference().child("turns").child(myUid).removeValue();
+                        firebaseDatabase.getReference().child("won").child(myUid).removeValue();
                         Intent intent = new Intent(inviter.this, Home.class);
                         startActivity(intent);
                     });
@@ -364,9 +363,9 @@ public class inviter extends AppCompatActivity {
             final Button quitBtn = findViewById(R.id.QuitBtn);
             quitBtn.setOnClickListener(v -> {
                 dialog.dismiss();
-                firebaseDatabase.getReference().child("connections").child(opponentUid).removeValue();
-                firebaseDatabase.getReference().child("turns").child(opponentUid).removeValue();
-                firebaseDatabase.getReference().child("won").child(opponentUid).removeValue();
+                firebaseDatabase.getReference().child("connections").child(myUid).removeValue();
+                firebaseDatabase.getReference().child("turns").child(myUid).removeValue();
+                firebaseDatabase.getReference().child("won").child(myUid).removeValue();
                 Intent intent = new Intent(inviter.this, Home.class);
                 startActivity(intent);
             });
@@ -393,7 +392,7 @@ public class inviter extends AppCompatActivity {
         super.onDestroy();
         firebaseDatabase.getReference().child("turns").child(myUid).removeValue();
         firebaseDatabase.getReference().child("won").child(myUid).removeValue();
-        firebaseDatabase.getReference().child("connections").child(firebaseAuth.getUid()).removeValue();
+        firebaseDatabase.getReference().child("connections").child(myUid).removeValue();
     }
 
     @Override
@@ -402,7 +401,7 @@ public class inviter extends AppCompatActivity {
         if (this.isFinishing()) {
             firebaseDatabase.getReference().child("turns").child(myUid).removeValue();
             firebaseDatabase.getReference().child("won").child(myUid).removeValue();
-            firebaseDatabase.getReference().child("connections").child(firebaseAuth.getUid()).removeValue();        }
+            firebaseDatabase.getReference().child("connections").child(myUid).removeValue();        }
     }
 
     private void resetGameData() {
@@ -418,9 +417,6 @@ public class inviter extends AppCompatActivity {
         image7.setImageResource(R.drawable.transparent_back);
         image8.setImageResource(R.drawable.transparent_back);
         image9.setImageResource(R.drawable.transparent_back);
-        firebaseDatabase.getReference().child("connections").child(myUid).removeValue();
-        firebaseDatabase.getReference().child("turns").child(myUid).removeValue();
-        firebaseDatabase.getReference().child("won").child(myUid).removeValue();
         doneBoxes.clear();
         opponentFound = false;
         setGame();
