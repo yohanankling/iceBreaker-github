@@ -331,7 +331,7 @@ public class Home extends AppCompatActivity {
         PlayWith.setOnClickListener(view -> {
             Intent intent = new Intent(Home.this, receiver.class);
             intent.putExtra("opponentName", user.getName());
-            intent.putExtra("opponentUid", "ECy9q0iKO5Wl5QaynZwVpTEjFTI2");
+            intent.putExtra("opponentUid", "SxjqtI3A3zYuIhPuCQ7uwJ5mOoA2");
             startActivity(intent);
         });
     }

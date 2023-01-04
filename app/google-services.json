@@ -1,34 +1,33 @@
 {
   "project_info": {
-    "project_number": "179649390136",
-    "firebase_url": "https://icebreaker-7db2a-default-rtdb.firebaseio.com",
-    "project_id": "icebreaker-7db2a",
-    "storage_bucket": "icebreaker-7db2a.appspot.com"
+    "project_number": "461798852971",
+    "project_id": "icebreaker-c5542",
+    "storage_bucket": "icebreaker-c5542.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:179649390136:android:a2ea4538eacdafee85e8cd",
+        "mobilesdk_app_id": "1:461798852971:android:5115ec457f85dd269ce42e",
         "android_client_info": {
           "package_name": "com.example.icebreaker"
         }
       },
       "oauth_client": [
         {
-          "client_id": "179649390136-el11no46jtp0g161v7dvlduk3uvcrgpa.apps.googleusercontent.com",
+          "client_id": "461798852971-udtl6mr64t1f7jdbls4voo84rnpem11l.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAThMpDOSeut6XSGFNoJzC2Je1IoGY1YIw"
+          "current_key": "AIzaSyBct_MBfAsfKhLYkAi9sFb_aEL4FEMv_68"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "179649390136-el11no46jtp0g161v7dvlduk3uvcrgpa.apps.googleusercontent.com",
+              "client_id": "461798852971-udtl6mr64t1f7jdbls4voo84rnpem11l.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

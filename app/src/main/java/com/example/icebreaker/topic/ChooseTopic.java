@@ -18,6 +18,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.icebreaker.Home;
 import com.example.icebreaker.MainActivity;
 import com.example.icebreaker.R;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
@@ -57,7 +58,7 @@ public class ChooseTopic extends AppCompatActivity {
         recyclerView = findViewById(R.id.recyclerview);
         ImageButton back = findViewById(R.id.back);
         back.setOnClickListener(v -> {
-            Intent intent = new Intent(ChooseTopic.this, MainActivity.class);
+            Intent intent = new Intent(ChooseTopic.this, Home.class);
             startActivity(intent);});
         TextView title = findViewById(R.id.Title);
         title.setText("Topics");

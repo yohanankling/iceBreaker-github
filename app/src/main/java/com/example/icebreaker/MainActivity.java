@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
         if (firebaseUser != null) {
-            // If the user is already logged in, start the home activity
+//             If the user is already logged in, start the home activity
             startActivity(new Intent(this, Home.class));
         }
     }
