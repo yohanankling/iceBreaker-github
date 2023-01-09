@@ -97,8 +97,24 @@ public class Login extends AppCompatActivity {
                 }, error -> {
             Toast.makeText(Login.this, error.toString(), Toast.LENGTH_SHORT).show();
         });
-
         volleyQueue.add(stringRequest);
+
+
+        // old method 2 pier:
+//        firebaseAuth.signInWithEmailAndPassword(Email.getText().toString(),Password.getText().toString())
+//                .addOnCompleteListener(task -> {
+//                    if (task.isSuccessful()){
+//                        Toast.makeText(Login.this, "login successfully!", Toast.LENGTH_SHORT).show();
+//                        setAndInitStatus();
+//                        Intent intent = new Intent(Login.this, Home.class);
+//                        startActivity(intent);
+//                        finish();
+//                    } else
+//                        Toast.makeText(Login.this, "oh! please try again..", Toast.LENGTH_SHORT).show();
+//                }).addOnFailureListener(e -> Toast.makeText(Login.this, "Error: "+ e.getLocalizedMessage(), Toast.LENGTH_SHORT).show()).addOnCanceledListener(() -> Toast.makeText(Login.this, "login canceled..", Toast.LENGTH_SHORT).show());
+//    }
+
+
     }
 
     private void setAndInitStatus() {
