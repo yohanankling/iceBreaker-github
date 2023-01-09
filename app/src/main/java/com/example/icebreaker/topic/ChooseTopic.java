@@ -3,7 +3,6 @@ package com.example.icebreaker.topic;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -19,7 +18,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.icebreaker.Home;
-import com.example.icebreaker.MainActivity;
 import com.example.icebreaker.R;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
@@ -113,7 +111,7 @@ public class ChooseTopic extends AppCompatActivity {
         builder.setTitle("to join " + Title + " title?");
         builder.setMessage("");
         builder.setPositiveButton("yes please", (dialog, which) ->
-            checkIfAlreadyin(Title, members));
+                checkIfAlreadyin(Title, members));
         builder.setNegativeButton("no", (dialog, which) ->
                 closeOptionsMenu()
         );
@@ -155,14 +153,14 @@ public class ChooseTopic extends AppCompatActivity {
                 if (document.exists()) {
                     Map<String, Object> topicData = document.getData();
                     if (topicData.containsKey(firebaseAuth.getUid())){
-                    long members = (long) topicData.get("Members");
-                    if (members == 1){
-                        documentReference.delete();
-                    }else {
-                        topicData.remove(firebaseAuth.getUid());
-                        topicData.replace("Members", members - 1);
-                        documentReference.set(topicData);
-                    }
+                        long members = (long) topicData.get("Members");
+                        if (members == 1){
+                            documentReference.delete();
+                        }else {
+                            topicData.remove(firebaseAuth.getUid());
+                            topicData.replace("Members", members - 1);
+                            documentReference.set(topicData);
+                        }
                     }
                 }
             }
@@ -218,7 +216,7 @@ public class ChooseTopic extends AppCompatActivity {
             builder.setView(addtopic);
             AlertDialog dialog = builder.create();
             CancelBtn.setOnClickListener(v1 ->
-                dialog.dismiss());
+                    dialog.dismiss());
             backBtn.setOnClickListener(v1 ->
                     dialog.dismiss());
             dialog.show();
