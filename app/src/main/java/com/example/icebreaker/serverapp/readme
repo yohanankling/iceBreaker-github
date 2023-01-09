@@ -1,0 +1,54 @@
+app server - firestore
+
+
+באפלקציה:
+בקובץ build.gradle:
+להוסיף
+implementation 'com.android.volley:volley:1.2.1'
+sync now
+
+
+קובץ קדם -
+ להיכנס לחשבון פיירבייס
+ הגדרות
+ service account
+ generate new private key
+ לקרוא לו firebase
+כדי להריץ:
+טרמינל *איפה שהקובץ JS נמצא*
+npm install express
+nmp install firebase-admin
+node appserver.js
+
+כדי לגשת מהדפדפן:
+http://localhost:3000/?email=example@gmail.com&password=123456
+מהאפליקציה:
+בטרמינל:
+"ipconfig" - ipv4 שדה = localhost
+אבל עדיין צריך לכתוב את המספר ולא localhost
+http://10.0.0.17:3000/?email=example@gmail.com&password=123456
+מהאמולטור - לא עבד לי בשום צורה, להריץ או בטלפון אמיתי במצב דיבאג או להתקין ממש
+
+דוגמא למימוש באפליקציה:
+String email = Email.getText().toString();
+String password = Password.getText().toString();
+RequestQueue volleyQueue = Volley.newRequestQueue(Login.this);
+String url = "http://10.0.0.17:3000/?email=" + email + "&password=" + password;
+StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+    response -> {
+        if (response.equals("correct!")) {
+                        Toast.makeText(Login.this, "login successfully!", Toast.LENGTH_SHORT).show();
+בלה בלה בלה
+                    } else Toast.makeText(Login.this, response, Toast.LENGTH_SHORT).show();
+                }, error -> {
+            Toast.makeText(Login.this, error.toString(), Toast.LENGTH_SHORT).show();
+        });
+        volleyQueue.add(stringRequest);
+
+יש לי קובץ דומה שלא מתבסס על פיירסטור אלא על פיירבייס, הוא שולף בפורמט גייסון
+בסוף לא השתמשתי מי שרוצה שיגיד אשנה אותו שיתאים
+
+firebase auth -
+  כרגע לא הצלחתי לשלוף סיסמא מי שיצליח תבוא עליו הברכה ואשמח שישתף אותי זה פתרון יפה יותר (:
+ יוחנן 0586669988
+

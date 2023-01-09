@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -16,9 +17,11 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.example.icebreaker.Home;
 import com.example.icebreaker.R;
+import com.example.icebreaker.chats.Message;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
@@ -44,6 +47,8 @@ public class receiver extends AppCompatActivity {
     private String myUid;
     private String opponentName;
     private String opponentUid;
+    private String waitingMsg = "you don't have invites yet, try to invite yourself maybe";
+
 
     private int winning = 0;
     private int loses = 0;
@@ -78,9 +83,7 @@ public class receiver extends AppCompatActivity {
         image7 = findViewById(R.id.image7);
         image8 = findViewById(R.id.image8);
         image9 = findViewById(R.id.image9);
-        myName = "yoh";
-        opponentName = getIntent().getStringExtra("opponentName");
-        opponentUid = getIntent().getStringExtra("opponentUid");
+        myName = getIntent().getStringExtra("myName");
         player1TV = findViewById(R.id.player1TV);
         player2TV = findViewById(R.id.player2TV);
 
@@ -95,7 +98,6 @@ public class receiver extends AppCompatActivity {
     }
 
     private void setGame() {
-        player1TV.setText(opponentName);
         player2TV.setText(myName);
         waitForOpponent();
         turnsListener();
@@ -121,31 +123,45 @@ public class receiver extends AppCompatActivity {
         builder.setView(PopUp);
         builder.setCancelable(false);
         Button exit = PopUp.findViewById(R.id.exit);
-        exit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                firebaseDatabase.getReference().child("connections").child(opponentUid).removeValue();
-                firebaseDatabase.getReference().child("turns").child(opponentUid).removeValue();
-                firebaseDatabase.getReference().child("won").child(opponentUid).removeValue();
-                Intent intent = new Intent(receiver.this, Home.class);
-                startActivity(intent);
-            }
+        exit.setOnClickListener(v -> {
+            firebaseDatabase.getReference().child("connections").child(myUid).removeValue();
+            firebaseDatabase.getReference().child("turns").child(myUid).removeValue();
+            firebaseDatabase.getReference().child("won").child(myUid).removeValue();
+            Intent intent = new Intent(receiver.this, Home.class);
+            startActivity(intent);
         });
 
         AlertDialog dialog = builder.create();
         dialog.show();
-        firebaseDatabase.getReference().child("connections").child(opponentUid).child("receiverName").setValue(myName);
-        firebaseDatabase.getReference().child("connections").child(opponentUid).addValueEventListener(new ValueEventListener() {
+        firebaseDatabase.getReference().child("connections").child(myUid).child("receiverName").setValue(myName);
+        firebaseDatabase.getReference().child("connections").child(myUid).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (!opponentFound) {
                     if (snapshot.hasChildren()) {
-                        playerTurn = opponentUid;
-                        applyPlayerTurn(playerTurn);
-                        if ((int) snapshot.getChildrenCount() == 2) {
+                        if(snapshot.getChildrenCount() == 1){
+                            Toast.makeText(receiver.this, waitingMsg, Toast.LENGTH_SHORT).show();
+                        }
+                        else{
+                            int count = 0;
+                            for (DataSnapshot dataSnapshot : snapshot.getChildren()){
+                                if (count == 0){
+                                    opponentName = dataSnapshot.getValue(String.class);
+                                    player1TV.setText(opponentName);
+
+                                    count++;
+                                } else if (count == 1){
+                                    opponentUid = dataSnapshot.getValue(String.class);
+                                    break;
+                                }
+                            }
+                        }
+                        if (snapshot.getChildrenCount() == 3) {
+                            playerTurn = opponentUid;
+                            applyPlayerTurn(playerTurn);
                             opponentFound = true;
-                            firebaseDatabase.getReference().child("turns").child(opponentUid).addValueEventListener(turnsEventListener);
-                            firebaseDatabase.getReference().child("won").child(opponentUid).addValueEventListener(wonEventListener);
+                            firebaseDatabase.getReference().child("turns").child(myUid).addValueEventListener(turnsEventListener);
+                            firebaseDatabase.getReference().child("won").child(myUid).addValueEventListener(wonEventListener);
                             firebaseDatabase.getReference().child("connections").removeEventListener(this);
                         }
                     }
@@ -155,7 +171,8 @@ public class receiver extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError error) {
             }
         });
-        new AsyncTask<Void, Void, Void>() {
+        if(!opponentFound){
+            new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... voids) {
                 for (int i = 0; i < 10; i++) {
@@ -180,6 +197,8 @@ public class receiver extends AppCompatActivity {
                 }
             }
         }.execute();
+        }
+
 //        if(!opponentFound){
 //            Toast.makeText(this, "its seems your opponent fear of showing up...", Toast.LENGTH_SHORT).show();
 //            Intent intent = new Intent(receiver.this, Home.class);
@@ -224,9 +243,9 @@ public class receiver extends AppCompatActivity {
                     builder.setCancelable(false);
                     AlertDialog dialog = builder.create();
 
-                    firebaseDatabase.getReference().child("connections").child(opponentUid).removeValue();
-                    firebaseDatabase.getReference().child("turns").child(opponentUid).removeValue();
-                    firebaseDatabase.getReference().child("won").child(opponentUid).removeValue();
+                    firebaseDatabase.getReference().child("connections").child(myUid).removeValue();
+                    firebaseDatabase.getReference().child("turns").child(myUid).removeValue();
+                    firebaseDatabase.getReference().child("won").child(myUid).removeValue();
 
                     final TextView messageTV = PopUp.findViewById(R.id.messageTV);
                     if (getWinPlayerId.equals(myUid)) {
@@ -240,8 +259,8 @@ public class receiver extends AppCompatActivity {
                         String newScore = winning + ":" + loses;
                         score.setText(newScore);
                     }
-                    firebaseDatabase.getReference().child("turns").child(opponentUid).removeEventListener(turnsEventListener);
-                    firebaseDatabase.getReference().child("won").child(opponentUid).removeEventListener(wonEventListener);
+                    firebaseDatabase.getReference().child("turns").child(myUid).removeEventListener(turnsEventListener);
+                    firebaseDatabase.getReference().child("won").child(myUid).removeEventListener(wonEventListener);
                     final Button startBtn = PopUp.findViewById(R.id.startNewMatch);
                     startBtn.setOnClickListener(v -> {
                         dialog.dismiss();
@@ -251,9 +270,9 @@ public class receiver extends AppCompatActivity {
                     final Button quitBtn = PopUp.findViewById(R.id.QuitBtn);
                     quitBtn.setOnClickListener(v -> {
                         dialog.dismiss();
-                        firebaseDatabase.getReference().child("connections").child(opponentUid).removeValue();
-                        firebaseDatabase.getReference().child("turns").child(opponentUid).removeValue();
-                        firebaseDatabase.getReference().child("won").child(opponentUid).removeValue();
+                        firebaseDatabase.getReference().child("connections").child(myUid).removeValue();
+                        firebaseDatabase.getReference().child("turns").child(myUid).removeValue();
+                        firebaseDatabase.getReference().child("won").child(myUid).removeValue();
                         Intent intent = new Intent(receiver.this, Home.class);
                         startActivity(intent);
                     });
@@ -273,8 +292,8 @@ public class receiver extends AppCompatActivity {
         imageView.setOnClickListener(v ->{
             if (!doneBoxes.contains(position) && playerTurn.equals(myUid)) {
                 ((ImageView) v).setImageResource(R.drawable.x);
-                firebaseDatabase.getReference().child("turns").child(opponentUid).child(String.valueOf(doneBoxes.size() + 1)).child("box_position").setValue(position);
-                firebaseDatabase.getReference().child("turns").child(opponentUid).child(String.valueOf(doneBoxes.size() + 1)).child("player_id").setValue(myUid);
+                firebaseDatabase.getReference().child("turns").child(myUid).child(String.valueOf(doneBoxes.size() + 1)).child("box_position").setValue(position);
+                firebaseDatabase.getReference().child("turns").child(myUid).child(String.valueOf(doneBoxes.size() + 1)).child("player_id").setValue(myUid);
                 playerTurn = opponentUid;
             }
         });
@@ -300,10 +319,6 @@ public class receiver extends AppCompatActivity {
             playerTurn = myUid;
         }
         applyPlayerTurn(playerTurn);
-        if (checkPlayerWin(selectedByPlayer)) {
-            firebaseDatabase.getReference().child("won").child(opponentUid).child("player_id").setValue(selectedByPlayer);
-
-        }
         if (doneBoxes.size() == 9) {
             AlertDialog.Builder builder = new AlertDialog.Builder(receiver.this);
             final View PopUp = getLayoutInflater().inflate(R.layout.activity_win_dialog, null);
@@ -311,14 +326,14 @@ public class receiver extends AppCompatActivity {
             builder.setCancelable(false);
             AlertDialog dialog = builder.create();
 
-            firebaseDatabase.getReference().child("connections").child(opponentUid).removeValue();
-            firebaseDatabase.getReference().child("turns").child(opponentUid).removeValue();
-            firebaseDatabase.getReference().child("won").child(opponentUid).removeValue();
+            firebaseDatabase.getReference().child("connections").child(myUid).removeValue();
+            firebaseDatabase.getReference().child("turns").child(myUid).removeValue();
+            firebaseDatabase.getReference().child("won").child(myUid).removeValue();
 
             final TextView messageTV = findViewById(R.id.messageTV);
             messageTV.setText("It's a draw!");
-            firebaseDatabase.getReference().child("turns").child(opponentUid).removeEventListener(turnsEventListener);
-            firebaseDatabase.getReference().child("won").child(opponentUid).removeEventListener(wonEventListener);
+            firebaseDatabase.getReference().child("turns").child(myUid).removeEventListener(turnsEventListener);
+            firebaseDatabase.getReference().child("won").child(myUid).removeEventListener(wonEventListener);
             final Button startBtn = PopUp.findViewById(R.id.startNewMatch);
             startBtn.setOnClickListener(v -> {
                 dialog.dismiss();
@@ -328,9 +343,9 @@ public class receiver extends AppCompatActivity {
             final Button quitBtn = PopUp.findViewById(R.id.QuitBtn);
             quitBtn.setOnClickListener(v -> {
                 dialog.dismiss();
-                firebaseDatabase.getReference().child("connections").child(opponentUid).removeValue();
-                firebaseDatabase.getReference().child("turns").child(opponentUid).removeValue();
-                firebaseDatabase.getReference().child("won").child(opponentUid).removeValue();
+                firebaseDatabase.getReference().child("connections").child(myUid).removeValue();
+                firebaseDatabase.getReference().child("turns").child(myUid).removeValue();
+                firebaseDatabase.getReference().child("won").child(myUid).removeValue();
                 Intent intent = new Intent(receiver.this, Home.class);
                 startActivity(intent);
             });            dialog.show();
@@ -353,18 +368,18 @@ public class receiver extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        firebaseDatabase.getReference().child("connections").child(opponentUid).removeValue();
-        firebaseDatabase.getReference().child("turns").child(opponentUid).removeValue();
-        firebaseDatabase.getReference().child("won").child(opponentUid).removeValue();
+        firebaseDatabase.getReference().child("connections").child(myUid).removeValue();
+        firebaseDatabase.getReference().child("turns").child(myUid).removeValue();
+        firebaseDatabase.getReference().child("won").child(myUid).removeValue();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         if (this.isFinishing()) {
-            firebaseDatabase.getReference().child("connections").child(opponentUid).removeValue();
-            firebaseDatabase.getReference().child("turns").child(opponentUid).removeValue();
-            firebaseDatabase.getReference().child("won").child(opponentUid).removeValue();
+            firebaseDatabase.getReference().child("connections").child(myUid).removeValue();
+            firebaseDatabase.getReference().child("turns").child(myUid).removeValue();
+            firebaseDatabase.getReference().child("won").child(myUid).removeValue();
         }
     }
 
@@ -375,6 +390,7 @@ public class receiver extends AppCompatActivity {
         }
         doneBoxes.clear();
         opponentFound = false;
+        waitingMsg = "waiting for opponent...";
         setGame();
     }
 }
