@@ -6,22 +6,18 @@ public class User {
     public String Name;
     public String Gender;
     public String Topic;
-    public String LastSeen;
-    public boolean Online;
-    public boolean AdminAccess;
-    public boolean GameAvailable;
 
 
-    public User(String Id, String Email, String Name, String Gender, String Topic, String LastSeen, boolean online, boolean AdminAccess, boolean GameAvailable) {
+    public User(String Id, String Email, String Name, String Gender, String Topic) {
         this.Id = Id;
         this.Name = Name;
         this.Email = Email;
         this.Gender = Gender;
         this.Topic = Topic;
-        this.LastSeen = LastSeen;
-        this.Online = online;
-        this.AdminAccess = AdminAccess;
-        this.GameAvailable = GameAvailable;
+    }
+
+    public User() {
+
     }
 
     public String getId() {
@@ -29,8 +25,6 @@ public class User {
     }
 
     public String getName() { return Name;}
-
-    public String getLastSeen() { return LastSeen;}
 
     public String getEmail() {
         return Email;
@@ -42,18 +36,6 @@ public class User {
 
     public String getTopic() {
         return Topic;
-    }
-
-    public boolean getOnline() {
-        return Online;
-    }
-
-    public boolean isGameAvailable() {
-        return GameAvailable;
-    }
-
-    public boolean haveAdminAccess() {
-        return AdminAccess;
     }
 
     public void setId(String id) {
@@ -72,21 +54,9 @@ public class User {
         this.Gender = gender;
     }
 
-    public void setLastSeen(String lastSeen) { this.LastSeen = lastSeen;}
-
     public void setTopic(String topic) {
         this.Topic = topic;
     }
 
-    public void setGameAvailable(boolean gameAvailable) {
-        this.GameAvailable = gameAvailable;
-    }
 
-    public void setOnline(boolean online) {
-        this.Online = online;
-    }
-
-    public void setAdminAccess(boolean adminAccess) {
-        this.AdminAccess = adminAccess;
-    }
 }

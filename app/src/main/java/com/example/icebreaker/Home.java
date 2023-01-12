@@ -22,23 +22,13 @@ import com.example.icebreaker.contactUs.Contact;
 import com.example.icebreaker.gameZone.*;
 import com.example.icebreaker.topic.*;
 import com.example.icebreaker.users.*;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QuerySnapshot;
 
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class Home extends AppCompatActivity {
+    HomeModel homeModel = new HomeModel(this);
 
     // Declare variables for UI elements
     private Button TopicChooser;
@@ -48,13 +38,8 @@ public class Home extends AppCompatActivity {
     private ImageButton PlayWith;
     private ImageButton Broadcast;
 
-    // Declare Firebase variables
-    private FirebaseAuth firebaseAuth;
-    private FirebaseDatabase firebaseDatabase;
-    private FirebaseFirestore firebaseFirestore;
-
     // Declare User object
-    private User user;
+    public User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,13 +52,6 @@ public class Home extends AppCompatActivity {
         PlayWithButton();
         ChatsButton();
         ContactUsBtn();
-
-        // TODO:: add last message review
-        // TODO:: add alert to new message
-        // TODO:: add not read yet logo to messages
-        // TODO: get X O invetation
-        // TODO:: fix keyboard resizeable
-
     }
 
     @Override
@@ -85,7 +63,7 @@ public class Home extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.profile:
                 StatusButton();
                 return true;
@@ -97,11 +75,6 @@ public class Home extends AppCompatActivity {
 
     // Initialize fields and retrieve user data from Firebase
     private void initFields() {
-        // Initialize Firebase instances
-        firebaseAuth = FirebaseAuth.getInstance();
-        firebaseDatabase = FirebaseDatabase.getInstance();
-        firebaseFirestore = FirebaseFirestore.getInstance();
-
         // Initialize UI elements
         TopicChooser = findViewById(R.id.TopicChooser);
         TopicMembers = findViewById(R.id.TopicMembers);
@@ -109,14 +82,16 @@ public class Home extends AppCompatActivity {
         PlayWith = findViewById(R.id.game);
         chat = findViewById(R.id.chats);
         ContactUs = findViewById(R.id.contactUs);
+        initUser();
+    }
 
-        // Initialize User object with default values
-        user = new User("", "", "", "", "", "", true, false, true);
-        user.setId(firebaseAuth.getCurrentUser().getUid());
 
+    public void initUser() {
+        user = new User();
+        user.setId(homeModel.getUid());
         // Retrieve user data from Firebase
-        DocumentReference documentReferenceuser = firebaseFirestore.collection("Users").document(user.getId());
-        documentReferenceuser.get().addOnCompleteListener(task -> {
+        DocumentReference documentReference = homeModel.reference();
+        documentReference.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 DocumentSnapshot document = task.getResult();
                 if (document.exists()) {
@@ -128,14 +103,13 @@ public class Home extends AppCompatActivity {
                 }
                 // If user has admin access, initialize admin functions
                 if (user.getEmail().equals("admin@gmail.com")) {
-                    user.setAdminAccess(true);
                     initAdminFunc();
                 }
             }
         });
     }
 
-    private void initAdminFunc() {
+    public void initAdminFunc() {
         Button userList = findViewById(R.id.UserList);
         userList.setVisibility(View.VISIBLE);
         userList.setOnClickListener(v -> {
@@ -155,29 +129,7 @@ public class Home extends AppCompatActivity {
         Button Remove = removeuser.findViewById(R.id.remove);
         Remove.setOnClickListener(v12 -> {
             String removeMail = MailToRemove.getText().toString();
-            Query query = firebaseFirestore.collection("Users").whereEqualTo("email", removeMail);
-            query.get().addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    QuerySnapshot querySnapshot = task.getResult();
-                    if (querySnapshot.isEmpty()) {
-                        Toast.makeText(Home.this, "mail not found", Toast.LENGTH_SHORT).show();
-                    } else {
-                        List<DocumentSnapshot> documents = querySnapshot.getDocuments();
-                        DocumentSnapshot document = documents.get(0);
-                        Map<String, Object> userData = document.getData();
-                        String removeUid = userData.get("uid").toString();
-                        String removedEmail = userData.get("email").toString();
-//                        firebaseFirestore.collection("Users").document(removeUid).delete();
-                        DocumentReference documentReference = firebaseFirestore.collection("Banned").document(removeUid);
-                        Map<String, Object> BannedData = new HashMap<>();
-                        BannedData.put("email", removedEmail);
-                        documentReference.set(BannedData).addOnSuccessListener(unused -> {
-                        });
-                        Toast.makeText(Home.this, removeMail + " will banned soon", Toast.LENGTH_SHORT).show();
-                    }
-
-                }
-            });
+            homeModel.removeUser(removeMail);
         });
 
         Button CancelBtn = removeuser.findViewById(R.id.Cancel);
@@ -192,51 +144,13 @@ public class Home extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         checkifbanned();
-//        listenToNewMessages();
     }
 
     private void checkifbanned() {
-        DocumentReference documentReference = firebaseFirestore.collection("Banned").document(firebaseAuth.getUid());
-        documentReference.addSnapshotListener((value, error) -> {
-            if (value.exists()) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setCancelable(true);
-                builder.setTitle("its appear you are banned");
-                builder.setMessage("if you have an objection you can contact us on the mail :\nourIceBreaker@gmail.com");
-                builder.setPositiveButton("ok", (dialog, which) ->
-                {
-                    firebaseFirestore.collection("Users").document(firebaseAuth.getUid()).delete();
-                    Toast.makeText(Home.this, "bye-bye!", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(Home.this, MainActivity.class);
-                    status("offline");
-                    firebaseAuth.signOut();
-                    startActivity(intent);
-                });
-                builder.setCancelable(false);
-                AlertDialog dialog = builder.create();
-                dialog.show();
-            } else {
-                Home.this.status("online");
-            }
-        });
+        homeModel.checkifbanned();
     }
 
-    private void listenToNewMessages() {
-        DatabaseReference databaseReference = firebaseDatabase.getReference().child("chats").child(firebaseAuth.getUid());
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                Toast.makeText(Home.this, "you have got a message!", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-    }
-
-        // Set OnClickListener for Status button
+    // Set OnClickListener for Status button
     private void StatusButton() {
         // Show dialog to allow user to see their details
         AlertDialog.Builder builder = new AlertDialog.Builder(Home.this);
@@ -259,10 +173,8 @@ public class Home extends AppCompatActivity {
         name.setText(user.getName());
         mail.setText("mail: " + user.getEmail());
         topic.setText("topic: " + user.getTopic());
-        if (user.isGameAvailable()) {
             Game.setText("game: " + "available");
-        } else Game.setText("game: " + "not available");
-        if (!user.haveAdminAccess()) {
+        if (!user.getEmail().equals("admin@gmail.com")) {
             SocialClass.setText("access: user");
         } else SocialClass.setText("access: admin");
         builder.setView(PopUpStatus);
@@ -282,47 +194,14 @@ public class Home extends AppCompatActivity {
     // Set OnClickListener for Topic Members button
     private void TopicMembersButton() {
         TopicMembers.setOnClickListener(view -> {
-            DocumentReference documentReferenceuser = firebaseFirestore.collection("Users").document(firebaseAuth.getUid());
-            documentReferenceuser.get().addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        Map<String, Object> userData = document.getData();
-                        String Title = (String) userData.get("topic");
-                        if(!Title.equals("~null")){
-                            Intent intent = new Intent(Home.this, TopicMembersList.class);
-                            intent.putExtra("Title", Title);
-                            intent.putExtra("MyName", user.getName());
-                            startActivity(intent);
-                        }
-                        else Toast.makeText(this, "must have topic first..", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            });
+            homeModel.TopicMembersButtonPressed(user.getName());
         });
     }
 
     // Set OnClickListener for Broadcast button
     private void BroadcastButton() {
         Broadcast.setOnClickListener(view -> {
-            DocumentReference documentReferenceuser = firebaseFirestore.collection("Users").document(firebaseAuth.getUid());
-            documentReferenceuser.get().addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        Map<String, Object> userData = document.getData();
-                        String Title = (String) userData.get("topic");
-                        String UserName = (String) userData.get("name");
-                        if(!Title.equals("~null")){
-                            Intent intent = new Intent(Home.this, Broadcast.class);
-                            intent.putExtra("Title", Title);
-                            intent.putExtra("Name", UserName);
-                            startActivity(intent);
-                        }
-                        else Toast.makeText(this, "must have topic first..", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            });
+            homeModel.broadcastButtonPressed();
         });
     }
 
@@ -354,15 +233,15 @@ public class Home extends AppCompatActivity {
 
     private void DisconnectDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setCancelable(false);
+        builder.setCancelable(true);
         builder.setTitle(user.getName() + " ,you sure?");
         builder.setMessage("");
         builder.setPositiveButton("yes please", (dialog, which) ->
         {
             Toast.makeText(Home.this, "bye-bye!", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(Home.this, MainActivity.class);
-            status("offline");
-            firebaseAuth.signOut();
+            homeModel.status("offline");
+            homeModel.signOut();
             startActivity(intent);
         });
         builder.setNegativeButton("no", (dialog, which) ->
@@ -372,29 +251,17 @@ public class Home extends AppCompatActivity {
         dialog.show();
     }
 
-    private void status(String status) {
-        DocumentReference documentReference = firebaseFirestore.collection("Users").document(firebaseAuth.getUid());
-        documentReference.update("status", status).addOnSuccessListener(unused -> {
-        });
-    }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        status("offline");
+        homeModel.status("offline");
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         if (this.isFinishing()) {
-            status("offline");
+            homeModel.status("offline");
         }
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        DisconnectDialog();
     }
 }

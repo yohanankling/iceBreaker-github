@@ -15,8 +15,12 @@ import android.widget.Toast;
 
 import com.example.icebreaker.MainActivity;
 import com.example.icebreaker.R;
+import com.example.icebreaker.topic.ChooseTopic;
+import com.example.icebreaker.users.model.LoginModel;
+import com.example.icebreaker.users.model.RegisterModel;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
@@ -24,13 +28,13 @@ import java.util.Map;
 
 public class Register extends AppCompatActivity {
 
+    RegisterModel registerModel = new RegisterModel(this);
+
     private TextView GenderNotice;
     private Button Submit, Cancel;
     private EditText Name, Password, RePassword, Email;
     private ImageButton Male, Female;
     boolean MaleClick = false, FemaleClick = false;
-    private FirebaseAuth firebaseAuth;
-    private FirebaseFirestore firebaseFirestore;
 
 
     @Override
@@ -44,8 +48,6 @@ public class Register extends AppCompatActivity {
     }
 
     private void initFields() {
-        firebaseAuth = FirebaseAuth.getInstance();
-        firebaseFirestore = FirebaseFirestore.getInstance();
         GenderNotice = findViewById(R.id.GenderNotice);
         Male = findViewById(R.id.Male);
         Female = findViewById(R.id.Female);
@@ -153,35 +155,6 @@ public class Register extends AppCompatActivity {
     }
 
     private void ValidEmailOnDatabase() {
-        firebaseAuth.createUserWithEmailAndPassword(Email.getText().toString(),Password.getText().toString()).addOnCompleteListener(task -> {
-            if(task.isSuccessful()){
-                StoreToDatabase();
-                Toast.makeText(Register.this, "registered successfully!", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(Register.this, MainActivity.class);
-                firebaseAuth.signOut();
-                startActivity(intent);
-                finish();
-            }
-            else
-                Toast.makeText(Register.this, "oh! please try again..", Toast.LENGTH_SHORT).show();
-        }).addOnFailureListener(e -> Toast.makeText(Register.this, "Error: "+ e.getLocalizedMessage(), Toast.LENGTH_SHORT).show()).addOnCanceledListener(() -> Toast.makeText(Register.this, "canceled, try again!", Toast.LENGTH_SHORT).show());
-    }
-
-    private void StoreToDatabase() {
-        String UserId = firebaseAuth.getCurrentUser().getUid();
-        DocumentReference documentReference = firebaseFirestore.collection("Users").document(UserId);
-        Map<String, Object> userData = new HashMap<>();
-        userData.put("uid", UserId);
-        userData.put("email", Email.getText().toString());
-        userData.put("name", Name.getText().toString());
-        userData.put("password", Password.getText().toString());
-        userData.put("status", "offline");
-        if(MaleClick){
-            userData.put("gender", "Male");
-        } else userData.put("gender", "Female");
-        userData.put("topic", "~null");
-        documentReference.set(userData).addOnSuccessListener(unused -> {
-        });
-        finish();
+        registerModel.ValidEmailOnDatabase(Email.getText().toString(),Password.getText().toString(), Name.getText().toString(), MaleClick);
     }
 }

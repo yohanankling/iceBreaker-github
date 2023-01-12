@@ -12,10 +12,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="68dp"
+        android:layout_marginBottom="175dp"
         android:text="register"
+        android:background="@drawable/buttons"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <Button
         android:id="@+id/Login"
@@ -23,9 +24,21 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="30dp"
         android:text="Login"
+        android:background="@drawable/buttons"
         app:layout_constraintBottom_toBottomOf="@+id/register"
         app:layout_constraintEnd_toStartOf="@+id/register"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/register" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
+        android:alpha="0.8"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/circular" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

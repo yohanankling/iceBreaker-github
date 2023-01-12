@@ -17,7 +17,9 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.icebreaker.Home;
+import com.example.icebreaker.HomeModel;
 import com.example.icebreaker.R;
+import com.example.icebreaker.users.model.LoginModel;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -35,10 +37,11 @@ import java.util.Map;
 
 public class Login extends AppCompatActivity {
 
+    LoginModel loginModel = new LoginModel(this);
+
     private Button LoginBtn, RegisterBtn;
     private EditText Email, Password;
-    private FirebaseAuth firebaseAuth;
-    private FirebaseFirestore firebaseFirestore;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,8 +53,6 @@ public class Login extends AppCompatActivity {
     }
 
     private void initFields() {
-        firebaseAuth = FirebaseAuth.getInstance();
-        firebaseFirestore = FirebaseFirestore.getInstance();
         Email = findViewById(R.id.Email);
         Password = findViewById(R.id.Password);
         LoginBtn = findViewById(R.id.LoginBtn);
@@ -118,28 +119,7 @@ public class Login extends AppCompatActivity {
     }
 
     private void setAndInitStatus() {
-        firebaseAuth.signInWithEmailAndPassword(Email.getText().toString(), Password.getText().toString())
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        String UserId = firebaseAuth.getCurrentUser().getUid();
-                        DocumentReference documentReferenceuser = firebaseFirestore.collection("Users").document(UserId);
-                        documentReferenceuser.get().addOnCompleteListener(task2 -> {
-                            if (task2.isSuccessful()) {
-                                DocumentSnapshot document = task2.getResult();
-                                if (document.exists()) {
-                                    Map<String, Object> userData = document.getData();
-                                    userData.replace("status", "online");
-                                    documentReferenceuser.set(userData);
-                                }
-                                Intent intent = new Intent(Login.this, Home.class);
-                                startActivity(intent);
-                                finish();
-                            }
-                        });
-                    }
-                });
-
-
+        loginModel.setAndInitStatus(Email.getText().toString(),Password.getText().toString());
     }
 
     private void RegisterButton() {

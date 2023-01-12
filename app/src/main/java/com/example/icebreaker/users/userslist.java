@@ -20,6 +20,8 @@ import android.widget.TextView;
 import com.example.icebreaker.Home;
 import com.example.icebreaker.R;
 import com.example.icebreaker.chats.*;
+import com.example.icebreaker.users.model.RegisterModel;
+import com.example.icebreaker.users.model.userlistModel;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
@@ -33,13 +35,11 @@ import java.util.Map;
 // This class represents the user list screen of the app
 public class userslist extends AppCompatActivity {
 
+    userlistModel userslistModel = new userlistModel(this);
+
     // UI elements
     private ImageButton back;
     private RecyclerView recyclerView;
-
-    // Firebase authentication and firestore instances
-    private FirebaseAuth firebaseAuth;
-    private FirebaseFirestore firebaseFirestore;
 
     // Adapter for displaying the user list in a RecyclerView
     private FirestoreRecyclerAdapter<FirebaseUser, userDetailes> chatAdapter;
@@ -62,8 +62,6 @@ public class userslist extends AppCompatActivity {
 
     // Initialize fields
     private void initFields() {
-        firebaseAuth = FirebaseAuth.getInstance();
-        firebaseFirestore = FirebaseFirestore.getInstance();
         recyclerView = findViewById(R.id.recyclerview);
         back = findViewById(R.id.back);
         TextView title = findViewById(R.id.Title);
@@ -102,7 +100,7 @@ public class userslist extends AppCompatActivity {
     // Set up the user list using a FirestoreRecyclerAdapter
     private void initChats() {
         // Query the database for users that are not the current user
-        Query query = firebaseFirestore.collection("Users").whereNotEqualTo("uid", firebaseAuth.getUid());
+        Query query = userslistModel.getQuryData();
         // Set up the options for the adapter
         FirestoreRecyclerOptions<FirebaseUser> allusername = new FirestoreRecyclerOptions.Builder<FirebaseUser>().setQuery(query, FirebaseUser.class).build();
         // Create the adapter
@@ -131,7 +129,7 @@ public class userslist extends AppCompatActivity {
     // Show the details of a user when clicked
     private void showUserDetails(String userUId) {
         // Query the database for the user with the given ID
-        DocumentReference docRef = firebaseFirestore.collection("Users").document(userUId);
+        DocumentReference docRef = userslistModel.getDocRef(userUId);
         docRef.get().addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         // If the user was found, get their data as a map
@@ -155,7 +153,6 @@ public class userslist extends AppCompatActivity {
                             TextView nametext = PopUpStatus.findViewById(R.id.Name);
                             TextView emailtext = PopUpStatus.findViewById(R.id.Mail);
                             TextView topictext = PopUpStatus.findViewById(R.id.Topic);
-                            TextView Gametext = PopUpStatus.findViewById(R.id.Game);
                             Button chat = PopUpStatus.findViewById(R.id.chatwith);
                             chat.setVisibility(View.VISIBLE);
                             TextView SocialClass = PopUpStatus.findViewById(R.id.SocialClass);
@@ -198,21 +195,6 @@ public class userslist extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         chatAdapter.startListening();
-        status("online");
-    }
-
-//    @Override
-//    protected void onStop() {
-//        super.onStop();
-//        if (chatAdapter != null){
-//            chatAdapter.stopListening();
-//            status("offline");
-//        }
-//    }
-
-    private void status(String status) {
-        DocumentReference documentReference = firebaseFirestore.collection("Users").document(firebaseAuth.getUid());
-        documentReference.update("status", status).addOnSuccessListener(unused -> {
-        });
+        userslistModel.status("online");
     }
 }

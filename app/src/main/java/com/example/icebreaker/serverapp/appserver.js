@@ -52,3 +52,7 @@ app.get('/', (req, res) => {
 app.listen(3000, () => {
     console.log('App listening on port 3000');
 });
+
+// TO RUN:
+// cd app\src\main\java\com\example\icebreaker\serverapp
+// node appserver
