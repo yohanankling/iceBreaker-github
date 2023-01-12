@@ -2,13 +2,11 @@ package com.example.icebreaker.topic;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -23,7 +21,7 @@ public class TopicAdapter extends RecyclerView.Adapter {
 
     private final Context context;
     private final ArrayList<FirebaseUser> usersArrayList;
-    private String MyName;
+    private final String MyName;
 
 
     public TopicAdapter(Context context, ArrayList<FirebaseUser> usersArrayList, Intent intent) {

@@ -33,7 +33,6 @@ public class inviter extends AppCompatActivity {
     private final List<String> doneBoxes = new ArrayList<>();
     private final List<ImageView> board = new ArrayList<>();
 
-    private FirebaseAuth firebaseAuth;
     private FirebaseDatabase firebaseDatabase;
 
     private boolean opponentFound = false;
@@ -61,7 +60,7 @@ public class inviter extends AppCompatActivity {
     }
 
     private void initFields() {
-        firebaseAuth = FirebaseAuth.getInstance();
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
         myUid = firebaseAuth.getUid();
         player1Layout = findViewById(R.id.player1Layout);

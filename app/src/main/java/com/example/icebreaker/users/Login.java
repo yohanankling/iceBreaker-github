@@ -11,29 +11,10 @@ import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.icebreaker.Home;
-import com.example.icebreaker.HomeModel;
 import com.example.icebreaker.R;
 import com.example.icebreaker.users.model.LoginModel;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.Map;
 
 public class Login extends AppCompatActivity {
 
@@ -95,9 +76,7 @@ public class Login extends AppCompatActivity {
                         Toast.makeText(Login.this, "login successfully!", Toast.LENGTH_SHORT).show();
                         setAndInitStatus();
                     } else Toast.makeText(Login.this, response, Toast.LENGTH_SHORT).show();
-                }, error -> {
-            Toast.makeText(Login.this, error.toString(), Toast.LENGTH_SHORT).show();
-        });
+                }, error -> Toast.makeText(Login.this, error.toString(), Toast.LENGTH_SHORT).show());
         volleyQueue.add(stringRequest);
 
 

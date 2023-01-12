@@ -22,13 +22,10 @@ import com.example.icebreaker.R;
 import com.example.icebreaker.topic.model.ChooseTopicModel;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
-import java.util.HashMap;
 import java.util.Map;
 
 public class ChooseTopic extends AppCompatActivity {

@@ -14,15 +14,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.icebreaker.R;
-import com.google.firebase.auth.FirebaseAuth;
+import com.example.icebreaker.chats.model.BroadcastModel;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.MetadataChanges;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -30,15 +26,13 @@ import java.util.Calendar;
 
 public class Broadcast extends AppCompatActivity {
 
+    BroadcastModel broadcastModel = new BroadcastModel();
+
     private EditText getMessage;
     private ImageButton back;
     private Button sendBtn;
-    private TextView name, status;
     private String enteredMessage;
     String BroadcastTitle, SenderUid, SenderName;
-    private FirebaseAuth firebaseAuth;
-    private FirebaseDatabase firebaseDatabase;
-    private FirebaseFirestore firebaseFirestore;
     RecyclerView recyclerView;
     String currentTime;
     Calendar calendar;
@@ -60,33 +54,30 @@ public class Broadcast extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        status("offline");
+        broadcastModel.status("offline");
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         if (this.isFinishing()) {
-            status("offline");
+            broadcastModel.status("offline");
         }
     }
 
     @SuppressLint("SimpleDateFormat")
     private void initFields() {
-        firebaseAuth = FirebaseAuth.getInstance();
-        firebaseDatabase = FirebaseDatabase.getInstance();
-        firebaseFirestore = FirebaseFirestore.getInstance();
         calendar = Calendar.getInstance();
         simpleDateFormat = new SimpleDateFormat("hh:mm a");
         back = findViewById(R.id.Back);
         getMessage = findViewById(R.id.getMessage);
-        status = findViewById(R.id.Status);
+        TextView status = findViewById(R.id.Status);
         status.setText("(broadcast)");
         status.setTextSize(12);
         recyclerView = findViewById(R.id.recyclerview);
         sendBtn = findViewById(R.id.send);
-        name = findViewById(R.id.UserName);
-        SenderUid = firebaseAuth.getUid();
+        TextView name = findViewById(R.id.UserName);
+        SenderUid = broadcastModel.getUid();
         BroadcastTitle = getIntent().getStringExtra("Title");
         SenderName = getIntent().getStringExtra("Name");
         name.setText(BroadcastTitle);
@@ -100,7 +91,7 @@ public class Broadcast extends AppCompatActivity {
 
     private void initMessages() {
         messageArrayList.clear();
-        DatabaseReference databaseReference = firebaseDatabase.getReference().child("broadcast").child(BroadcastTitle);
+        DatabaseReference databaseReference = broadcastModel.getDbRef(BroadcastTitle);
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -131,9 +122,8 @@ public class Broadcast extends AppCompatActivity {
                 Toast.makeText(Broadcast.this, "enter message first..", Toast.LENGTH_SHORT).show();
             } else {
                 currentTime = simpleDateFormat.format(calendar.getTime());
-                Message message = new Message(currentTime,SenderName + " : " +  enteredMessage, firebaseAuth.getUid());
-                firebaseDatabase.getReference().child("broadcast").child(BroadcastTitle).push()
-                        .setValue(message);
+                Message message = new Message(currentTime,SenderName + " : " +  enteredMessage, broadcastModel.getUid());
+                broadcastModel.sendTextToDb(BroadcastTitle, message);
                 getMessage.setText(null);
             }
         });
@@ -144,21 +134,7 @@ public class Broadcast extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         messagesAdapter.notifyDataSetChanged();
-        status("online");
+        broadcastModel.status("online");
     }
 
-//    @Override
-//    protected void onStop() {
-//        super.onStop();
-//        if (messagesAdapter != null){
-//            messagesAdapter.notifyDataSetChanged();
-//            status("offline");
-//        }
-//    }
-
-    private void status(String status) {
-        DocumentReference documentReference = firebaseFirestore.collection("Users").document(firebaseAuth.getUid());
-        documentReference.update("status", status).addOnSuccessListener(unused -> {
-        });
-    }
 }

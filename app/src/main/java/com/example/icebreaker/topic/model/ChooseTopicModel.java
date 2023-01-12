@@ -15,9 +15,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ChooseTopicModel {
-    private Activity activity;
-    private FirebaseAuth firebaseAuth;
-    private FirebaseFirestore firebaseFirestore;
+    private final Activity activity;
+    private final FirebaseAuth firebaseAuth;
+    private final FirebaseFirestore firebaseFirestore;
 
     public ChooseTopicModel(Activity activity) {
         this.activity = activity;

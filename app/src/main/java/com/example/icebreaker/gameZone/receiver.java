@@ -17,11 +17,9 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.example.icebreaker.Home;
 import com.example.icebreaker.R;
-import com.example.icebreaker.chats.Message;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
@@ -38,7 +36,6 @@ public class receiver extends AppCompatActivity {
     private final List<String> doneBoxes = new ArrayList<>();
     private final List<ImageView> board = new ArrayList<>();
 
-    private FirebaseAuth firebaseAuth;
     private FirebaseDatabase firebaseDatabase;
 
     private boolean opponentFound = false;
@@ -68,7 +65,7 @@ public class receiver extends AppCompatActivity {
     }
 
     private void initFields() {
-        firebaseAuth = FirebaseAuth.getInstance();
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
         myUid = firebaseAuth.getUid();
         player1Layout = findViewById(R.id.player1Layout);
@@ -198,12 +195,6 @@ public class receiver extends AppCompatActivity {
             }
         }.execute();
         }
-
-//        if(!opponentFound){
-//            Toast.makeText(this, "its seems your opponent fear of showing up...", Toast.LENGTH_SHORT).show();
-//            Intent intent = new Intent(receiver.this, Home.class);
-//            startActivity(intent);
-//        }
     }
 
     private void turnsListener() {

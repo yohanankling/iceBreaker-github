@@ -19,7 +19,7 @@ public class usersAdapter extends RecyclerView.Adapter {
 
     private final Context context;
     private final ArrayList<FirebaseUser> usersArrayList;
-    private String MyName;
+    private final String MyName;
 
     public usersAdapter(Context context, ArrayList<FirebaseUser> usersArrayList, Intent intent) {
         this.context = context;

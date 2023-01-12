@@ -1,26 +1,15 @@
 package com.example.icebreaker.users.model;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.widget.Toast;
-
-import com.example.icebreaker.MainActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
-import java.util.HashMap;
-import java.util.Map;
-
-
 public class userlistModel {
-    private Activity activity;
-    private FirebaseAuth firebaseAuth;
-    private FirebaseFirestore firebaseFirestore;
+    private final FirebaseAuth firebaseAuth;
+    private final FirebaseFirestore firebaseFirestore;
 
-    public userlistModel(Activity activity) {
-        this.activity = activity;
+    public userlistModel() {
         this.firebaseAuth = FirebaseAuth.getInstance();
         this.firebaseFirestore = FirebaseFirestore.getInstance();
     }

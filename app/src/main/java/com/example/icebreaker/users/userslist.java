@@ -20,14 +20,11 @@ import android.widget.TextView;
 import com.example.icebreaker.Home;
 import com.example.icebreaker.R;
 import com.example.icebreaker.chats.*;
-import com.example.icebreaker.users.model.RegisterModel;
 import com.example.icebreaker.users.model.userlistModel;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
 import java.util.Map;
@@ -35,7 +32,7 @@ import java.util.Map;
 // This class represents the user list screen of the app
 public class userslist extends AppCompatActivity {
 
-    userlistModel userslistModel = new userlistModel(this);
+    userlistModel userslistModel = new userlistModel();
 
     // UI elements
     private ImageButton back;

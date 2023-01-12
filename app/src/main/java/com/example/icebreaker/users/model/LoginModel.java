@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 
 import com.example.icebreaker.Home;
-import com.example.icebreaker.users.Login;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -14,9 +13,9 @@ import java.util.Map;
 
 
 public class LoginModel {
-    private Activity activity;
-    private FirebaseAuth firebaseAuth;
-    private FirebaseFirestore firebaseFirestore;
+    private final Activity activity;
+    private final FirebaseAuth firebaseAuth;
+    private final FirebaseFirestore firebaseFirestore;
 
     public LoginModel(Activity activity) {
         this.activity = activity;

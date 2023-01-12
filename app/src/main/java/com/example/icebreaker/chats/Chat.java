@@ -15,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.icebreaker.R;
+import com.example.icebreaker.chats.model.ChatModel;
 import com.example.icebreaker.gameZone.*;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -32,6 +33,8 @@ import java.util.Calendar;
 
 public class Chat extends AppCompatActivity {
 
+    ChatModel chatModel = new ChatModel(this);
+
     private EditText getMessage;
     private ImageButton back;
     private ImageButton inviteGame;
@@ -39,9 +42,6 @@ public class Chat extends AppCompatActivity {
     private TextView name, status;
     private String enteredMessage;
     String Recievername, RecieverUid, SenderUid, MyName;
-    private FirebaseAuth firebaseAuth;
-    private FirebaseDatabase firebaseDatabase;
-    private FirebaseFirestore firebaseFirestore;
     RecyclerView recyclerView;
     String currentTime;
     Calendar calendar;
@@ -64,9 +64,6 @@ public class Chat extends AppCompatActivity {
 
     @SuppressLint("SimpleDateFormat")
     private void initFields() {
-        firebaseAuth = FirebaseAuth.getInstance();
-        firebaseDatabase = FirebaseDatabase.getInstance();
-        firebaseFirestore = FirebaseFirestore.getInstance();
         calendar = Calendar.getInstance();
         simpleDateFormat = new SimpleDateFormat("hh:mm a");
         back = findViewById(R.id.Back);
@@ -76,7 +73,7 @@ public class Chat extends AppCompatActivity {
         recyclerView = findViewById(R.id.recyclerview);
         sendBtn = findViewById(R.id.send);
         name = findViewById(R.id.UserName);
-        SenderUid = firebaseAuth.getUid();
+        SenderUid = chatModel.getUid();
         RecieverUid = getIntent().getStringExtra("Uid");
         Recievername = getIntent().getStringExtra("Email");
         MyName = getIntent().getStringExtra("MyName");
@@ -90,7 +87,7 @@ public class Chat extends AppCompatActivity {
     }
 
     private void initStatus(){
-        status("online");
+        chatModel.status("online");
         DocumentReference docRef = FirebaseFirestore.getInstance().collection("Users").document(RecieverUid);
         docRef.addSnapshotListener(MetadataChanges.INCLUDE, (documentSnapshot, e) -> {
             if(documentSnapshot.exists()){
@@ -103,7 +100,7 @@ public class Chat extends AppCompatActivity {
 
         private void initMessages() {
         messageArrayList.clear();
-        DatabaseReference databaseReference = firebaseDatabase.getReference().child("chats").child(SenderUid).child(RecieverUid);
+        DatabaseReference databaseReference = chatModel.getDbRef(SenderUid, RecieverUid);
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -134,12 +131,8 @@ public class Chat extends AppCompatActivity {
                 Toast.makeText(Chat.this, "enter message first..", Toast.LENGTH_SHORT).show();
             } else {
                 currentTime = simpleDateFormat.format(calendar.getTime());
-                Message message = new Message(currentTime, enteredMessage, firebaseAuth.getUid());
-                firebaseDatabase.getReference().child("chats").child(SenderUid).child(RecieverUid).push()
-                        .setValue(message).addOnCompleteListener(task -> firebaseDatabase.getReference().
-                                child("chats").child(RecieverUid).child(SenderUid).push()
-                                .setValue(message).addOnCompleteListener(task1 -> {
-                                }));
+                Message message = new Message(currentTime, enteredMessage, chatModel.getUid());
+                chatModel.sendTextToDb(SenderUid, RecieverUid, message);
                 getMessage.setText(null);
             }
         });
@@ -163,26 +156,20 @@ public class Chat extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         messagesAdapter.notifyDataSetChanged();
-        status("online");
+        chatModel.status("online");
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        status("offline");
+        chatModel.status("offline");
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         if (this.isFinishing()) {
-            status("offline");
+            chatModel.status("offline");
         }
-    }
-
-    private void status(String status) {
-        DocumentReference documentReference = firebaseFirestore.collection("Users").document(firebaseAuth.getUid());
-        documentReference.update("status", status).addOnSuccessListener(unused -> {
-        });
     }
 }

@@ -28,6 +28,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import java.util.Map;
 
 public class Home extends AppCompatActivity {
+
     HomeModel homeModel = new HomeModel(this);
 
     // Declare variables for UI elements
@@ -63,12 +64,11 @@ public class Home extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.profile:
-                StatusButton();
-                return true;
-            case R.id.disconnect:
-                DisconnectDialog();
+        if (item.getItemId() == R.id.profile){
+            StatusButton();
+            return true;
+        } else {
+            DisconnectDialog();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -193,16 +193,14 @@ public class Home extends AppCompatActivity {
 
     // Set OnClickListener for Topic Members button
     private void TopicMembersButton() {
-        TopicMembers.setOnClickListener(view -> {
-            homeModel.TopicMembersButtonPressed(user.getName());
-        });
+        TopicMembers.setOnClickListener(view ->
+                homeModel.TopicMembersButtonPressed(user.getName()));
     }
 
     // Set OnClickListener for Broadcast button
     private void BroadcastButton() {
-        Broadcast.setOnClickListener(view -> {
-            homeModel.broadcastButtonPressed();
-        });
+        Broadcast.setOnClickListener(view ->
+                homeModel.broadcastButtonPressed());
     }
 
     // Set OnClickListener for Play With button

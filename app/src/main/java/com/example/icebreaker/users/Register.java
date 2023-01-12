@@ -15,16 +15,7 @@ import android.widget.Toast;
 
 import com.example.icebreaker.MainActivity;
 import com.example.icebreaker.R;
-import com.example.icebreaker.topic.ChooseTopic;
-import com.example.icebreaker.users.model.LoginModel;
 import com.example.icebreaker.users.model.RegisterModel;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class Register extends AppCompatActivity {
 

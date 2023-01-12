@@ -11,7 +11,6 @@ import android.widget.TextView;
 import com.example.icebreaker.R;
 import com.example.icebreaker.chats.FirebaseUser;
 import com.example.icebreaker.topic.model.TopicMembersListModel;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 
@@ -20,9 +19,8 @@ import java.util.Map;
 
 public class TopicMembersList extends AppCompatActivity {
 
-    TopicMembersListModel topicMembersListModel = new TopicMembersListModel(this);
+    TopicMembersListModel topicMembersListModel = new TopicMembersListModel();
 
-    private ImageButton back;
     public String Title;
 
     RecyclerView recyclerView;
@@ -40,7 +38,7 @@ public class TopicMembersList extends AppCompatActivity {
     }
 
     private void initFields() {
-        back = findViewById(R.id.back);
+        ImageButton back = findViewById(R.id.back);
         back.setOnClickListener(v -> finish());
         Title = getIntent().getStringExtra("Title");
         TextView title = findViewById(R.id.Title);

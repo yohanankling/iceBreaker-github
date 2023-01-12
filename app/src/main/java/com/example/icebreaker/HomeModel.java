@@ -9,7 +9,6 @@ import androidx.appcompat.app.AlertDialog;
 import com.example.icebreaker.chats.Broadcast;
 import com.example.icebreaker.topic.TopicMembersList;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -21,9 +20,9 @@ import java.util.List;
 import java.util.Map;
 
 public class HomeModel {
-    private Activity activity;
-    private FirebaseAuth firebaseAuth;
-    private FirebaseFirestore firebaseFirestore;
+    private final Activity activity;
+    private final FirebaseAuth firebaseAuth;
+    private final FirebaseFirestore firebaseFirestore;
 
     public HomeModel(Activity activity) {
         this.activity = activity;

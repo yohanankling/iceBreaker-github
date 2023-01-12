@@ -3,22 +3,14 @@ package com.example.icebreaker.contactUs;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.icu.util.Calendar;
 import android.net.Uri;
 import android.os.Bundle;
 import android.widget.ImageButton;
 
-import com.example.icebreaker.Home;
 import com.example.icebreaker.R;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-
-import java.text.SimpleDateFormat;
-
 
 public class Contact extends AppCompatActivity {
     private ImageButton backBtn, yohWhatsapp, yohLinkedin, yohGithub, yohCv,
