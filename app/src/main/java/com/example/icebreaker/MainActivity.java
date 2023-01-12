@@ -34,12 +34,12 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-//        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-//        FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
-//        if (firebaseUser != null) {
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+        if (firebaseUser != null) {
 //             If the user is already logged in, start the home activity
-//            startActivity(new Intent(this, Home.class));
-//        }
+            startActivity(new Intent(this, Home.class));
+        }
     }
 
     // Method to initialize the button views

@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.example.icebreaker.Home;
 import com.example.icebreaker.R;
+import com.example.icebreaker.topic.model.ChooseTopicModel;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
@@ -32,10 +33,10 @@ import java.util.Map;
 
 public class ChooseTopic extends AppCompatActivity {
 
+    ChooseTopicModel chooseTopicModel = new ChooseTopicModel(this);
+
     private ImageButton Add;
     private RecyclerView recyclerView;
-    private FirebaseAuth firebaseAuth;
-    private FirebaseFirestore firebaseFirestore;
     private FirestoreRecyclerAdapter<Topic, TopicDetails> TopicsAdapter;
     String Name;
     TextView noChats;
@@ -51,8 +52,6 @@ public class ChooseTopic extends AppCompatActivity {
     }
 
     private void initFields() {
-        firebaseAuth = FirebaseAuth.getInstance();
-        firebaseFirestore = FirebaseFirestore.getInstance();
         recyclerView = findViewById(R.id.recyclerview);
         ImageButton back = findViewById(R.id.back);
         back.setOnClickListener(v -> {
@@ -81,7 +80,7 @@ public class ChooseTopic extends AppCompatActivity {
     }
 
     private void initTopics() {
-        Query query = firebaseFirestore.collection("Topics");
+        Query query = chooseTopicModel.getQueryData();
         FirestoreRecyclerOptions<Topic> topic = new FirestoreRecyclerOptions.Builder<Topic>().setQuery(query, Topic.class).build();
         TopicsAdapter = new FirestoreRecyclerAdapter<Topic, TopicDetails>(topic) {
             @Override
@@ -120,7 +119,7 @@ public class ChooseTopic extends AppCompatActivity {
     }
 
     private void checkIfAlreadyin(String title, long members) {
-        DocumentReference documentReferenceuser = firebaseFirestore.collection("Users").document(firebaseAuth.getUid());
+        DocumentReference documentReferenceuser = chooseTopicModel.getFirebaseFirestore();
         documentReferenceuser.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 DocumentSnapshot document = task.getResult();
@@ -146,59 +145,15 @@ public class ChooseTopic extends AppCompatActivity {
     }
 
     private void leaveTitle(String tiltleRegistered) {
-        DocumentReference documentReference = firebaseFirestore.collection("Topics").document(tiltleRegistered);
-        documentReference.get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                DocumentSnapshot document = task.getResult();
-                if (document.exists()) {
-                    Map<String, Object> topicData = document.getData();
-                    if (topicData.containsKey(firebaseAuth.getUid())){
-                        long members = (long) topicData.get("Members");
-                        if (members == 1){
-                            documentReference.delete();
-                        }else {
-                            topicData.remove(firebaseAuth.getUid());
-                            topicData.replace("Members", members - 1);
-                            documentReference.set(topicData);
-                        }
-                    }
-                }
-            }
-        });
+        chooseTopicModel.leaveTitle(tiltleRegistered);
     }
 
     private void registerdToTopic(String Title, long members) {
-        DocumentReference documentReference = firebaseFirestore.collection("Topics").document(Title);
-        documentReference.get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                DocumentSnapshot document = task.getResult();
-                if (document.exists()) {
-                    Map<String, Object> userData = document.getData();
-                    userData.put(firebaseAuth.getUid(),Name);
-                    userData.replace("Members", members + 1);
-                    documentReference.set(userData);
-                }
-            }
-        });
+        chooseTopicModel.registerdToTopic(Title, members, Name);
     }
 
     private void changeUserData(String Title){
-        DocumentReference documentReferenceuser = firebaseFirestore.collection("Users").document(firebaseAuth.getUid());
-        documentReferenceuser.get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                DocumentSnapshot document = task.getResult();
-                if (document.exists()) {
-                    Map<String, Object> userData = document.getData();
-                    String tiltleRegistered = (String) userData
-                            .get("topic");
-                    if (!tiltleRegistered.equals("~null")){
-                        leaveTitle(tiltleRegistered);
-                    }
-                    userData.replace("topic", Title);
-                    documentReferenceuser.set(userData);
-                }
-            }
-        });
+        chooseTopicModel.changeUserData(Title);
     }
 
     private void AddTopic() {
@@ -232,70 +187,27 @@ public class ChooseTopic extends AppCompatActivity {
             Toast.makeText(this, "too long title! \n up tp 15 characters", Toast.LENGTH_SHORT).show();
             return;
         }
-        DocumentReference documentReference = firebaseFirestore.collection("Topics").document(TopicName);
-        documentReference.get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                DocumentSnapshot snapshot = task.getResult();
-                if (snapshot.exists()) {
-                    Toast.makeText(ChooseTopic.this, "topic is already exist!\n join or create another one..", Toast.LENGTH_SHORT).show();
-                } else {
-                    Map<String, Object> TopicData = new HashMap<>();
-                    TopicData.put("Title", TopicName);
-                    TopicData.put(firebaseAuth.getUid(), Name);
-                    TopicData.put("Members", 1);
-                    documentReference.set(TopicData);
-                    Toast.makeText(ChooseTopic.this, "topic added!", Toast.LENGTH_SHORT).show();
-                    CurrnetTitle();
-                    changeUserData(TopicName);
-                    Intent intent = new Intent(ChooseTopic.this, ChooseTopic.class);
-                    intent.putExtra("Name", Name);
-                    startActivity(intent);
-                }
-            }
-        });
-    }
-
-    private void CurrnetTitle() {
-        DocumentReference documentReferenceuser = firebaseFirestore.collection("Users").document(firebaseAuth.getUid());
-        documentReferenceuser.get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                DocumentSnapshot document = task.getResult();
-                if (document.exists()) {
-                    Map<String, Object> userData = document.getData();
-                    String tiltleRegistered = (String) userData
-                            .get("topic");
-                    if (!tiltleRegistered.equals("~null")){
-                        leaveTitle(tiltleRegistered);
-                    }
-                }
-            }
-        });
+        chooseTopicModel.ValidateTopic(TopicName, Name);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
         TopicsAdapter.startListening();
-        status("online");
+        chooseTopicModel.status("online");
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        status("offline");
+        chooseTopicModel.status("offline");
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         if (this.isFinishing()) {
-            status("offline");
+            chooseTopicModel.status("offline");
         }
-    }
-
-    private void status(String status) {
-        DocumentReference documentReference = firebaseFirestore.collection("Users").document(firebaseAuth.getUid());
-        documentReference.update("status", status).addOnSuccessListener(unused -> {
-        });
     }
 }

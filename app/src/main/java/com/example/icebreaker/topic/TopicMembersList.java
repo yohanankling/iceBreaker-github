@@ -10,19 +10,19 @@ import android.widget.TextView;
 
 import com.example.icebreaker.R;
 import com.example.icebreaker.chats.FirebaseUser;
+import com.example.icebreaker.topic.model.TopicMembersListModel;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.Map;
 
 public class TopicMembersList extends AppCompatActivity {
 
+    TopicMembersListModel topicMembersListModel = new TopicMembersListModel(this);
+
     private ImageButton back;
-    private FirebaseAuth firebaseAuth;
-    private FirebaseFirestore firebaseFirestore;
     public String Title;
 
     RecyclerView recyclerView;
@@ -40,8 +40,6 @@ public class TopicMembersList extends AppCompatActivity {
     }
 
     private void initFields() {
-        firebaseAuth = FirebaseAuth.getInstance();
-        firebaseFirestore = FirebaseFirestore.getInstance();
         back = findViewById(R.id.back);
         back.setOnClickListener(v -> finish());
         Title = getIntent().getStringExtra("Title");
@@ -60,7 +58,7 @@ public class TopicMembersList extends AppCompatActivity {
 
     private void initChats() {
         userArrayList.clear();
-        DocumentReference documentReferenceuser = firebaseFirestore.collection("Topics").document(Title);
+        DocumentReference documentReferenceuser = topicMembersListModel.getDocRef(Title);
         documentReferenceuser.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 userArrayList.clear();
@@ -69,7 +67,7 @@ public class TopicMembersList extends AppCompatActivity {
                     Map<String, Object> userData = document.getData();
                     userData.remove("Members");
                     userData.remove("Title");
-                    userData.remove(firebaseAuth.getUid());
+                    userData.remove(topicMembersListModel.getUid());
                     for (Map.Entry<String, Object> data : userData.entrySet()) {
                         String uid = data.getKey();
                         String Email = data.getValue().toString();
@@ -86,25 +84,19 @@ public class TopicMembersList extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         topicAdapter.notifyDataSetChanged();
-        status("online");
+        topicMembersListModel.status("online");
     }
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        status("offline");
+        topicMembersListModel.status("offline");
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         if (this.isFinishing()) {
-            status("offline");
+            topicMembersListModel.status("offline");
         }
-    }
-
-    private void status(String status) {
-        DocumentReference documentReference = firebaseFirestore.collection("Users").document(firebaseAuth.getUid());
-        documentReference.update("status", status).addOnSuccessListener(unused -> {
-        });
     }
 }
