@@ -13,8 +13,10 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.icebreaker.Home;
 import com.example.icebreaker.R;
 import com.example.icebreaker.users.model.LoginModel;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class Login extends AppCompatActivity {
 
@@ -66,33 +68,33 @@ public class Login extends AppCompatActivity {
     }
 
     private void ValidEmailOnDatabase() {
-        String email = Email.getText().toString();
-        String password = Password.getText().toString();
-        RequestQueue volleyQueue = Volley.newRequestQueue(Login.this);
-        String url = "http://10.0.0.17:3000/?email=" + email + "&password=" + password;
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-                response -> {
-                    if (response.equals("correct!")) {
-                        Toast.makeText(Login.this, "login successfully!", Toast.LENGTH_SHORT).show();
-                        setAndInitStatus();
-                    } else Toast.makeText(Login.this, response, Toast.LENGTH_SHORT).show();
-                }, error -> Toast.makeText(Login.this, error.toString(), Toast.LENGTH_SHORT).show());
-        volleyQueue.add(stringRequest);
+//        String email = Email.getText().toString();
+//        String password = Password.getText().toString();
+//        RequestQueue volleyQueue = Volley.newRequestQueue(Login.this);
+//        String url = "http://10.0.0.17:3000/?email=" + email + "&password=" + password;
+//        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+//                response -> {
+//                    if (response.equals("correct!")) {
+//                        Toast.makeText(Login.this, "login successfully!", Toast.LENGTH_SHORT).show();
+//                        setAndInitStatus();
+//                    } else Toast.makeText(Login.this, response, Toast.LENGTH_SHORT).show();
+//                }, error -> Toast.makeText(Login.this, error.toString(), Toast.LENGTH_SHORT).show());
+//        volleyQueue.add(stringRequest);
 
 
         // old method 2 pier:
-//        firebaseAuth.signInWithEmailAndPassword(Email.getText().toString(),Password.getText().toString())
-//                .addOnCompleteListener(task -> {
-//                    if (task.isSuccessful()){
-//                        Toast.makeText(Login.this, "login successfully!", Toast.LENGTH_SHORT).show();
-//                        setAndInitStatus();
-//                        Intent intent = new Intent(Login.this, Home.class);
-//                        startActivity(intent);
-//                        finish();
-//                    } else
-//                        Toast.makeText(Login.this, "oh! please try again..", Toast.LENGTH_SHORT).show();
-//                }).addOnFailureListener(e -> Toast.makeText(Login.this, "Error: "+ e.getLocalizedMessage(), Toast.LENGTH_SHORT).show()).addOnCanceledListener(() -> Toast.makeText(Login.this, "login canceled..", Toast.LENGTH_SHORT).show());
-//    }
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        firebaseAuth.signInWithEmailAndPassword(Email.getText().toString(),Password.getText().toString())
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()){
+                        Toast.makeText(Login.this, "login successfully!", Toast.LENGTH_SHORT).show();
+                        setAndInitStatus();
+                        Intent intent = new Intent(Login.this, Home.class);
+                        startActivity(intent);
+                        finish();
+                    } else
+                        Toast.makeText(Login.this, "oh! please try again..", Toast.LENGTH_SHORT).show();
+                }).addOnFailureListener(e -> Toast.makeText(Login.this, "Error: "+ e.getLocalizedMessage(), Toast.LENGTH_SHORT).show()).addOnCanceledListener(() -> Toast.makeText(Login.this, "login canceled..", Toast.LENGTH_SHORT).show());
 
 
     }
