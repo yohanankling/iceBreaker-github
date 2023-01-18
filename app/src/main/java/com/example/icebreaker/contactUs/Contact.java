@@ -79,7 +79,7 @@ public class Contact extends AppCompatActivity {
             startActivity(intent);
         });
         nadavGithub.setOnClickListener(view -> {
-            String Url = "https://github.com/yohanankling";
+            String Url = "https://github.com/nadavmoyal";
             Intent intent = new Intent(Intent.ACTION_VIEW);
             intent.setData(Uri.parse(Url));
             startActivity(intent);
@@ -98,7 +98,7 @@ public class Contact extends AppCompatActivity {
             startActivity(intent);
         });
         nadavLinkedin.setOnClickListener(view -> {
-            String Url = "https://github.com/yohanankling";
+            String Url = "https://github.com/nadavmoyal";
             Intent intent = new Intent(Intent.ACTION_VIEW);
             intent.setData(Uri.parse(Url));
             startActivity(intent);

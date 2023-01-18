@@ -1,12 +1,10 @@
 app server - firestore
 
-
 באפלקציה:
 בקובץ build.gradle:
 להוסיף
 implementation 'com.android.volley:volley:1.2.1'
 sync now
-
 
 קובץ קדם -
  להיכנס לחשבון פיירבייס
