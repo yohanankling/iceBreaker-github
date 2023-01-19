@@ -7,7 +7,11 @@
 הרשאות:
 
 סרטון המחשה:
-https://streamable.com/to9ztt
+
+
+https://user-images.githubusercontent.com/93326335/213512806-aa129bcb-49bc-4cd5-9d4d-109709e369ac.mp4
+
+
 
 מאחלים לכם שימוש נעים וחמים שימיס כל קרח סביבכם (:
 צוות אייסברייקר.
